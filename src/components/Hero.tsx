@@ -28,8 +28,8 @@ export const Hero = () => {
       <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
         <img
           className="h-56 w-full object-cover sm:h-72 md:h-96 lg:h-full lg:w-full"
-          src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"
-          alt="Modern apartment interior"
+          src="https://images.unsplash.com/photo-1600585154526-990dced4db0d"
+          alt="Modern minimalist apartment interior"
         />
       </div>
     </div>
