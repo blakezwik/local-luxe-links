@@ -3,23 +3,18 @@ import { Button } from "@/components/ui/button";
 const steps = [
   {
     id: "01",
-    title: "Sign up as a host",
-    description: "Create your account and connect your properties",
+    title: "Sign up",
+    description: "Join our platform in seconds",
   },
   {
     id: "02",
-    title: "Partner with local businesses",
-    description: "Browse and select from our network of verified local partners",
+    title: "Share",
+    description: "Share exclusive local offerings to guests",
   },
   {
     id: "03",
-    title: "Share with guests",
-    description: "Distribute your unique codes and links to guests",
-  },
-  {
-    id: "04",
-    title: "Earn commissions",
-    description: "Get paid when guests make purchases through your referrals",
+    title: "Earn",
+    description: "Get paid when guests book through your referrals",
   },
 ];
 
@@ -32,19 +27,19 @@ export const HowItWorks = () => {
             How It Works
           </h2>
           <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Start earning in four simple steps
+            Start earning in three simple steps
           </p>
           <p className="mt-6 text-lg leading-8 text-gray-600">
             Our platform makes it easy to create additional revenue streams while enhancing your guests' experience.
           </p>
         </div>
         <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
-          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-4">
+          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
             {steps.map((step) => (
               <div key={step.id} className="flex flex-col">
                 <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                    <span className="text-white">{step.id}</span>
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
+                    <span className="text-white text-lg">{step.id}</span>
                   </div>
                   {step.title}
                 </dt>

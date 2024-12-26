@@ -11,12 +11,9 @@ export const CTA = () => {
           <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-300">
             Join thousands of hosts who are already earning passive income through local partnerships.
           </p>
-          <div className="mt-10 flex items-center justify-center gap-x-6">
+          <div className="mt-10 flex items-center justify-center">
             <Button size="lg" className="text-lg">
               Get Started Now
-            </Button>
-            <Button variant="outline" size="lg" className="text-lg text-white hover:bg-white hover:text-gray-900">
-              Contact Sales
             </Button>
           </div>
           <svg
@@ -27,8 +24,8 @@ export const CTA = () => {
             <circle cx="512" cy="512" r="512" fill="url(#gradient)" fillOpacity="0.7" />
             <defs>
               <radialGradient id="gradient">
-                <stop stopColor="#7775D6" />
-                <stop offset="1" stopColor="#E935C1" />
+                <stop stopColor="#1EAEDB" />
+                <stop offset="1" stopColor="#33C3F0" />
               </radialGradient>
             </defs>
           </svg>

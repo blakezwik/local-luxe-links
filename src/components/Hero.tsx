@@ -20,11 +20,6 @@ export const Hero = () => {
                     Start Earning Today
                   </Button>
                 </div>
-                <div className="mt-3 sm:mt-0 sm:ml-3">
-                  <Button variant="outline" className="w-full px-8 py-3 text-lg" size="lg">
-                    Learn More
-                  </Button>
-                </div>
               </div>
             </div>
           </main>
@@ -33,8 +28,8 @@ export const Hero = () => {
       <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
         <img
           className="h-56 w-full object-cover sm:h-72 md:h-96 lg:h-full lg:w-full"
-          src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7"
-          alt="Host using platform"
+          src="https://images.unsplash.com/photo-1554995207-c18c203602cb"
+          alt="Modern apartment interior"
         />
       </div>
     </div>
