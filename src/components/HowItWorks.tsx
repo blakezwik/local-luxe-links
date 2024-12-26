@@ -36,12 +36,12 @@ export const HowItWorks = () => {
         <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
           <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
             {steps.map((step) => (
-              <div key={step.id} className="flex flex-col">
-                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
-                    <span className="text-white text-lg">{step.id}</span>
+              <div key={step.id} className="flex flex-col items-center text-center">
+                <dt className="flex flex-col items-center gap-y-4">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-primary">
+                    <span className="text-white text-2xl font-bold">{step.id}</span>
                   </div>
-                  {step.title}
+                  <span className="text-2xl font-semibold leading-7 text-gray-900">{step.title}</span>
                 </dt>
                 <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
                   <p className="flex-auto">{step.description}</p>
