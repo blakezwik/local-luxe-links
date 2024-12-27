@@ -11,17 +11,18 @@ export const Hero = () => {
       <div className="mx-auto max-w-7xl">
         <div className="relative z-10 bg-background pb-8 sm:pb-16 md:pb-20 lg:w-full lg:max-w-2xl lg:pb-28 xl:pb-32">
           <main className="mx-auto mt-10 max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-            <div className="sm:text-center lg:text-left">
-              <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl">
-                <span className="block">Earn passive income</span>
-                <span className="block text-primary">from local partnerships</span>
+            <div className="sm:text-center lg:text-left space-y-8">
+              <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-6xl md:text-7xl space-y-4">
+                <span className="block mb-6">Earn passive income</span>
+                <span className="block text-primary mb-6">from local</span>
+                <span className="block text-primary">partnerships</span>
               </h1>
-              <p className="mt-3 text-base text-foreground sm:mx-auto sm:mt-5 sm:max-w-xl sm:text-lg md:mt-5 md:text-xl lg:mx-0">
+              <p className="text-xl text-foreground sm:mx-auto sm:mt-8 sm:max-w-xl sm:text-2xl md:mt-8 lg:mx-0">
                 Get paid by simply referring your guests to premium local experiences!
               </p>
-              <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+              <div className="mt-10 sm:mt-12 sm:flex sm:justify-center lg:justify-start">
                 <div className="rounded-md shadow">
-                  <Button className="w-full px-8 py-3 text-lg bg-secondary hover:bg-secondary/90" size="lg">
+                  <Button className="w-full px-10 py-4 text-xl bg-secondary hover:bg-secondary/90" size="lg">
                     Start Earning Today
                   </Button>
                 </div>
