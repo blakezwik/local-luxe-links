@@ -25,16 +25,16 @@ const features = [
 
 export const Features = () => {
   return (
-    <div className="bg-white py-24 sm:py-32">
+    <div className="bg-background py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="sm:text-center">
           <h2 className="text-xl font-semibold leading-8 text-primary">
             Benefits
           </h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <p className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Unlock a New Revenue Source Effortlessly
           </p>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-foreground">
             Our platform makes it easy to create additional revenue streams while enhancing your guests' experience.
           </p>
         </div>
@@ -46,14 +46,14 @@ export const Features = () => {
                 key={feature.name}
                 className="relative flex flex-col gap-6 sm:flex-row md:flex-col lg:flex-row"
               >
-                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary text-white sm:shrink-0">
+                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-secondary text-white sm:shrink-0">
                   <feature.icon className="h-10 w-10" aria-hidden="true" />
                 </div>
                 <div className="sm:min-w-0 sm:flex-1">
-                  <p className="text-xl font-semibold leading-8 text-gray-900">
+                  <p className="text-xl font-semibold leading-8 text-foreground">
                     {feature.name}
                   </p>
-                  <p className="mt-2 text-lg leading-7 text-gray-600">
+                  <p className="mt-2 text-lg leading-7 text-foreground">
                     {feature.description}
                   </p>
                 </div>
