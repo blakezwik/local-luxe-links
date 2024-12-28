@@ -14,7 +14,7 @@ export const Hero = () => {
             <div className="sm:text-center lg:text-left space-y-8">
               <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-6xl md:text-7xl space-y-4">
                 <span className="block mb-6">Earn More</span>
-                <span className="block text-primary mb-6">as a</span>
+                <span className="block mb-6">as a</span>
                 <span className="block text-primary">Host</span>
               </h1>
               <p className="text-xl text-foreground sm:mx-auto sm:mt-8 sm:max-w-xl sm:text-2xl md:mt-8 lg:mx-0">
