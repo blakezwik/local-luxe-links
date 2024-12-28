@@ -31,35 +31,35 @@ export const Features = () => {
   };
 
   return (
-    <div id="benefits" className="bg-background py-12 sm:py-16">
+    <div id="benefits" className="bg-background py-8 sm:py-12">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="sm:text-center">
-          <h2 className="text-xl font-semibold leading-8 text-primary">
+          <h2 className="text-2xl font-semibold leading-8 text-primary">
             Benefits
           </h2>
-          <p className="mt-2 text-[52px] font-bold tracking-tight text-foreground sm:text-[52px]">
+          <p className="mt-2 text-[104px] font-bold tracking-tight text-foreground sm:text-[104px]">
             Unlock a New Revenue Source Effortlessly
           </p>
-          <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-foreground">
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-foreground">
             Our platform makes it easy to create additional revenue streams while enhancing your guests' experience.
           </p>
         </div>
 
-        <div className="mt-12 max-w-lg sm:mx-auto md:max-w-none">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="mt-8 max-w-lg sm:mx-auto md:max-w-none">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {features.map((feature) => (
               <div
                 key={feature.name}
-                className="relative flex flex-col items-center text-center gap-4 rounded-2xl bg-white p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100"
+                className="relative flex flex-col items-center text-center gap-3 rounded-2xl bg-white p-4 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100"
               >
-                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary text-white">
-                  <feature.icon className="h-8 w-8" aria-hidden="true" />
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-white">
+                  <feature.icon className="h-7 w-7" aria-hidden="true" />
                 </div>
                 <div>
-                  <p className="text-xl font-semibold leading-8 text-foreground">
+                  <p className="text-lg font-semibold leading-7 text-foreground">
                     {feature.name}
                   </p>
-                  <p className="mt-2 text-base leading-7 text-foreground">
+                  <p className="mt-1 text-sm leading-6 text-foreground">
                     {feature.description}
                   </p>
                 </div>
@@ -67,7 +67,7 @@ export const Features = () => {
             ))}
           </div>
         </div>
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center mt-6">
           <Button 
             variant="ghost" 
             size="icon"

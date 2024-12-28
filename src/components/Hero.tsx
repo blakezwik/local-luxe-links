@@ -38,7 +38,7 @@ export const Hero = () => {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="space-y-8">
             <h1 className="text-6xl font-bold tracking-tight text-white sm:text-7xl md:text-8xl">
-              Earn more as a host
+              Earn More as a Host
             </h1>
             
             <p className="mx-auto max-w-2xl text-xl text-white/90 sm:text-2xl">
