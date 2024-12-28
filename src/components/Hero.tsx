@@ -16,30 +16,29 @@ export const Hero = () => {
           HostVibes
         </h1>
         <SignUpDialog>
-          <Button variant="ghost" className="text-primary hover:text-primary/90">
+          <Button className="text-primary hover:bg-primary hover:text-white px-6">
             Sign Up
           </Button>
         </SignUpDialog>
       </div>
 
       {/* Hero Section */}
-      <div className="relative min-h-screen flex items-center justify-center pt-16">
+      <div className="relative h-[calc(100vh-4rem)] flex items-center justify-center pt-16">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0">
           <img
-            src="/lovable-uploads/b72bf377-9f73-4f6c-9aa1-ab06d4f962b7.png"
-            alt="Modern interior"
+            src="https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+            alt="Scenic vacation destination"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/30" /> {/* Lighter overlay */}
+          <div className="absolute inset-0 bg-black/30" />
         </div>
 
         {/* Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="space-y-8">
-            <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl">
-              <span className="block mb-2">Earn more as a host</span>
-              <span className="block text-primary">from local partnerships</span>
+            <h1 className="text-6xl font-bold tracking-tight text-white sm:text-7xl md:text-8xl">
+              Earn more as a host
             </h1>
             
             <p className="mx-auto max-w-2xl text-xl text-white/90 sm:text-2xl">

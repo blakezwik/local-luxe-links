@@ -32,7 +32,7 @@ export const HowItWorks = () => {
           <h2 className="text-lg font-semibold leading-8 tracking-tight text-primary">
             How It Works
           </h2>
-          <p className="mt-2 text-[42px] font-bold tracking-tight text-foreground sm:text-[42px]">
+          <p className="mt-2 text-[52px] font-bold tracking-tight text-foreground sm:text-[52px]">
             Start earning in three simple steps
           </p>
           <p className="mt-6 text-lg leading-8 text-foreground">

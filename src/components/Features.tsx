@@ -37,7 +37,7 @@ export const Features = () => {
           <h2 className="text-xl font-semibold leading-8 text-primary">
             Benefits
           </h2>
-          <p className="mt-2 text-[42px] font-bold tracking-tight text-foreground sm:text-[42px]">
+          <p className="mt-2 text-[52px] font-bold tracking-tight text-foreground sm:text-[52px]">
             Unlock a New Revenue Source Effortlessly
           </p>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-foreground">
@@ -50,7 +50,7 @@ export const Features = () => {
             {features.map((feature) => (
               <div
                 key={feature.name}
-                className="relative flex flex-col gap-6 rounded-2xl bg-white p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100"
+                className="relative flex flex-col items-center text-center gap-6 rounded-2xl bg-white p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100"
               >
                 <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary text-white">
                   <feature.icon className="h-8 w-8" aria-hidden="true" />
