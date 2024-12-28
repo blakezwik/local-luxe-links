@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 
 const steps = [
   {
@@ -19,14 +20,19 @@ const steps = [
 ];
 
 export const HowItWorks = () => {
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    element?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <div className="bg-background py-24 sm:py-32">
+    <div id="how-it-works" className="bg-background py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
           <h2 className="text-lg font-semibold leading-8 tracking-tight text-primary">
             How It Works
           </h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <p className="mt-2 text-[42px] font-bold tracking-tight text-foreground sm:text-[42px]">
             Start earning in three simple steps
           </p>
           <p className="mt-6 text-lg leading-8 text-foreground">
@@ -49,6 +55,16 @@ export const HowItWorks = () => {
               </div>
             ))}
           </dl>
+        </div>
+        <div className="flex justify-center mt-12">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => scrollToSection('cta')}
+            className="animate-bounce"
+          >
+            <ChevronDown className="h-8 w-8 text-primary" />
+          </Button>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
-import { CircleDollarSign, Share2, Smile, Trophy } from "lucide-react";
+import { CircleDollarSign, Share2, Smile, Trophy, ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const features = [
   {
@@ -24,14 +25,19 @@ const features = [
 ];
 
 export const Features = () => {
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    element?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <div className="bg-background py-24 sm:py-32">
+    <div id="benefits" className="bg-background py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="sm:text-center">
           <h2 className="text-xl font-semibold leading-8 text-primary">
             Benefits
           </h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <p className="mt-2 text-[42px] font-bold tracking-tight text-foreground sm:text-[42px]">
             Unlock a New Revenue Source Effortlessly
           </p>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-foreground">
@@ -60,6 +66,16 @@ export const Features = () => {
               </div>
             ))}
           </div>
+        </div>
+        <div className="flex justify-center mt-12">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => scrollToSection('how-it-works')}
+            className="animate-bounce"
+          >
+            <ChevronDown className="h-8 w-8 text-primary" />
+          </Button>
         </div>
       </div>
     </div>

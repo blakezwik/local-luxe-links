@@ -1,6 +1,12 @@
 import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 
 export const Hero = () => {
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    element?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="relative overflow-hidden bg-background">
       <div className="absolute top-0 left-0 p-4">
@@ -11,11 +17,11 @@ export const Hero = () => {
       <div className="mx-auto max-w-7xl">
         <div className="relative z-10 bg-background pb-8 sm:pb-16 md:pb-20 lg:w-full lg:max-w-2xl lg:pb-28 xl:pb-32">
           <main className="mx-auto mt-10 max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-            <div className="sm:text-center lg:text-left space-y-8">
-              <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-6xl md:text-7xl space-y-4">
-                <span className="block mb-6">Earn more</span>
-                <span className="block mb-6">as a Host</span>
-                <span className="block text-primary mb-6">from local</span>
+            <div className="sm:text-center lg:text-left space-y-6">
+              <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-6xl md:text-7xl space-y-2">
+                <span className="block mb-4">Earn more</span>
+                <span className="block mb-4">as a Host</span>
+                <span className="block text-primary mb-4">from local</span>
                 <span className="block text-primary">partnerships</span>
               </h1>
               <p className="text-xl text-foreground sm:mx-auto sm:mt-8 sm:max-w-xl sm:text-2xl md:mt-8 lg:mx-0">
@@ -30,6 +36,16 @@ export const Hero = () => {
               </div>
             </div>
           </main>
+          <div className="flex justify-center mt-8">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => scrollToSection('benefits')}
+              className="animate-bounce"
+            >
+              <ChevronDown className="h-8 w-8 text-primary" />
+            </Button>
+          </div>
         </div>
       </div>
       <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
