@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
+import { SignUpDialog } from "./SignUpDialog";
 
 export const Hero = () => {
   const scrollToSection = (id: string) => {
@@ -29,9 +30,11 @@ export const Hero = () => {
               </p>
               <div className="mt-10 sm:mt-12 sm:flex sm:justify-center lg:justify-start">
                 <div className="rounded-md shadow-xl">
-                  <Button className="w-full px-14 py-7 text-xl bg-secondary hover:bg-secondary/90 shadow-lg hover:shadow-2xl transition-all duration-200 transform hover:-translate-y-1" size="lg">
-                    Start Earning Today
-                  </Button>
+                  <SignUpDialog>
+                    <Button className="w-full px-14 py-7 text-xl bg-secondary hover:bg-secondary/90 shadow-lg hover:shadow-2xl transition-all duration-200 transform hover:-translate-y-1" size="lg">
+                      Start Earning Today
+                    </Button>
+                  </SignUpDialog>
                 </div>
               </div>
             </div>

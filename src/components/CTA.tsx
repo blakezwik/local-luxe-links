@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { SignUpDialog } from "./SignUpDialog";
 
 export const CTA = () => {
   return (
@@ -12,9 +13,11 @@ export const CTA = () => {
             Join thousands of hosts who are already earning passive income through local partnerships.
           </p>
           <div className="mt-10 flex items-center justify-center">
-            <Button size="lg" className="text-lg bg-secondary hover:bg-secondary/90">
-              Get Started Now
-            </Button>
+            <SignUpDialog>
+              <Button size="lg" className="text-lg bg-secondary hover:bg-secondary/90">
+                Get Started Now
+              </Button>
+            </SignUpDialog>
           </div>
         </div>
       </div>

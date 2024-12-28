@@ -46,20 +46,20 @@ export const Features = () => {
         </div>
 
         <div className="mt-20 max-w-lg sm:mx-auto md:max-w-none">
-          <div className="grid grid-cols-1 gap-y-16 md:grid-cols-2 md:gap-x-12 md:gap-y-16">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             {features.map((feature) => (
               <div
                 key={feature.name}
-                className="relative flex flex-col gap-6 sm:flex-row md:flex-col lg:flex-row"
+                className="relative flex flex-col gap-6 rounded-2xl bg-white p-8 shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
-                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-secondary text-white sm:shrink-0">
-                  <feature.icon className="h-10 w-10" aria-hidden="true" />
+                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-secondary text-white">
+                  <feature.icon className="h-8 w-8" aria-hidden="true" />
                 </div>
-                <div className="sm:min-w-0 sm:flex-1">
+                <div>
                   <p className="text-xl font-semibold leading-8 text-foreground">
                     {feature.name}
                   </p>
-                  <p className="mt-2 text-lg leading-7 text-foreground">
+                  <p className="mt-2 text-base leading-7 text-foreground">
                     {feature.description}
                   </p>
                 </div>
