@@ -9,12 +9,12 @@ export const CTA = () => {
           <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Ready to boost your hosting income?
           </h2>
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-300">
+          <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-white/90">
             Join thousands of hosts who are already earning passive income through local partnerships.
           </p>
           <div className="mt-10 flex items-center justify-center">
             <SignUpDialog>
-              <Button size="lg" className="text-lg bg-secondary hover:bg-secondary/90">
+              <Button size="lg" className="text-lg bg-white text-primary hover:bg-white/90">
                 Get Started Now
               </Button>
             </SignUpDialog>

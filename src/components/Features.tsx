@@ -50,9 +50,9 @@ export const Features = () => {
             {features.map((feature) => (
               <div
                 key={feature.name}
-                className="relative flex flex-col gap-6 rounded-2xl bg-white p-8 shadow-lg hover:shadow-xl transition-shadow duration-300"
+                className="relative flex flex-col gap-6 rounded-2xl bg-white p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100"
               >
-                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-secondary text-white">
+                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary text-white">
                   <feature.icon className="h-8 w-8" aria-hidden="true" />
                 </div>
                 <div>
@@ -72,9 +72,9 @@ export const Features = () => {
             variant="ghost" 
             size="icon"
             onClick={() => scrollToSection('how-it-works')}
-            className="animate-bounce"
+            className="animate-bounce text-primary"
           >
-            <ChevronDown className="h-8 w-8 text-primary" />
+            <ChevronDown className="h-8 w-8" />
           </Button>
         </div>
       </div>

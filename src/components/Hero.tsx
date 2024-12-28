@@ -9,54 +9,58 @@ export const Hero = () => {
   };
 
   return (
-    <div className="relative overflow-hidden bg-background">
-      <div className="absolute top-0 left-0 p-4">
-        <h1 className="text-3xl text-primary" style={{ fontFamily: 'Bukhari Script' }}>
+    <div className="relative min-h-screen flex items-center justify-center">
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0">
+        <img
+          src="/lovable-uploads/b72bf377-9f73-4f6c-9aa1-ab06d4f962b7.png"
+          alt="Modern interior"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
+
+      {/* Logo */}
+      <div className="absolute top-0 left-0 p-4 z-10">
+        <h1 className="text-3xl text-white" style={{ fontFamily: 'Bukhari Script' }}>
           HostVibes
         </h1>
       </div>
-      <div className="mx-auto max-w-7xl">
-        <div className="relative z-10 bg-background pb-8 sm:pb-16 md:pb-20 lg:w-full lg:max-w-2xl lg:pb-28 xl:pb-32">
-          <main className="mx-auto mt-10 max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-            <div className="sm:text-center lg:text-left space-y-6">
-              <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-6xl md:text-7xl space-y-2">
-                <span className="block mb-4">Earn more</span>
-                <span className="block mb-4">as a Host</span>
-                <span className="block text-primary mb-4">from local</span>
-                <span className="block text-primary">partnerships</span>
-              </h1>
-              <p className="text-xl text-foreground sm:mx-auto sm:mt-8 sm:max-w-xl sm:text-2xl md:mt-8 lg:mx-0">
-                Generate passive income by simply referring your guests to premium local experiences!
-              </p>
-              <div className="mt-10 sm:mt-12 sm:flex sm:justify-center lg:justify-start">
-                <div className="rounded-md shadow-xl">
-                  <SignUpDialog>
-                    <Button className="w-full px-14 py-7 text-xl bg-secondary hover:bg-secondary/90 shadow-lg hover:shadow-2xl transition-all duration-200 transform hover:-translate-y-1" size="lg">
-                      Start Earning Today
-                    </Button>
-                  </SignUpDialog>
-                </div>
-              </div>
-            </div>
-          </main>
-          <div className="flex justify-center mt-8">
-            <Button 
-              variant="ghost" 
-              size="icon"
-              onClick={() => scrollToSection('benefits')}
-              className="animate-bounce"
-            >
-              <ChevronDown className="h-8 w-8 text-primary" />
-            </Button>
+
+      {/* Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="space-y-8">
+          <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl">
+            <span className="block mb-2">Unlock Local Experiences</span>
+            <span className="block text-primary">For Your Guests</span>
+          </h1>
+          
+          <p className="mx-auto max-w-2xl text-xl text-white/90 sm:text-2xl">
+            Connect your guests with exclusive local activities, dining, and events. Enhance their stay while earning passive income.
+          </p>
+
+          <div className="mt-8 flex justify-center">
+            <SignUpDialog>
+              <Button 
+                size="lg" 
+                className="px-14 py-7 text-xl bg-primary hover:bg-primary/90 shadow-lg hover:shadow-2xl transition-all duration-200 transform hover:-translate-y-1"
+              >
+                Start Earning Today
+              </Button>
+            </SignUpDialog>
           </div>
         </div>
-      </div>
-      <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-        <img
-          className="h-56 w-full object-cover sm:h-72 md:h-96 lg:h-full lg:w-full"
-          src="/lovable-uploads/b72bf377-9f73-4f6c-9aa1-ab06d4f962b7.png"
-          alt="Modern minimalist interior with white walls, wooden furniture and plants"
-        />
+
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => scrollToSection('benefits')}
+            className="animate-bounce text-white hover:text-primary"
+          >
+            <ChevronDown className="h-8 w-8" />
+          </Button>
+        </div>
       </div>
     </div>
   );
