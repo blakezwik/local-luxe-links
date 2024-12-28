@@ -13,7 +13,8 @@ export const Hero = () => {
           <main className="mx-auto mt-10 max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
             <div className="sm:text-center lg:text-left space-y-8">
               <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-6xl md:text-7xl space-y-4">
-                <span className="block mb-6">Earn more as a Host</span>
+                <span className="block mb-6">Earn more</span>
+                <span className="block mb-6">as a Host</span>
                 <span className="block text-primary mb-6">from local</span>
                 <span className="block text-primary">partnerships</span>
               </h1>
@@ -21,8 +22,8 @@ export const Hero = () => {
                 Generate passive income by simply referring your guests to premium local experiences!
               </p>
               <div className="mt-10 sm:mt-12 sm:flex sm:justify-center lg:justify-start">
-                <div className="rounded-md shadow-lg">
-                  <Button className="w-full px-12 py-6 text-xl bg-secondary hover:bg-secondary/90 shadow-md hover:shadow-lg transition-all duration-200" size="lg">
+                <div className="rounded-md shadow-xl">
+                  <Button className="w-full px-14 py-7 text-xl bg-secondary hover:bg-secondary/90 shadow-lg hover:shadow-2xl transition-all duration-200 transform hover:-translate-y-1" size="lg">
                     Start Earning Today
                   </Button>
                 </div>
