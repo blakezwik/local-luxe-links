@@ -16,7 +16,7 @@ export const Hero = () => {
           HostVibes
         </h1>
         <SignUpDialog>
-          <Button className="text-primary hover:bg-primary hover:text-white px-6">
+          <Button className="bg-primary text-white hover:bg-primary/90 px-6">
             Sign Up
           </Button>
         </SignUpDialog>
@@ -27,8 +27,8 @@ export const Hero = () => {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1506744038136-46273834b3fb"
-            alt="Scenic vacation destination"
+            src="https://images.unsplash.com/photo-1615571022219-eb45cf7faa9d"
+            alt="Luxury vacation home with purple sunset"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black/30" />
@@ -49,7 +49,7 @@ export const Hero = () => {
               <SignUpDialog>
                 <Button 
                   size="lg" 
-                  className="px-14 py-7 text-xl bg-primary hover:bg-primary/90 shadow-lg hover:shadow-2xl transition-all duration-200 transform hover:-translate-y-1"
+                  className="px-14 py-7 text-xl bg-primary hover:bg-primary/90 text-white shadow-lg hover:shadow-2xl transition-all duration-200 transform hover:-translate-y-1"
                 >
                   Start Earning Today
                 </Button>
