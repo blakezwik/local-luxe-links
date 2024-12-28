@@ -22,7 +22,7 @@ export const Hero = () => {
 
       {/* Logo */}
       <div className="absolute top-0 left-0 p-4 z-10">
-        <h1 className="text-3xl text-white" style={{ fontFamily: 'Bukhari Script' }}>
+        <h1 className="text-3xl text-primary" style={{ fontFamily: 'Bukhari Script' }}>
           HostVibes
         </h1>
       </div>
@@ -31,8 +31,8 @@ export const Hero = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="space-y-8">
           <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl">
-            <span className="block mb-2">Unlock Local Experiences</span>
-            <span className="block text-primary">For Your Guests</span>
+            <span className="block mb-2">Earn more as a host</span>
+            <span className="block text-primary">from local partnerships</span>
           </h1>
           
           <p className="mx-auto max-w-2xl text-xl text-white/90 sm:text-2xl">
