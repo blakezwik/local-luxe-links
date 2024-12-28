@@ -18,7 +18,7 @@ export const Hero = () => {
                 <span className="block text-primary">Host</span>
               </h1>
               <p className="text-xl text-foreground sm:mx-auto sm:mt-8 sm:max-w-xl sm:text-2xl md:mt-8 lg:mx-0">
-                Earn passive income by simply referring your guests to premium local experiences!
+                Get paid by simply referring your guests to premium local experiences!
               </p>
               <div className="mt-10 sm:mt-12 sm:flex sm:justify-center lg:justify-start">
                 <div className="rounded-md shadow">
