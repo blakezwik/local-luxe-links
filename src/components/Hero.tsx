@@ -16,15 +16,11 @@ export const Hero = () => {
           HostVibes
         </h1>
         <div className="flex gap-4">
-          <SignUpDialog>
-            <Button className="bg-[#177E89] text-white hover:bg-[#177E89]/90 px-6 shadow-lg">
-              Click to Join
-            </Button>
+          <SignUpDialog mode="signup">
+            <span>Click to Join</span>
           </SignUpDialog>
-          <SignUpDialog>
-            <Button className="bg-[#177E89] text-white hover:bg-[#177E89]/90 px-6 shadow-lg">
-              Sign In
-            </Button>
+          <SignUpDialog mode="signin">
+            <span>Sign In</span>
           </SignUpDialog>
         </div>
       </div>
