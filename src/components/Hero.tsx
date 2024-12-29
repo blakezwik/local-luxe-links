@@ -46,17 +46,14 @@ export const Hero = () => {
             </p>
 
             <div className="flex flex-col items-center gap-12">
-              <div className="flex flex-col items-center gap-2">
-                <SignUpDialog>
-                  <Button 
-                    size="lg" 
-                    className="px-14 py-7 text-xl bg-[#FFD166] text-black hover:bg-[#FFD166]/90 shadow-xl hover:shadow-2xl transition-all duration-200 transform hover:-translate-y-1 border-b-4 border-[#E6BC5C]"
-                  >
-                    Free Sign-Up
-                  </Button>
-                </SignUpDialog>
-                <span className="text-white/90 text-sm drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)]">Click Here</span>
-              </div>
+              <SignUpDialog>
+                <Button 
+                  size="lg" 
+                  className="px-14 py-7 text-xl bg-[#FFD166] text-black hover:bg-[#FFD166]/90 shadow-xl hover:shadow-2xl transition-all duration-200 transform hover:-translate-y-1"
+                >
+                  Free Sign-Up
+                </Button>
+              </SignUpDialog>
 
               <Button 
                 variant="ghost" 
