@@ -23,7 +23,7 @@ export const Hero = () => {
       </div>
 
       {/* Hero Section */}
-      <div className="relative h-[calc(100vh-4rem)] flex items-center justify-center pt-16">
+      <div className="relative min-h-screen flex items-center justify-center">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0">
           <img
@@ -35,7 +35,7 @@ export const Hero = () => {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-16">
           <div className="space-y-8">
             <h1 className="text-6xl font-bold tracking-tight text-white sm:text-7xl md:text-8xl">
               Earn More as a Host
@@ -59,9 +59,9 @@ export const Hero = () => {
                 variant="ghost" 
                 size="icon"
                 onClick={() => scrollToSection('benefits')}
-                className="text-white hover:text-primary animate-bounce"
+                className="animate-bounce bg-[#FFD166]"
               >
-                <ChevronDown className="h-8 w-8" />
+                <ChevronDown className="h-8 w-8 text-white" />
               </Button>
             </div>
           </div>

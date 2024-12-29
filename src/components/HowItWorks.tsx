@@ -26,34 +26,34 @@ export const HowItWorks = () => {
   };
 
   return (
-    <div id="how-it-works" className="bg-background py-12 sm:py-16">
+    <div id="how-it-works" className="min-h-screen pt-24 bg-background">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
           <h2 className="text-6xl font-bold leading-8 tracking-tight text-[#177E89]">
             How It Works
           </h2>
-          <p className="mt-2 text-2xl font-bold tracking-tight text-[#177E89] italic">
-            Start earning in three simple steps
+          <p className="mt-8 text-2xl font-bold tracking-tight text-[#177E89] italic">
+            Start Earning in 3 Simple Steps
           </p>
         </div>
-        <div className="mx-auto mt-12 max-w-2xl sm:mt-16 lg:mt-20 lg:max-w-none">
-          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-12 lg:max-w-none lg:grid-cols-3">
+        <div className="mx-auto mt-16 max-w-2xl lg:mt-20 lg:max-w-none">
+          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
             {steps.map((step) => (
               <div key={step.id} className="flex flex-col items-center text-center">
-                <dt className="flex flex-col items-center gap-y-4">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-primary">
-                    <span className="text-white text-2xl font-bold">{step.id}</span>
+                <dt className="flex flex-col items-center gap-y-6">
+                  <div className="flex h-24 w-24 items-center justify-center rounded-lg bg-primary">
+                    <span className="text-white text-3xl font-bold">{step.id}</span>
                   </div>
                   <span className="text-2xl font-semibold leading-7 text-foreground">{step.title}</span>
                 </dt>
-                <dd className="mt-4 flex flex-auto flex-col text-sm leading-6 text-foreground">
+                <dd className="mt-4 flex flex-auto flex-col text-base leading-6 text-foreground">
                   <p className="flex-auto">{step.description}</p>
                 </dd>
               </div>
             ))}
           </dl>
         </div>
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center mt-16">
           <Button 
             variant="ghost" 
             size="icon"
