@@ -10,7 +10,16 @@ const AuthCallback = () => {
       try {
         console.log("AuthCallback: Starting auth callback handling");
         
-        // Check if we have a hash fragment (from email confirmation)
+        // Get the current session
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session) {
+          console.log("AuthCallback: Active session found, redirecting to dashboard");
+          navigate("/dashboard");
+          return;
+        }
+
+        // If no session, check for tokens in the URL
         const hashFragment = window.location.hash;
         if (hashFragment) {
           console.log("AuthCallback: Found hash fragment, processing tokens");
@@ -36,17 +45,8 @@ const AuthCallback = () => {
           }
         }
 
-        // For any other auth redirects
-        console.log("AuthCallback: No hash fragment, checking session");
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        if (session) {
-          console.log("AuthCallback: Active session found, redirecting to dashboard");
-          navigate("/dashboard");
-        } else {
-          console.log("AuthCallback: No session found, redirecting to home");
-          navigate("/");
-        }
+        console.log("AuthCallback: No valid session or tokens found, redirecting to home");
+        navigate("/");
       } catch (error) {
         console.error("AuthCallback: Error in auth callback:", error);
         navigate("/");
