@@ -10,11 +10,17 @@ const AuthCallback = () => {
       try {
         console.log("AuthCallback: Starting auth callback handling");
         
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session }, error } = await supabase.auth.getSession();
         
+        if (error) {
+          console.error("AuthCallback: Error getting session:", error);
+          navigate("/");
+          return;
+        }
+
         if (session) {
           console.log("AuthCallback: Active session found, redirecting to dashboard");
-          navigate("/dashboard");
+          window.location.href = "/dashboard";
           return;
         }
 

@@ -22,15 +22,18 @@ export function SignUpDialog({
 
   useEffect(() => {
     const fetchLocations = async () => {
+      console.log("SignUpDialog: Fetching locations");
       const { data, error } = await supabase
         .from('locations')
-        .select('state, state_code, city');
+        .select('state, state_code, city')
+        .order('state', { ascending: true });
       
       if (error) {
         console.error('Error fetching locations:', error);
         return;
       }
       
+      console.log("SignUpDialog: Locations fetched successfully:", data?.length);
       setLocations(data || []);
     };
 
