@@ -22,7 +22,7 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
     try {
       const { error } = await supabase.auth.signUp({
         email,
-        password,
+        password: 'temporary-password',  // This will be changed after email verification
         options: {
           data: {
             full_name: fullName,
@@ -117,17 +117,6 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="signupPassword">Password</Label>
-                <Input
-                  id="signupPassword"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={6}
                 />
               </div>
               <Button

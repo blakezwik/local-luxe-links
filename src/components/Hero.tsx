@@ -17,12 +17,12 @@ export const Hero = () => {
         </h1>
         <div className="flex gap-4">
           <SignUpDialog>
-            <Button className="bg-[#FFD166] text-black hover:bg-[#FFD166]/90 px-6 shadow-lg">
+            <Button className="bg-[#177E89] text-white hover:bg-[#177E89]/90 px-6 shadow-lg">
               Click to Join
             </Button>
           </SignUpDialog>
           <SignUpDialog>
-            <Button className="bg-[#FFD166] text-black hover:bg-[#FFD166]/90 px-6 shadow-lg">
+            <Button className="bg-[#177E89] text-white hover:bg-[#177E89]/90 px-6 shadow-lg">
               Sign In
             </Button>
           </SignUpDialog>
