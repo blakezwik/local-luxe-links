@@ -49,9 +49,9 @@ export const Hero = () => {
               <SignUpDialog>
                 <Button 
                   size="lg" 
-                  className="px-14 py-7 text-xl bg-[#FFD166] text-black hover:bg-[#FFD166]/90 shadow-xl hover:shadow-2xl transition-all duration-200 transform hover:-translate-y-1"
+                  className="px-14 py-8 text-xl bg-[#FFD166] text-black hover:bg-[#FFD166]/90 shadow-2xl hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.3)] transition-all duration-200 transform hover:-translate-y-1"
                 >
-                  Free Sign-Up
+                  Click Here, it's Free!
                 </Button>
               </SignUpDialog>
 
@@ -59,7 +59,7 @@ export const Hero = () => {
                 variant="ghost" 
                 size="icon"
                 onClick={() => scrollToSection('benefits')}
-                className="animate-bounce bg-[#FFD166] shadow-lg mt-8"
+                className="bg-[#FFD166] shadow-lg mt-12"
               >
                 <ChevronDown className="h-8 w-8 text-white" />
               </Button>
