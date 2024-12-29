@@ -17,7 +17,7 @@ export const Hero = () => {
         </h1>
         <SignUpDialog>
           <Button className="bg-[#FFD166] text-black hover:bg-[#FFD166]/90 px-6 shadow-lg">
-            Sign Up
+            Click to Join
           </Button>
         </SignUpDialog>
       </div>
@@ -42,16 +42,16 @@ export const Hero = () => {
             </h1>
             
             <p className="mx-auto max-w-2xl text-2xl text-white/90 sm:text-3xl drop-shadow-[0_2px_2px_rgba(0,0,0,0.4)]">
-              Connect your guests with exclusive local activities, dining, and events. Enhance their stay while earning passive income.
+              Share local deals with your guests while earning passive income
             </p>
 
-            <div className="flex flex-col items-center gap-8">
+            <div className="flex flex-col items-center gap-12">
               <SignUpDialog>
                 <Button 
                   size="lg" 
-                  className="px-14 py-7 text-xl bg-[#FFD166] text-black hover:bg-[#FFD166]/90 shadow-lg hover:shadow-2xl transition-all duration-200 transform hover:-translate-y-1"
+                  className="px-14 py-7 text-xl bg-[#FFD166] text-black hover:bg-[#FFD166]/90 shadow-xl hover:shadow-2xl transition-all duration-200 transform hover:-translate-y-1"
                 >
-                  Start Earning Today
+                  Free Sign-Up
                 </Button>
               </SignUpDialog>
 
@@ -59,7 +59,7 @@ export const Hero = () => {
                 variant="ghost" 
                 size="icon"
                 onClick={() => scrollToSection('benefits')}
-                className="animate-bounce bg-[#FFD166] shadow-lg"
+                className="animate-bounce bg-[#FFD166] shadow-lg mt-8"
               >
                 <ChevronDown className="h-8 w-8 text-white" />
               </Button>

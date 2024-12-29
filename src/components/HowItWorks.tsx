@@ -3,19 +3,19 @@ import { ChevronDown } from "lucide-react";
 
 const steps = [
   {
-    id: "01",
+    id: "1",
     title: "Sign up",
     description: "Join our platform in seconds",
   },
   {
-    id: "02",
+    id: "2",
     title: "Share",
-    description: "Share exclusive local offerings to guests",
+    description: "Share local deals to guests",
   },
   {
-    id: "03",
+    id: "3",
     title: "Earn",
-    description: "Get paid when guests book through your referrals",
+    description: "Earn when guests book",
   },
 ];
 
