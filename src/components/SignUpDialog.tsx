@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,6 +6,13 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+interface Location {
+  state: string;
+  state_code: string;
+  city: string;
+}
 
 export function SignUpDialog({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +20,39 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+  const [locations, setLocations] = useState<Location[]>([]);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      const { data, error } = await supabase
+        .from('locations')
+        .select('state, state_code, city');
+      
+      if (error) {
+        console.error('Error fetching locations:', error);
+        return;
+      }
+      
+      setLocations(data || []);
+    };
+
+    fetchLocations();
+  }, []);
+
+  const getUniqueStates = () => {
+    const states = [...new Set(locations.map(loc => loc.state))];
+    return states.sort();
+  };
+
+  const getCitiesForState = (selectedState: string) => {
+    return locations
+      .filter(loc => loc.state === selectedState)
+      .map(loc => loc.city)
+      .sort();
+  };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +66,8 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
         options: {
           data: {
             full_name: fullName,
+            state: state,
+            city: city,
           },
           emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
@@ -134,6 +175,36 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
                   required
                   minLength={6}
                 />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="state">State</Label>
+                <Select value={state} onValueChange={setState}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a state" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {getUniqueStates().map((stateName) => (
+                      <SelectItem key={stateName} value={stateName}>
+                        {stateName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="city">City</Label>
+                <Select value={city} onValueChange={setCity} disabled={!state}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={state ? "Select a city" : "Select a state first"} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {state && getCitiesForState(state).map((cityName) => (
+                      <SelectItem key={cityName} value={cityName}>
+                        {cityName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <Button
                 type="submit"
