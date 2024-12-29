@@ -14,7 +14,7 @@ const AuthCallback = () => {
         
         if (session) {
           console.log("AuthCallback: Active session found, redirecting to dashboard");
-          window.location.href = "/dashboard";
+          navigate("/dashboard");
           return;
         }
 
