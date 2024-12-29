@@ -58,8 +58,9 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
           title: "Check your email",
           description: "We sent you a confirmation link to complete your registration.",
         });
-        // Close the dialog but don't redirect yet
+        // Redirect to dashboard even before email confirmation
         onSuccess();
+        navigate('/dashboard');
       }
     } catch (error: any) {
       console.error("SignUpForm: Signup error:", error);

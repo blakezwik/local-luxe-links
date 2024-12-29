@@ -25,11 +25,7 @@ export function LocationSelect({ locations, state, city, setState, setCity }: Lo
     return locations
       .filter(loc => loc.state === selectedState)
       .map(loc => loc.city)
-      .sort((a, b) => {
-        if (a === 'Not Listed') return 1;
-        if (b === 'Not Listed') return -1;
-        return a.localeCompare(b);
-      });
+      .sort();
   };
 
   return (
