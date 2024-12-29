@@ -1,35 +1,28 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
-import { Mail } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-interface SignUpDialogProps {
-  children: React.ReactNode;
-}
-
-export const SignUpDialog = ({ children }: SignUpDialogProps) => {
-  const [email, setEmail] = useState("");
-  const [fullName, setFullName] = useState("");
+export function SignUpDialog({ children }: { children: React.ReactNode }) {
+  const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
   const { toast } = useToast();
 
-  const handleEmailSignUp = async (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithOtp({
+      const { error } = await supabase.auth.signUp({
         email,
+        password: 'temporary-password',
         options: {
           data: {
             full_name: fullName,
@@ -41,8 +34,37 @@ export const SignUpDialog = ({ children }: SignUpDialogProps) => {
 
       toast({
         title: "Check your email",
-        description: "We've sent you a magic link to complete your signup.",
+        description: "We sent you a confirmation link to complete your registration.",
       });
+      setIsOpen(false);
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Welcome back!",
+        description: "You've successfully signed in.",
+      });
+      setIsOpen(false);
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -55,44 +77,87 @@ export const SignUpDialog = ({ children }: SignUpDialogProps) => {
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        {children}
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Join HostVibes</DialogTitle>
-          <DialogDescription>
-            Connect with local businesses and earn more from your vacation rental.
-          </DialogDescription>
+          <DialogTitle className="text-center">
+            <span className="text-4xl text-[#177E89]" style={{ fontFamily: 'Bukhari Script' }}>
+              HostVibes
+            </span>
+          </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleEmailSignUp} className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Input
-              type="text"
-              placeholder="Full Name"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <Button 
-            type="submit" 
-            className="w-full bg-[#177E89] hover:bg-[#177E89]/90"
-            disabled={loading}
-          >
-            <Mail className="mr-2 h-4 w-4" />
-            Continue with Email
-          </Button>
-        </form>
+        <Tabs defaultValue="signup" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="signup">Sign Up</TabsTrigger>
+            <TabsTrigger value="signin">Sign In</TabsTrigger>
+          </TabsList>
+          <TabsContent value="signup">
+            <form onSubmit={handleSignUp} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="fullName">Full Name</Label>
+                <Input
+                  id="fullName"
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="signupEmail">Email</Label>
+                <Input
+                  id="signupEmail"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <Button
+                type="submit"
+                className="w-full bg-[#177E89] hover:bg-[#177E89]/90"
+                disabled={loading}
+              >
+                {loading ? "Processing..." : "Sign Up"}
+              </Button>
+            </form>
+          </TabsContent>
+          <TabsContent value="signin">
+            <form onSubmit={handleSignIn} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="signinEmail">Email</Label>
+                <Input
+                  id="signinEmail"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <Button
+                type="submit"
+                className="w-full bg-[#177E89] hover:bg-[#177E89]/90"
+                disabled={loading}
+              >
+                {loading ? "Processing..." : "Sign In"}
+              </Button>
+            </form>
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );
-};
+}

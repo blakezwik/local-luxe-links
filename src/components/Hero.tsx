@@ -15,11 +15,18 @@ export const Hero = () => {
         <h1 className="text-4xl text-[#177E89]" style={{ fontFamily: 'Bukhari Script' }}>
           HostVibes
         </h1>
-        <SignUpDialog>
-          <Button className="bg-[#FFD166] text-black hover:bg-[#FFD166]/90 px-6 shadow-lg">
-            Click to Join
-          </Button>
-        </SignUpDialog>
+        <div className="flex gap-4">
+          <SignUpDialog>
+            <Button className="bg-[#FFD166] text-black hover:bg-[#FFD166]/90 px-6 shadow-lg">
+              Click to Join
+            </Button>
+          </SignUpDialog>
+          <SignUpDialog>
+            <Button className="bg-[#FFD166] text-black hover:bg-[#FFD166]/90 px-6 shadow-lg">
+              Sign In
+            </Button>
+          </SignUpDialog>
+        </div>
       </div>
 
       {/* Hero Section */}
