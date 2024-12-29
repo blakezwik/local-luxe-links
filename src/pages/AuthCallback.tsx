@@ -10,7 +10,6 @@ const AuthCallback = () => {
       try {
         console.log("AuthCallback: Starting auth callback handling");
         
-        // Get the current session
         const { data: { session } } = await supabase.auth.getSession();
         
         if (session) {
@@ -19,33 +18,7 @@ const AuthCallback = () => {
           return;
         }
 
-        // If no session, check for tokens in the URL
-        const hashFragment = window.location.hash;
-        if (hashFragment) {
-          console.log("AuthCallback: Found hash fragment, processing tokens");
-          const params = new URLSearchParams(hashFragment.substring(1));
-          const accessToken = params.get("access_token");
-          const refreshToken = params.get("refresh_token");
-          
-          if (accessToken && refreshToken) {
-            console.log("AuthCallback: Setting session with tokens");
-            const { error } = await supabase.auth.setSession({
-              access_token: accessToken,
-              refresh_token: refreshToken,
-            });
-
-            if (error) {
-              console.error("AuthCallback: Error setting session:", error);
-              throw error;
-            }
-
-            console.log("AuthCallback: Session set successfully, redirecting to dashboard");
-            navigate("/dashboard");
-            return;
-          }
-        }
-
-        console.log("AuthCallback: No valid session or tokens found, redirecting to home");
+        console.log("AuthCallback: No valid session found, redirecting to home");
         navigate("/");
       } catch (error) {
         console.error("AuthCallback: Error in auth callback:", error);

@@ -11,6 +11,7 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const { toast } = useToast();
 
@@ -22,6 +23,7 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
     try {
       const { error } = await supabase.auth.signUp({
         email,
+        password,
         options: {
           data: {
             full_name: fullName,
@@ -56,18 +58,20 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
     console.log("SignUpDialog: Starting signin process");
 
     try {
-      const { error } = await supabase.auth.signInWithOtp({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
+        password,
       });
 
       if (error) throw error;
 
-      console.log("SignUpDialog: Magic link sent successfully");
+      console.log("SignUpDialog: Signin successful");
       toast({
-        title: "Check your email",
-        description: "We sent you a magic link to sign in.",
+        title: "Welcome back!",
+        description: "You have successfully signed in.",
       });
       setIsOpen(false);
+      window.location.href = '/dashboard';
     } catch (error: any) {
       console.error("SignUpDialog: Signin error:", error);
       toast({
@@ -120,6 +124,17 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
                   required
                 />
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="signupPassword">Password</Label>
+                <Input
+                  id="signupPassword"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                />
+              </div>
               <Button
                 type="submit"
                 className="w-full bg-[#177E89] hover:bg-[#177E89]/90"
@@ -141,12 +156,22 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
                   required
                 />
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="signinPassword">Password</Label>
+                <Input
+                  id="signinPassword"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
               <Button
                 type="submit"
                 className="w-full bg-[#177E89] hover:bg-[#177E89]/90"
                 disabled={loading}
               >
-                {loading ? "Processing..." : "Send Magic Link"}
+                {loading ? "Processing..." : "Sign In"}
               </Button>
             </form>
           </TabsContent>
