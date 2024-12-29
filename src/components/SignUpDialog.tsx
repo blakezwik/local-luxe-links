@@ -54,24 +54,6 @@ export const SignUpDialog = ({ children }: SignUpDialogProps) => {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-      if (error) throw error;
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
-    }
-  };
-
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -108,27 +90,6 @@ export const SignUpDialog = ({ children }: SignUpDialogProps) => {
           >
             <Mail className="mr-2 h-4 w-4" />
             Continue with Email
-          </Button>
-
-          <div className="relative my-4">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
-                Or continue with
-              </span>
-            </div>
-          </div>
-
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            onClick={handleGoogleSignIn}
-          >
-            <img src="/google.svg" alt="Google" className="mr-2 h-4 w-4" />
-            Google
           </Button>
         </form>
       </DialogContent>
