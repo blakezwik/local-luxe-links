@@ -41,12 +41,12 @@ export const HowItWorks = () => {
             {steps.map((step) => (
               <div key={step.id} className="flex flex-col items-center text-center">
                 <dt className="flex flex-col items-center gap-y-6">
-                  <div className="flex h-24 w-24 items-center justify-center rounded-lg bg-primary">
+                  <div className="flex h-24 w-24 items-center justify-center rounded-lg bg-primary shadow-lg">
                     <span className="text-white text-3xl font-bold">{step.id}</span>
                   </div>
                   <span className="text-2xl font-semibold leading-7 text-foreground">{step.title}</span>
                 </dt>
-                <dd className="mt-4 flex flex-auto flex-col text-base leading-6 text-foreground">
+                <dd className="mt-4 flex flex-auto flex-col text-lg leading-6 text-foreground">
                   <p className="flex-auto">{step.description}</p>
                 </dd>
               </div>
@@ -58,7 +58,7 @@ export const HowItWorks = () => {
             variant="ghost" 
             size="icon"
             onClick={() => scrollToSection('cta')}
-            className="animate-bounce bg-[#FFD166]"
+            className="animate-bounce bg-[#FFD166] shadow-lg"
           >
             <ChevronDown className="h-8 w-8 text-white" />
           </Button>

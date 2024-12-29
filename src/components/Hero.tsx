@@ -16,7 +16,7 @@ export const Hero = () => {
           HostVibes
         </h1>
         <SignUpDialog>
-          <Button className="bg-[#FFD166] text-black hover:bg-[#FFD166]/90 px-6">
+          <Button className="bg-[#FFD166] text-black hover:bg-[#FFD166]/90 px-6 shadow-lg">
             Sign Up
           </Button>
         </SignUpDialog>
@@ -41,7 +41,7 @@ export const Hero = () => {
               Earn More as a Host
             </h1>
             
-            <p className="mx-auto max-w-2xl text-xl text-white/90 sm:text-2xl">
+            <p className="mx-auto max-w-2xl text-2xl text-white/90 sm:text-3xl drop-shadow-[0_2px_2px_rgba(0,0,0,0.4)]">
               Connect your guests with exclusive local activities, dining, and events. Enhance their stay while earning passive income.
             </p>
 
@@ -59,7 +59,7 @@ export const Hero = () => {
                 variant="ghost" 
                 size="icon"
                 onClick={() => scrollToSection('benefits')}
-                className="animate-bounce bg-[#FFD166]"
+                className="animate-bounce bg-[#FFD166] shadow-lg"
               >
                 <ChevronDown className="h-8 w-8 text-white" />
               </Button>

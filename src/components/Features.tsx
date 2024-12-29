@@ -52,14 +52,14 @@ export const Features = () => {
                 key={feature.name}
                 className="relative flex flex-col items-center text-center gap-3 rounded-2xl bg-white p-4 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#FFD166] text-white">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#FFD166] text-white shadow-lg">
                   <feature.icon className="h-7 w-7" aria-hidden="true" />
                 </div>
                 <div>
                   <p className="text-lg font-semibold leading-7 text-foreground">
                     {feature.name}
                   </p>
-                  <p className="mt-1 text-sm leading-6 text-foreground">
+                  <p className="mt-1 text-base leading-6 text-foreground">
                     {feature.description}
                   </p>
                 </div>
@@ -72,7 +72,7 @@ export const Features = () => {
             variant="ghost" 
             size="icon"
             onClick={() => scrollToSection('how-it-works')}
-            className="animate-bounce bg-[#FFD166]"
+            className="animate-bounce bg-[#FFD166] shadow-lg"
           >
             <ChevronDown className="h-8 w-8 text-white" />
           </Button>

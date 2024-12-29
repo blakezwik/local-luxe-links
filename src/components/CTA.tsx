@@ -12,7 +12,7 @@ export const CTA = () => {
         <div className="flex justify-center mb-8">
           <Button 
             onClick={scrollToTop}
-            className="bg-[#FFD166] text-black hover:bg-[#FFD166]/90"
+            className="bg-[#FFD166] text-black hover:bg-[#FFD166]/90 shadow-lg"
           >
             Back to Top
           </Button>
@@ -26,7 +26,7 @@ export const CTA = () => {
           </p>
           <div className="mt-10 flex items-center justify-center">
             <SignUpDialog>
-              <Button size="lg" className="text-lg bg-[#FFD166] text-black hover:bg-[#FFD166]/90">
+              <Button size="lg" className="text-lg bg-[#FFD166] text-black hover:bg-[#FFD166]/90 shadow-lg">
                 Get Started Now
               </Button>
             </SignUpDialog>
