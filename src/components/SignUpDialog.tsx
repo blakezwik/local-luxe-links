@@ -27,7 +27,7 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
           data: {
             full_name: fullName,
           },
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?type=signup`,
         },
       });
 
