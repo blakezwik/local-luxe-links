@@ -23,7 +23,7 @@ export function LocationSelect({ locations, state, city, setState, setCity }: Lo
   };
 
   return (
-    <>
+    <div className="grid grid-cols-2 gap-4">
       <div className="space-y-2">
         <Label htmlFor="state">State</Label>
         <Select value={state} onValueChange={setState}>
@@ -49,6 +49,6 @@ export function LocationSelect({ locations, state, city, setState, setCity }: Lo
           placeholder="Enter your city"
         />
       </div>
-    </>
+    </div>
   );
 }

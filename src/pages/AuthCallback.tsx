@@ -60,8 +60,7 @@ const AuthCallback = () => {
             title: "Email Verified",
             description: "Your email has been verified successfully. Welcome!",
           });
-          // Force a full page reload to ensure proper session handling
-          window.location.href = '/dashboard';
+          navigate("/dashboard");
           return;
         }
 
