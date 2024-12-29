@@ -22,11 +22,12 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
     try {
       const { error } = await supabase.auth.signUp({
         email,
-        password: 'temporary-password',
+        password,
         options: {
           data: {
             full_name: fullName,
           },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 
@@ -38,6 +39,7 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
       });
       setIsOpen(false);
     } catch (error: any) {
+      console.error("Signup error:", error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -66,6 +68,7 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
       });
       setIsOpen(false);
     } catch (error: any) {
+      console.error("Signin error:", error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -114,6 +117,17 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="signupPassword">Password</Label>
+                <Input
+                  id="signupPassword"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
                 />
               </div>
               <Button
