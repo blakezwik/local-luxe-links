@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { LocationSelect } from "./LocationSelect";
+import { useNavigate } from "react-router-dom";
 
 interface Location {
   state: string;
@@ -20,6 +21,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +29,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
     console.log("SignUpForm: Starting signup process");
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -42,12 +44,23 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
 
       if (error) throw error;
 
-      console.log("SignUpForm: Signup successful, email confirmation sent");
-      toast({
-        title: "Check your email",
-        description: "We sent you a confirmation link to complete your registration.",
-      });
-      onSuccess();
+      if (data.session) {
+        console.log("SignUpForm: Signup successful with immediate session");
+        toast({
+          title: "Welcome to HostVibes!",
+          description: "Your account has been created successfully.",
+        });
+        onSuccess();
+        navigate('/dashboard');
+      } else {
+        console.log("SignUpForm: Signup successful, confirmation email sent");
+        toast({
+          title: "Check your email",
+          description: "We sent you a confirmation link to complete your registration.",
+        });
+        // Close the dialog but don't redirect yet
+        onSuccess();
+      }
     } catch (error: any) {
       console.error("SignUpForm: Signup error:", error);
       toast({
@@ -93,13 +106,21 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
           minLength={6}
         />
       </div>
-      <LocationSelect
-        locations={locations}
-        state={state}
-        city={city}
-        setState={setState}
-        setCity={setCity}
-      />
+      
+      <div className="mt-6 mb-4">
+        <h3 className="text-lg font-semibold text-[#177E89]">Rental Property Details</h3>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <LocationSelect
+          locations={locations}
+          state={state}
+          city={city}
+          setState={setState}
+          setCity={setCity}
+        />
+      </div>
+
       <Button
         type="submit"
         className="w-full bg-[#177E89] hover:bg-[#177E89]/90"
