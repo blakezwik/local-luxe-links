@@ -1,4 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 interface Location {
@@ -21,13 +22,6 @@ export function LocationSelect({ locations, state, city, setState, setCity }: Lo
     return states.sort();
   };
 
-  const getCitiesForState = (selectedState: string) => {
-    return locations
-      .filter(loc => loc.state === selectedState)
-      .map(loc => loc.city)
-      .sort();
-  };
-
   return (
     <>
       <div className="space-y-2">
@@ -46,19 +40,14 @@ export function LocationSelect({ locations, state, city, setState, setCity }: Lo
         </Select>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="city">City</Label>
-        <Select value={city} onValueChange={setCity} disabled={!state}>
-          <SelectTrigger>
-            <SelectValue placeholder={state ? "Select a city" : "Select a state first"} />
-          </SelectTrigger>
-          <SelectContent>
-            {state && getCitiesForState(state).map((cityName) => (
-              <SelectItem key={cityName} value={cityName}>
-                {cityName}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Label htmlFor="city">City (Optional)</Label>
+        <Input
+          id="city"
+          type="text"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          placeholder="Enter your city"
+        />
       </div>
     </>
   );
