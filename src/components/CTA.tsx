@@ -44,4 +44,4 @@ export const CTA = () => {
       </div>
     </div>
   );
-};
+}
