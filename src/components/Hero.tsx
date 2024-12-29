@@ -12,11 +12,11 @@ export const Hero = () => {
     <div className="relative min-h-screen">
       {/* White Top Banner */}
       <div className="fixed top-0 left-0 right-0 bg-white h-16 flex justify-between items-center px-6 z-50 shadow-sm">
-        <h1 className="text-3xl text-primary" style={{ fontFamily: 'Bukhari Script' }}>
+        <h1 className="text-3xl text-[#177E89]" style={{ fontFamily: 'Bukhari Script' }}>
           HostVibes
         </h1>
         <SignUpDialog>
-          <Button className="bg-primary text-white hover:bg-primary/90 px-6">
+          <Button className="bg-[#FFD166] text-white hover:bg-[#FFD166]/90 px-6">
             Sign Up
           </Button>
         </SignUpDialog>

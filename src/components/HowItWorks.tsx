@@ -29,10 +29,10 @@ export const HowItWorks = () => {
     <div id="how-it-works" className="bg-background py-12 sm:py-16">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-2xl font-semibold leading-8 tracking-tight text-primary">
+          <h2 className="text-4xl font-semibold leading-8 tracking-tight text-[#177E89]">
             How It Works
           </h2>
-          <p className="mt-2 text-[104px] font-bold tracking-tight text-foreground sm:text-[104px]">
+          <p className="mt-2 text-2xl font-bold tracking-tight text-[#177E89]">
             Start earning in three simple steps
           </p>
           <p className="mt-4 text-sm leading-6 text-foreground">
