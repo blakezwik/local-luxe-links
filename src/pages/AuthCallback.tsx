@@ -8,48 +8,47 @@ const AuthCallback = () => {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        // Check if we have a hash fragment
+        console.log("AuthCallback: Starting auth callback handling");
+        
+        // Check if we have a hash fragment (from email confirmation)
         const hashFragment = window.location.hash;
         if (hashFragment) {
-          // Remove the # from the beginning
+          console.log("AuthCallback: Found hash fragment, processing tokens");
           const params = new URLSearchParams(hashFragment.substring(1));
           const accessToken = params.get("access_token");
           const refreshToken = params.get("refresh_token");
-          const type = params.get("type");
-
+          
           if (accessToken && refreshToken) {
-            console.log("Setting session with tokens from hash fragment");
+            console.log("AuthCallback: Setting session with tokens");
             const { error } = await supabase.auth.setSession({
               access_token: accessToken,
               refresh_token: refreshToken,
             });
 
             if (error) {
-              console.error("Error setting session:", error);
+              console.error("AuthCallback: Error setting session:", error);
               throw error;
             }
 
-            // If this is a signup, navigate to dashboard
-            if (type === "signup") {
-              console.log("Signup confirmed, redirecting to dashboard");
-              navigate("/dashboard");
-              return;
-            }
+            console.log("AuthCallback: Session set successfully, redirecting to dashboard");
+            navigate("/dashboard");
+            return;
           }
         }
 
-        // If we don't have a hash fragment, check for query parameters
-        const params = new URLSearchParams(window.location.search);
-        const type = params.get("type");
-
-        // For other auth events or if no hash/query params, navigate to home
-        if (type === "signup") {
+        // For any other auth redirects
+        console.log("AuthCallback: No hash fragment, checking session");
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session) {
+          console.log("AuthCallback: Active session found, redirecting to dashboard");
           navigate("/dashboard");
         } else {
+          console.log("AuthCallback: No session found, redirecting to home");
           navigate("/");
         }
       } catch (error) {
-        console.error("Error in auth callback:", error);
+        console.error("AuthCallback: Error in auth callback:", error);
         navigate("/");
       }
     };

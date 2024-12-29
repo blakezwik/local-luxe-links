@@ -18,28 +18,30 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    console.log("SignUpDialog: Starting signup process");
 
     try {
       const { error } = await supabase.auth.signUp({
         email,
-        password: 'temporary-password',  // This will be changed after email verification
+        password,
         options: {
           data: {
             full_name: fullName,
           },
-          emailRedirectTo: `${window.location.origin}/auth/callback?type=signup`,
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 
       if (error) throw error;
 
+      console.log("SignUpDialog: Signup successful, email confirmation sent");
       toast({
         title: "Check your email",
         description: "We sent you a confirmation link to complete your registration.",
       });
       setIsOpen(false);
     } catch (error: any) {
-      console.error("Signup error:", error);
+      console.error("SignUpDialog: Signup error:", error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -53,6 +55,7 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    console.log("SignUpDialog: Starting signin process");
 
     try {
       const { error } = await supabase.auth.signInWithPassword({
@@ -62,13 +65,15 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
 
       if (error) throw error;
 
+      console.log("SignUpDialog: Signin successful, redirecting");
       toast({
         title: "Welcome back!",
         description: "You've successfully signed in.",
       });
       setIsOpen(false);
+      window.location.href = "/dashboard";
     } catch (error: any) {
-      console.error("Signin error:", error);
+      console.error("SignUpDialog: Signin error:", error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -117,6 +122,17 @@ export function SignUpDialog({ children }: { children: React.ReactNode }) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="signupPassword">Password</Label>
+                <Input
+                  id="signupPassword"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
                 />
               </div>
               <Button
