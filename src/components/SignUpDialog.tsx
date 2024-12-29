@@ -72,24 +72,6 @@ export const SignUpDialog = ({ children }: SignUpDialogProps) => {
     }
   };
 
-  const handleAppleSignIn = async () => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'apple',
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-      if (error) throw error;
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
-    }
-  };
-
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -147,16 +129,6 @@ export const SignUpDialog = ({ children }: SignUpDialogProps) => {
           >
             <img src="/google.svg" alt="Google" className="mr-2 h-4 w-4" />
             Google
-          </Button>
-
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            onClick={handleAppleSignIn}
-          >
-            <img src="/apple.svg" alt="Apple" className="mr-2 h-4 w-4" />
-            Apple
           </Button>
         </form>
       </DialogContent>
