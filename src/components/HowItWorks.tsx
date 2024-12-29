@@ -29,14 +29,11 @@ export const HowItWorks = () => {
     <div id="how-it-works" className="bg-background py-12 sm:py-16">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-4xl font-semibold leading-8 tracking-tight text-[#177E89]">
+          <h2 className="text-6xl font-bold leading-8 tracking-tight text-[#177E89]">
             How It Works
           </h2>
-          <p className="mt-2 text-2xl font-bold tracking-tight text-[#177E89]">
+          <p className="mt-2 text-2xl font-bold tracking-tight text-[#177E89] italic">
             Start earning in three simple steps
-          </p>
-          <p className="mt-4 text-sm leading-6 text-foreground">
-            Our platform makes it easy to create additional revenue streams while enhancing your guests' experience.
           </p>
         </div>
         <div className="mx-auto mt-12 max-w-2xl sm:mt-16 lg:mt-20 lg:max-w-none">
@@ -61,9 +58,9 @@ export const HowItWorks = () => {
             variant="ghost" 
             size="icon"
             onClick={() => scrollToSection('cta')}
-            className="animate-bounce"
+            className="animate-bounce bg-[#FFD166]"
           >
-            <ChevronDown className="h-8 w-8 text-primary" />
+            <ChevronDown className="h-8 w-8 text-white" />
           </Button>
         </div>
       </div>
