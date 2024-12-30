@@ -53,6 +53,9 @@ const Dashboard = () => {
     );
   }
 
+  // Extract first name from full name
+  const firstName = user?.full_name?.split(' ')[0] || '';
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       {/* Header Banner */}
@@ -81,7 +84,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-[#177E89]">
-                  Welcome back, {user?.full_name}!
+                  Welcome back, {firstName}!
                 </h2>
                 {user?.city && user?.state && (
                   <p className="text-gray-600 flex items-center gap-2">
@@ -100,11 +103,11 @@ const Dashboard = () => {
               <div className="text-center space-y-4">
                 <div className="flex items-center justify-center gap-3 mb-4">
                   <Sparkles className="h-8 w-8 text-[#FFD166] animate-pulse" />
-                  <h3 className="text-2xl font-semibold">Exciting Updates Coming Soon!</h3>
+                  <h3 className="text-2xl font-semibold">Stay Tuned!</h3>
                   <Sparkles className="h-8 w-8 text-[#FFD166] animate-pulse" />
                 </div>
                 <p className="text-white/90 text-lg leading-relaxed max-w-2xl mx-auto group-hover:text-white transition-colors duration-300">
-                  We're working on securing local partnerships and building tools to help you maximize your hosting revenue.
+                  We're working on securing local partnerships in your area.
                 </p>
               </div>
             </div>

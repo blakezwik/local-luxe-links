@@ -130,8 +130,18 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
               <PartyPopper className="h-12 w-12 text-[#FFD166] animate-bounce" />
               <span className="text-2xl">Welcome to HostVibes!</span>
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-center pt-4">
-              We've sent a confirmation link to your email address. Please check your inbox and click the link to verify your account.
+            <AlertDialogDescription className="text-center space-y-4">
+              <p>
+                We've sent a confirmation link to your email address. Please check your inbox and click the link to verify your account.
+              </p>
+              <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                <h4 className="font-medium text-gray-900 mb-2">What's Next?</h4>
+                <ol className="text-sm text-gray-600 space-y-2 list-decimal list-inside">
+                  <li>Check your email for the verification link</li>
+                  <li>Click the link to verify your account</li>
+                  <li>Once verified, you'll be able to access your dashboard</li>
+                </ol>
+              </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="sm:justify-center">
@@ -142,7 +152,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
                 onSuccess();
               }}
             >
-              Back to Home
+              Got It
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
