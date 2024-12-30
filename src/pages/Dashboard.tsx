@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Construction, Store, Calendar, CreditCard, MapPin, Building2, ExternalLink } from "lucide-react";
+import { Construction, Store, Calendar, CreditCard, MapPin, Building2 } from "lucide-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -12,6 +12,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const checkSession = async () => {
+      console.log("Dashboard: Checking session");
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         navigate("/");
@@ -24,6 +25,7 @@ const Dashboard = () => {
         .eq('id', session.user.id)
         .single();
 
+      console.log("Dashboard: User profile loaded:", profile);
       setUser(profile);
       setLoading(false);
     };
@@ -71,9 +73,11 @@ const Dashboard = () => {
                 <h2 className="text-2xl font-bold text-[#177E89]">
                   Welcome back, {user?.full_name}!
                 </h2>
-                <p className="text-gray-600 flex items-center gap-2">
-                  <MapPin className="h-4 w-4" /> {user?.city}, {user?.state}
-                </p>
+                {user?.city && user?.state && (
+                  <p className="text-gray-600 flex items-center gap-2">
+                    <MapPin className="h-4 w-4" /> {user.city}, {user.state}
+                  </p>
+                )}
               </div>
             </div>
           </CardContent>
@@ -82,47 +86,50 @@ const Dashboard = () => {
         {/* Main Features Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60">
-            <div className="absolute top-2 right-2">
+            <div className="absolute top-2 right-2 flex items-center gap-1">
               <Construction className="h-5 w-5 text-gray-400 animate-pulse" />
+              <span className="text-sm text-gray-400">Under Construction</span>
             </div>
             <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-xl">
-                <Store className="h-6 w-6 text-[#177E89] group-hover:scale-110 transition-transform" />
+              <CardTitle className="flex items-center gap-3 text-xl line-through text-gray-400">
+                <Store className="h-6 w-6 text-[#FFD166] group-hover:scale-110 transition-transform" />
                 Local Partnerships
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-500">Connect with local businesses and earn from guest bookings.</p>
+              <p className="text-gray-400">Connect with local businesses and earn from guest bookings.</p>
             </CardContent>
           </Card>
 
           <Card className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60">
-            <div className="absolute top-2 right-2">
+            <div className="absolute top-2 right-2 flex items-center gap-1">
               <Construction className="h-5 w-5 text-gray-400 animate-pulse" />
+              <span className="text-sm text-gray-400">Under Construction</span>
             </div>
             <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-xl">
-                <Calendar className="h-6 w-6 text-[#177E89] group-hover:scale-110 transition-transform" />
+              <CardTitle className="flex items-center gap-3 text-xl line-through text-gray-400">
+                <Calendar className="h-6 w-6 text-[#FFD166] group-hover:scale-110 transition-transform" />
                 Booking Analytics
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-500">Track your bookings and partnership performance.</p>
+              <p className="text-gray-400">Track your bookings and partnership performance.</p>
             </CardContent>
           </Card>
 
           <Card className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60">
-            <div className="absolute top-2 right-2">
+            <div className="absolute top-2 right-2 flex items-center gap-1">
               <Construction className="h-5 w-5 text-gray-400 animate-pulse" />
+              <span className="text-sm text-gray-400">Under Construction</span>
             </div>
             <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-xl">
-                <CreditCard className="h-6 w-6 text-[#177E89] group-hover:scale-110 transition-transform" />
+              <CardTitle className="flex items-center gap-3 text-xl line-through text-gray-400">
+                <CreditCard className="h-6 w-6 text-[#FFD166] group-hover:scale-110 transition-transform" />
                 Earnings
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-500">Monitor your earnings and payment history.</p>
+              <p className="text-gray-400">Monitor your earnings and payment history.</p>
             </CardContent>
           </Card>
         </div>
@@ -138,9 +145,7 @@ const Dashboard = () => {
                   <p className="text-white/80">We're working on securing local partnerships and building tools to help you maximize your hosting revenue.</p>
                 </div>
               </div>
-              <Button className="bg-white text-[#177E89] hover:bg-white/90">
-                Stay Tuned
-              </Button>
+              <span className="text-white/90 font-medium">Stay Tuned</span>
             </div>
           </CardContent>
         </Card>
