@@ -1,11 +1,11 @@
 import { NavigateFunction } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Toast } from "@/hooks/use-toast";
+import { toast as Toast } from "@/hooks/use-toast";
 
 export const handleAuthCallback = async (
   hash: string,
   navigate: NavigateFunction,
-  toast: Toast
+  toast: typeof Toast
 ) => {
   try {
     console.log("AuthCallback: Starting auth callback handling");
