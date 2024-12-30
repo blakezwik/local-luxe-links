@@ -39,11 +39,19 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
             state: state,
             city: city || null,
           },
-          emailRedirectTo: `${window.location.origin}/auth/callback?redirect=/dashboard`,
         },
       });
 
       if (error) throw error;
+
+      // Send welcome email
+      const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
+        body: { to: email, fullName },
+      });
+
+      if (emailError) {
+        console.error("Error sending welcome email:", emailError);
+      }
 
       console.log("SignUpForm: Signup successful, showing success message");
       setShowSuccess(true);
@@ -131,7 +139,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
               <span className="text-2xl">Welcome to HostVibes!</span>
             </AlertDialogTitle>
             <AlertDialogDescription className="text-center pt-4">
-              We've sent a confirmation link to your email address. Please check your inbox and click the link to verify your account.
+              We've sent you a welcome email with a link to sign in to your account. Please check your inbox!
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="sm:justify-center">
