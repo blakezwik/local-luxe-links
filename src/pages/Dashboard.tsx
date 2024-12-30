@@ -4,19 +4,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Construction, Store, Calendar, CreditCard, MapPin, Building2, ExternalLink } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
-  const [nearbyAttractions, setNearbyAttractions] = useState<any[]>([
-    { name: "Local Parks", distance: "0.5 miles" },
-    { name: "Downtown Area", distance: "1.2 miles" },
-    { name: "Shopping District", distance: "2.0 miles" },
-    { name: "Restaurant Row", distance: "1.5 miles" },
-    { name: "Cultural Center", distance: "2.5 miles" },
-  ]);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -135,41 +127,8 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* Area Insights Section */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="text-xl text-[#177E89] flex items-center gap-2">
-              <MapPin className="h-5 w-5" />
-              Area Insights
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ScrollArea className="h-[300px] rounded-md border p-4">
-              <div className="space-y-4">
-                {nearbyAttractions.map((attraction, index) => (
-                  <div
-                    key={index}
-                    className="p-4 rounded-lg bg-gradient-to-r from-[#FFD166]/5 to-transparent hover:from-[#FFD166]/10 transition-all duration-300 flex items-center justify-between group cursor-pointer"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-[#FFD166]/20 rounded-full group-hover:bg-[#FFD166]/30 transition-colors">
-                        <MapPin className="h-4 w-4 text-[#177E89]" />
-                      </div>
-                      <span className="font-medium">{attraction.name}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-500">{attraction.distance}</span>
-                      <ExternalLink className="h-4 w-4 text-[#177E89] opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
-          </CardContent>
-        </Card>
-
         {/* Coming Soon Banner */}
-        <Card className="bg-gradient-to-r from-[#177E89] to-[#1A9DAB] text-white">
+        <Card className="bg-gradient-to-r from-[#177E89] to-[#1A9DAB] text-white mt-8">
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-4">
