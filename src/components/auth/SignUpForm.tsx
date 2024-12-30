@@ -37,9 +37,9 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
           data: {
             full_name: fullName,
             state: state,
-            city: city || null, // Make city optional
+            city: city || null,
           },
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?redirect=/dashboard`,
         },
       });
 

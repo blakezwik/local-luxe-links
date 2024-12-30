@@ -15,12 +15,15 @@ const AuthCallback = () => {
         const session = await handleAuthCallback(location.hash, navigate, toast);
         
         if (session) {
-          console.log("AuthCallback: Active session found, redirecting to dashboard");
+          console.log("AuthCallback: Active session found, checking for redirect");
+          const params = new URLSearchParams(location.search);
+          const redirectTo = params.get('redirect') || '/dashboard';
+          
           toast({
             title: "Email Verified",
             description: "Your email has been verified successfully. Welcome!",
           });
-          navigate("/dashboard");
+          navigate(redirectTo);
           return;
         }
 
@@ -42,7 +45,7 @@ const AuthCallback = () => {
     };
 
     processAuthCallback();
-  }, [navigate, toast, location.hash]);
+  }, [navigate, toast, location.hash, location.search]);
 
   return <LoadingState />;
 };
