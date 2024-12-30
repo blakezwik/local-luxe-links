@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Construction, Store, Calendar, CreditCard, MapPin, Building2 } from "lucide-react";
+import { Construction, Link, BarChart3, UserCog, MapPin, Building2 } from "lucide-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -86,50 +86,38 @@ const Dashboard = () => {
         {/* Main Features Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60">
-            <div className="absolute top-2 right-2 flex items-center gap-1">
-              <Construction className="h-5 w-5 text-gray-400 animate-pulse" />
-              <span className="text-sm text-gray-400">Under Construction</span>
-            </div>
             <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-xl line-through text-gray-400">
-                <Store className="h-6 w-6 text-[#FFD166] group-hover:scale-110 transition-transform" />
-                Local Partnerships
+              <CardTitle className="flex items-center gap-3 text-xl text-gray-400">
+                <Link className="h-6 w-6 text-[#FFD166] group-hover:scale-110 transition-transform" />
+                Generate Host Link
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-400">Connect with local businesses and earn from guest bookings.</p>
+              <p className="text-gray-400">Share this with your guests</p>
             </CardContent>
           </Card>
 
           <Card className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60">
-            <div className="absolute top-2 right-2 flex items-center gap-1">
-              <Construction className="h-5 w-5 text-gray-400 animate-pulse" />
-              <span className="text-sm text-gray-400">Under Construction</span>
-            </div>
             <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-xl line-through text-gray-400">
-                <Calendar className="h-6 w-6 text-[#FFD166] group-hover:scale-110 transition-transform" />
-                Booking Analytics
+              <CardTitle className="flex items-center gap-3 text-xl text-gray-400">
+                <BarChart3 className="h-6 w-6 text-[#FFD166] group-hover:scale-110 transition-transform" />
+                Account Analytics
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-400">Track your bookings and partnership performance.</p>
+              <p className="text-gray-400">View booking analytics and earnings</p>
             </CardContent>
           </Card>
 
           <Card className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60">
-            <div className="absolute top-2 right-2 flex items-center gap-1">
-              <Construction className="h-5 w-5 text-gray-400 animate-pulse" />
-              <span className="text-sm text-gray-400">Under Construction</span>
-            </div>
             <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-xl line-through text-gray-400">
-                <CreditCard className="h-6 w-6 text-[#FFD166] group-hover:scale-110 transition-transform" />
-                Earnings
+              <CardTitle className="flex items-center gap-3 text-xl text-gray-400">
+                <UserCog className="h-6 w-6 text-[#FFD166] group-hover:scale-110 transition-transform" />
+                Manage Account
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-400">Monitor your earnings and payment history.</p>
+              <p className="text-gray-400">View/update your account details</p>
             </CardContent>
           </Card>
         </div>
@@ -137,15 +125,15 @@ const Dashboard = () => {
         {/* Coming Soon Banner */}
         <Card className="bg-gradient-to-r from-[#177E89] to-[#1A9DAB] text-white mt-8">
           <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex flex-col items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <Construction className="h-8 w-8 animate-bounce" />
-                <div>
+                <div className="text-center">
                   <h3 className="text-xl font-semibold">Exciting Features Coming Soon!</h3>
                   <p className="text-white/80">We're working on securing local partnerships and building tools to help you maximize your hosting revenue.</p>
+                  <p className="text-white/90 font-medium mt-4">Stay Tuned</p>
                 </div>
               </div>
-              <span className="text-white/90 font-medium">Stay Tuned</span>
             </div>
           </CardContent>
         </Card>
