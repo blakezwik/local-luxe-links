@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Construction, Link, BarChart3, UserCog, MapPin, Building2 } from "lucide-react";
+import { Link, BarChart3, UserCog, MapPin, Building2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
 
@@ -32,6 +34,14 @@ const Dashboard = () => {
 
     checkSession();
   }, [navigate]);
+
+  const handleFeatureClick = () => {
+    toast({
+      title: "Coming Soon",
+      description: "This feature is currently under development.",
+      duration: 3000,
+    });
+  };
 
   if (loading) {
     return (
@@ -83,9 +93,25 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
+        {/* Coming Soon Banner */}
+        <Card className="bg-gradient-to-r from-[#177E89] to-[#1A9DAB] text-white mb-8">
+          <CardContent className="p-6">
+            <div className="flex flex-col items-center justify-between gap-4">
+              <div className="text-center">
+                <p className="text-white/90">
+                  We're working on securing local partnerships and building tools to help you maximize your hosting revenue.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Main Features Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60">
+          <Card 
+            className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60 cursor-pointer"
+            onClick={handleFeatureClick}
+          >
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-xl text-gray-400">
                 <Link className="h-6 w-6 text-[#FFD166] group-hover:scale-110 transition-transform" />
@@ -97,7 +123,10 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60">
+          <Card 
+            className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60 cursor-pointer"
+            onClick={handleFeatureClick}
+          >
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-xl text-gray-400">
                 <BarChart3 className="h-6 w-6 text-[#FFD166] group-hover:scale-110 transition-transform" />
@@ -109,7 +138,10 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60">
+          <Card 
+            className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60 cursor-pointer"
+            onClick={handleFeatureClick}
+          >
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-xl text-gray-400">
                 <UserCog className="h-6 w-6 text-[#FFD166] group-hover:scale-110 transition-transform" />
@@ -121,22 +153,6 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </div>
-
-        {/* Coming Soon Banner */}
-        <Card className="bg-gradient-to-r from-[#177E89] to-[#1A9DAB] text-white mt-8">
-          <CardContent className="p-6">
-            <div className="flex flex-col items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <Construction className="h-8 w-8 animate-bounce" />
-                <div className="text-center">
-                  <h3 className="text-xl font-semibold">Exciting Features Coming Soon!</h3>
-                  <p className="text-white/80">We're working on securing local partnerships and building tools to help you maximize your hosting revenue.</p>
-                  <p className="text-white/90 font-medium mt-4">Stay Tuned</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
