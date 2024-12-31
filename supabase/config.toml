@@ -1,1 +1,2 @@
-project_id = "dpaanznummcovcpyxdet"
+[functions.send-welcome-email]
+verify_jwt = false
