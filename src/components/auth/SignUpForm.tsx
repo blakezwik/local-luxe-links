@@ -142,7 +142,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
           <AlertDialogHeader>
             <AlertDialogTitle className="text-center flex flex-col items-center gap-4">
               <PartyPopper className="h-12 w-12 text-[#FFD166] animate-bounce" />
-              <span className="text-2xl">Welcome to HostVibes!</span>
+              <span className="text-2xl">Welcome to GuestVibes!</span>
             </AlertDialogTitle>
             <AlertDialogDescription className="text-center space-y-4">
               <p>
