@@ -13,7 +13,7 @@ export const Hero = () => {
       {/* White Top Banner */}
       <div className="fixed top-0 left-0 right-0 bg-white h-16 flex justify-between items-center px-6 z-50 shadow-sm">
         <h1 className="text-4xl text-[#177E89]" style={{ fontFamily: 'Bukhari Script' }}>
-          HostVibes
+          GuestVibes
         </h1>
         <div className="flex gap-4">
           <SignUpDialog>

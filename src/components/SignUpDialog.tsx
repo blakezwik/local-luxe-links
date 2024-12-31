@@ -49,7 +49,7 @@ export function SignUpDialog({
         <DialogHeader>
           <DialogTitle className="text-center">
             <span className="text-4xl text-[#177E89]" style={{ fontFamily: 'Bukhari Script' }}>
-              HostVibes
+              GuestVibes
             </span>
           </DialogTitle>
         </DialogHeader>

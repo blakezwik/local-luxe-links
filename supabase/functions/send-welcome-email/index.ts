@@ -35,12 +35,12 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "HostVibes <onboarding@resend.dev>", // Using Resend's test domain for now
+        from: "GuestVibes <onboarding@resend.dev>", // Using Resend's test domain for now
         to: [email],
-        subject: "Welcome to HostVibes - Please Verify Your Email",
+        subject: "Welcome to GuestVibes - Please Verify Your Email",
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h1 style="color: #177E89; text-align: center; font-size: 24px;">Welcome to HostVibes!</h1>
+            <h1 style="color: #177E89; text-align: center; font-size: 24px;">Welcome to GuestVibes!</h1>
             
             <p style="color: #333; font-size: 16px; line-height: 1.5;">Hi ${firstName},</p>
             
