@@ -35,7 +35,7 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "GuestVibes <onboarding@resend.dev>", // Using Resend's test domain for now
+        from: "GuestVibes <contact@guestvibes.com>",
         to: [email],
         subject: "Welcome to GuestVibes - Please Verify Your Email",
         html: `
@@ -45,7 +45,7 @@ const handler = async (req: Request): Promise<Response> => {
             <p style="color: #333; font-size: 16px; line-height: 1.5;">Hi ${firstName},</p>
             
             <p style="color: #333; font-size: 16px; line-height: 1.5;">
-              Thank you for joining HostVibes! We're excited to have you on board and can't wait to help you connect with local businesses in your area.
+              Thank you for joining GuestVibes! We're excited to have you on board and can't wait to help you connect with local businesses in your area.
             </p>
 
             <div style="background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin: 24px 0;">
