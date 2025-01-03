@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { LocationSelect } from "./LocationSelect";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction } from "@/components/ui/alert-dialog";
 import { PartyPopper } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface Location {
   state: string;
@@ -23,6 +24,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
   const [city, setCity] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +43,6 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
             state: state,
             city: city || null,
           },
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
         }
       });
 
@@ -60,6 +61,12 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSuccessClose = () => {
+    setShowSuccess(false);
+    onSuccess();
+    navigate('/dashboard');
   };
 
   return (
@@ -120,41 +127,23 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
         </Button>
       </form>
 
-      <AlertDialog open={showSuccess} onOpenChange={(open) => {
-        if (!open) {
-          setShowSuccess(false);
-          onSuccess();
-        }
-      }}>
+      <AlertDialog open={showSuccess} onOpenChange={handleSuccessClose}>
         <AlertDialogContent className="max-w-md">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-center flex flex-col items-center gap-4">
               <PartyPopper className="h-12 w-12 text-[#FFD166] animate-bounce" />
               <span className="text-2xl">Welcome to GuestVibes!</span>
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-center space-y-4">
-              <p>
-                We've sent you a welcome email with a verification link. Please check your inbox and click the link to verify your account.
-              </p>
-              <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
-                <h4 className="font-medium text-gray-900 mb-2">What's Next?</h4>
-                <ol className="text-sm text-gray-600 space-y-2 list-decimal list-inside">
-                  <li>Check your email for our welcome message</li>
-                  <li>Click the verification button in the email</li>
-                  <li>Once verified, you'll be taken to your dashboard</li>
-                </ol>
-              </div>
+            <AlertDialogDescription className="text-center">
+              Your account has been created successfully. Click continue to access your dashboard.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="sm:justify-center">
             <AlertDialogAction 
               className="bg-[#177E89] hover:bg-[#177E89]/90"
-              onClick={() => {
-                setShowSuccess(false);
-                onSuccess();
-              }}
+              onClick={handleSuccessClose}
             >
-              Got It
+              Continue to Dashboard
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
