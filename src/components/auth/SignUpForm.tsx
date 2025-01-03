@@ -30,9 +30,9 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
     console.log("SignUpForm: Starting signup process");
 
     try {
-      // First, generate an email OTP token
-      console.log("SignUpForm: Generating email verification token");
-      const { data: otpData, error: otpError } = await supabase.auth.admin.generateLink({
+      // Generate a signup link without sending Supabase's email
+      console.log("SignUpForm: Generating signup link");
+      const { data, error } = await supabase.auth.admin.generateLink({
         type: 'signup',
         email,
         password,
@@ -42,24 +42,25 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
             state: state,
             city: city || null,
           },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         }
       });
 
-      if (otpError) throw otpError;
+      if (error) throw error;
 
-      if (!otpData?.properties?.email_otp) {
-        throw new Error("Failed to generate email verification token");
+      if (!data?.properties?.confirmationURL) {
+        throw new Error("Failed to generate signup link");
       }
 
-      console.log("SignUpForm: Email verification token generated successfully");
+      console.log("SignUpForm: Signup link generated successfully");
 
-      // Send our custom welcome email with the OTP token
+      // Send our custom welcome email with the verification URL
       console.log("SignUpForm: Sending welcome email");
       const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
         body: {
           email,
           name: fullName,
-          verificationToken: otpData.properties.email_otp,
+          verificationUrl: data.properties.confirmationURL,
         },
       });
 

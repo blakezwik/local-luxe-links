@@ -11,7 +11,7 @@ const corsHeaders = {
 interface WelcomeEmailRequest {
   email: string;
   name: string;
-  verificationToken: string;
+  verificationUrl: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -23,7 +23,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, name, verificationToken } = await req.json() as WelcomeEmailRequest;
+    const { email, name, verificationUrl } = await req.json() as WelcomeEmailRequest;
     console.log("Received request to send welcome email to:", email);
 
     if (!RESEND_API_KEY) {
@@ -36,13 +36,7 @@ const handler = async (req: Request): Promise<Response> => {
       ? "GuestVibes <onboarding@resend.dev>"
       : "GuestVibes <welcome@guestvibes.com>";
 
-    // Get the base URL from the request origin
-    const origin = req.headers.get("origin") || "";
-    console.log("Base URL for verification link:", origin);
-
-    // Construct verification URL with the OTP token
-    const verificationUrl = `${origin}/auth/callback#access_token=${verificationToken}&type=signup`;
-    console.log("Constructed verification URL (without token):", `${origin}/auth/callback#type=signup`);
+    console.log("Using verification URL:", verificationUrl);
 
     const emailData = {
       from: fromEmail,
