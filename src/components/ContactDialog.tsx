@@ -62,13 +62,13 @@ export const ContactDialog = () => {
       <DialogTrigger asChild>
         <Button 
           variant="outline" 
-          className="w-full max-w-2xl mx-auto flex items-center gap-2 mt-8 bg-white hover:bg-gray-50"
+          className="w-full max-w-2xl mx-auto flex items-center gap-2 mt-8 bg-[#FFD166] hover:bg-[#FFD166]/90 text-black border-[#FFD166]"
         >
           <Mail className="h-5 w-5" />
           Contact Us
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md bg-gradient-to-b from-white to-[#FFD166]/10">
         <DialogHeader>
           <DialogTitle className="text-center text-xl font-semibold">
             Contact GuestVibes Support
@@ -79,7 +79,7 @@ export const ContactDialog = () => {
             placeholder="How can we help you?"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="min-h-[150px]"
+            className="min-h-[150px] bg-white/50 border-[#FFD166]/50 focus-visible:ring-[#FFD166]"
           />
           <Button
             onClick={handleSubmit}
