@@ -22,20 +22,16 @@ export const ContactDialog = () => {
         throw new Error("No active session");
       }
 
-      const response = await fetch("/functions/v1/send-contact-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: {
           message,
           userId: session.user.id,
-        }),
+        }
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to send message");
+      if (error) {
+        console.error("ContactDialog: Function invocation error:", error);
+        throw error;
       }
 
       console.log("ContactDialog: Message sent successfully");
@@ -50,7 +46,7 @@ export const ContactDialog = () => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to send message. Please try again.",
+        description: error.message || "Failed to send message. Please try again.",
       });
     } finally {
       setLoading(false);
