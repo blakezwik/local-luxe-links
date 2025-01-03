@@ -30,10 +30,9 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
     console.log("SignUpForm: Starting signup process");
 
     try {
-      // Generate a signup link without sending Supabase's email
-      console.log("SignUpForm: Generating signup link");
-      const { data, error } = await supabase.auth.admin.generateLink({
-        type: 'signup',
+      // Sign up the user with Supabase auth
+      console.log("SignUpForm: Creating user account");
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -42,25 +41,19 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
             state: state,
             city: city || null,
           },
-          redirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         }
       });
 
-      if (error) throw error;
+      if (signUpError) throw signUpError;
 
-      if (!data?.properties?.signInURL) {
-        throw new Error("Failed to generate signup link");
-      }
-
-      console.log("SignUpForm: Signup link generated successfully");
-
-      // Send our custom welcome email with the verification URL
+      // Send our custom welcome email
       console.log("SignUpForm: Sending welcome email");
       const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
         body: {
           email,
           name: fullName,
-          verificationUrl: data.properties.signInURL,
+          verificationUrl: `${window.location.origin}/auth/callback#access_token=${signUpData.session?.access_token}&refresh_token=${signUpData.session?.refresh_token}&type=signup`,
         },
       });
 
