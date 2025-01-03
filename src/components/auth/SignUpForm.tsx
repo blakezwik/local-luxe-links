@@ -30,10 +30,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
     console.log("SignUpForm: Starting signup process");
 
     try {
-      // Get the base URL for the verification link
-      const baseUrl = window.location.origin;
-      
-      // Sign up with Supabase
+      // Sign up with Supabase but don't send their default email
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -43,28 +40,24 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
             state: state,
             city: city || null,
           },
-          emailRedirectTo: `${baseUrl}/auth/callback?redirect=/dashboard`,
+          emailRedirectTo: `${window.location.origin}/dashboard`,
         },
       });
 
       if (error) throw error;
-      
-      if (!data.user?.confirmation_sent_at) {
-        throw new Error("Failed to get confirmation details");
-      }
 
-      // Send custom welcome email
+      // Send our custom welcome email with verification
       const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
         body: {
           email,
           name: fullName,
-          confirmLink: `${baseUrl}/auth/callback?redirect=/dashboard`,
+          verificationToken: data.user?.confirmation_token,
         },
       });
 
       if (emailError) {
         console.error("Error sending welcome email:", emailError);
-        // Don't throw the error as the signup was successful
+        throw emailError;
       }
 
       console.log("SignUpForm: Signup successful, showing success message");
@@ -154,14 +147,14 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
             </AlertDialogTitle>
             <AlertDialogDescription className="text-center space-y-4">
               <p>
-                We've sent a confirmation link to your email address. Please check your inbox and click the link to verify your account.
+                We've sent you a welcome email with a verification link. Please check your inbox and click the link to verify your account.
               </p>
               <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
                 <h4 className="font-medium text-gray-900 mb-2">What's Next?</h4>
                 <ol className="text-sm text-gray-600 space-y-2 list-decimal list-inside">
-                  <li>Check your email for the verification link</li>
-                  <li>Click the link to verify your account</li>
-                  <li>Once verified, you'll be able to access your dashboard</li>
+                  <li>Check your email for our welcome message</li>
+                  <li>Click the verification button in the email</li>
+                  <li>Once verified, you'll be taken to your dashboard</li>
                 </ol>
               </div>
             </AlertDialogDescription>
