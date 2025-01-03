@@ -36,8 +36,8 @@ const handler = async (req: Request): Promise<Response> => {
       ? "GuestVibes <onboarding@resend.dev>"
       : "GuestVibes <welcome@guestvibes.com>";
 
-    // Construct verification URL with hash format for Supabase auth
-    const verificationUrl = `${req.headers.get("origin")}/auth/callback#access_token=${verificationToken}&type=signup`;
+    // Construct verification URL with the correct path and hash format
+    const verificationUrl = `${req.headers.get("origin")}/auth/callback#access_token=${verificationToken}&type=signup&refresh_token=&provider_token=&provider_refresh_token=`;
 
     const emailData = {
       from: fromEmail,
