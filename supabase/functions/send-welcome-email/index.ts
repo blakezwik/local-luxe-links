@@ -31,15 +31,8 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("RESEND_API_KEY is not set");
     }
 
-    // For development/testing, use a different from address
-    const fromEmail = email === "bzwikventure@gmail.com" 
-      ? "GuestVibes <onboarding@resend.dev>"
-      : "GuestVibes <welcome@guestvibes.com>";
-
-    console.log("Using verification URL:", verificationUrl);
-
     const emailData = {
-      from: fromEmail,
+      from: "GuestVibes <onboarding@resend.dev>",
       to: [email],
       subject: "Welcome to GuestVibes - Please Verify Your Email",
       html: `
