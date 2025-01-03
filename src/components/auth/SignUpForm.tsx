@@ -74,12 +74,26 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
     }
   };
 
-  const handleSuccessClose = () => {
+  const handleSuccessClose = async () => {
     console.log("SignUpForm: Handling success close, navigating to dashboard");
     setShowSuccess(false);
     onSuccess();
-    // Force navigation to dashboard
-    navigate('/dashboard', { replace: true });
+    
+    // Ensure we have a valid session before navigating
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      console.log("SignUpForm: Valid session found, proceeding to dashboard");
+      // Force navigation to dashboard with replace to prevent back navigation
+      navigate('/dashboard', { replace: true });
+    } else {
+      console.log("SignUpForm: No valid session found, showing error");
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Unable to log in automatically. Please try signing in.",
+      });
+      navigate('/');
+    }
   };
 
   return (
@@ -163,4 +177,4 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
       </AlertDialog>
     </>
   );
-}
+};

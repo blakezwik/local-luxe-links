@@ -17,6 +17,7 @@ const Dashboard = () => {
       console.log("Dashboard: Checking session");
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
+        console.log("Dashboard: No session found, redirecting to home");
         navigate("/");
         return;
       }
@@ -33,6 +34,18 @@ const Dashboard = () => {
     };
 
     checkSession();
+
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT') {
+        console.log("Dashboard: User signed out, redirecting to home");
+        navigate("/");
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [navigate]);
 
   const handleFeatureClick = () => {
