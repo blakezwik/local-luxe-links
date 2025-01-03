@@ -26,6 +26,10 @@ const handler = async (req: Request): Promise<Response> => {
     const { email, name, confirmLink } = await req.json() as WelcomeEmailRequest;
     console.log("Sending welcome email to:", email);
 
+    if (!RESEND_API_KEY) {
+      throw new Error("RESEND_API_KEY is not set");
+    }
+
     const firstName = name.split(' ')[0];
 
     const res = await fetch("https://api.resend.com/emails", {
@@ -35,7 +39,7 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "GuestVibes <hello@send.guestvibes.com>",
+        from: "GuestVibes <onboarding@resend.dev>", // Using Resend's default domain for now
         to: [email],
         subject: "Welcome to GuestVibes - Please Verify Your Email",
         html: `
