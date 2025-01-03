@@ -17,13 +17,13 @@ export function SignInForm({ onSuccess }: { onSuccess: () => void }) {
     console.log("SignInForm: Starting signin process");
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
-        console.error("SignInForm: Signin error:", error);
+        console.error("SignInForm: Signin error:", error.message);
         
         // Handle email not confirmed error specifically
         if (error.message.includes("Email not confirmed")) {
@@ -32,6 +32,7 @@ export function SignInForm({ onSuccess }: { onSuccess: () => void }) {
             title: "Email Not Verified",
             description: "Please check your email and click the verification link before signing in.",
           });
+          setLoading(false);
           return;
         }
 
