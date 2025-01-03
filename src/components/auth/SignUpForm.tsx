@@ -51,7 +51,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
         body: {
           email,
           name: fullName,
-          verificationToken: data.user?.confirmation_token,
+          verificationToken: data.session?.access_token,
         },
       });
 
