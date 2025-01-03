@@ -48,6 +48,17 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
 
       if (error) throw error;
 
+      // Send welcome email
+      console.log("SignUpForm: Sending welcome email");
+      const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
+        body: { email, name: fullName }
+      });
+
+      if (emailError) {
+        console.error("Error sending welcome email:", emailError);
+        // Don't throw the error, just log it - we don't want to block signup if email fails
+      }
+
       console.log("SignUpForm: Signup successful, showing success message");
       setShowSuccess(true);
       
