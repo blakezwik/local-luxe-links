@@ -33,7 +33,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
 
     try {
       // Sign up the user with Supabase auth
-      console.log("SignUpForm: Creating user account");
+      console.log("SignUpForm: Creating user account with email:", email);
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -47,6 +47,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
       });
 
       if (error) throw error;
+      console.log("SignUpForm: User account created successfully:", data);
 
       // Send welcome email
       console.log("SignUpForm: Sending welcome email");
@@ -56,7 +57,8 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
 
       if (emailError) {
         console.error("Error sending welcome email:", emailError);
-        // Don't throw the error, just log it - we don't want to block signup if email fails
+      } else {
+        console.log("SignUpForm: Welcome email sent successfully");
       }
 
       console.log("SignUpForm: Signup successful, showing success message");
@@ -75,18 +77,31 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
   };
 
   const handleSuccessClose = async () => {
-    console.log("SignUpForm: Handling success close, navigating to dashboard");
+    console.log("SignUpForm: Starting success close handler");
     setShowSuccess(false);
     onSuccess();
     
-    // Ensure we have a valid session before navigating
-    const { data: { session } } = await supabase.auth.getSession();
+    // Check current session
+    console.log("SignUpForm: Checking current session");
+    const { data: { session }, error } = await supabase.auth.getSession();
+    
+    if (error) {
+      console.error("SignUpForm: Error getting session:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Unable to verify your session. Please try signing in.",
+      });
+      navigate('/');
+      return;
+    }
+
     if (session) {
-      console.log("SignUpForm: Valid session found, proceeding to dashboard");
-      // Force navigation to dashboard with replace to prevent back navigation
+      console.log("SignUpForm: Valid session found, user ID:", session.user.id);
+      console.log("SignUpForm: Attempting navigation to dashboard");
       navigate('/dashboard', { replace: true });
     } else {
-      console.log("SignUpForm: No valid session found, showing error");
+      console.log("SignUpForm: No valid session found");
       toast({
         variant: "destructive",
         title: "Error",
