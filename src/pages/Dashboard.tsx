@@ -5,6 +5,7 @@ import { DashboardHeader } from "@/components/DashboardHeader";
 import { HostInfoCard } from "@/components/HostInfoCard";
 import { ComingSoonBanner } from "@/components/ComingSoonBanner";
 import { FeatureCards } from "@/components/FeatureCards";
+import { ContactDialog } from "@/components/ContactDialog";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -71,6 +72,7 @@ const Dashboard = () => {
         />
         <ComingSoonBanner />
         <FeatureCards />
+        <ContactDialog />
       </div>
     </div>
   );
