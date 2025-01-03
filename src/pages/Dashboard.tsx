@@ -37,8 +37,10 @@ const Dashboard = () => {
 
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Dashboard: Auth state changed:", event);
       if (event === 'SIGNED_OUT') {
         console.log("Dashboard: User signed out, redirecting to home");
+        setUser(null);
         navigate("/");
       }
     });
@@ -48,12 +50,29 @@ const Dashboard = () => {
     };
   }, [navigate]);
 
-  const handleFeatureClick = () => {
-    toast({
-      title: "Coming Soon",
-      description: "This feature is currently under development.",
-      duration: 3000,
-    });
+  const handleSignOut = async () => {
+    try {
+      setLoading(true);
+      console.log("Dashboard: Starting sign out process");
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      console.log("Dashboard: Sign out successful");
+      toast({
+        title: "Signed out successfully",
+        description: "You have been logged out of your account.",
+      });
+      
+    } catch (error: any) {
+      console.error("Dashboard: Sign out error:", error);
+      toast({
+        variant: "destructive",
+        title: "Error signing out",
+        description: error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading) {
@@ -77,13 +96,11 @@ const Dashboard = () => {
           GuestVibes
         </h1>
         <Button 
-          onClick={async () => {
-            await supabase.auth.signOut();
-            navigate("/");
-          }}
+          onClick={handleSignOut}
+          disabled={loading}
           className="bg-[#FFD166] text-black hover:bg-[#FFD166]/90 px-6 shadow-lg"
         >
-          Sign Out
+          {loading ? "Signing out..." : "Sign Out"}
         </Button>
       </div>
 
@@ -131,7 +148,13 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card 
             className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60 cursor-pointer"
-            onClick={handleFeatureClick}
+            onClick={() => {
+              toast({
+                title: "Coming Soon",
+                description: "This feature is currently under development.",
+                duration: 3000,
+              });
+            }}
           >
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-xl text-gray-400">
@@ -146,7 +169,13 @@ const Dashboard = () => {
 
           <Card 
             className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60 cursor-pointer"
-            onClick={handleFeatureClick}
+            onClick={() => {
+              toast({
+                title: "Coming Soon",
+                description: "This feature is currently under development.",
+                duration: 3000,
+              });
+            }}
           >
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-xl text-gray-400">
@@ -161,7 +190,13 @@ const Dashboard = () => {
 
           <Card 
             className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60 cursor-pointer"
-            onClick={handleFeatureClick}
+            onClick={() => {
+              toast({
+                title: "Coming Soon",
+                description: "This feature is currently under development.",
+                duration: 3000,
+              });
+            }}
           >
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-xl text-gray-400">
