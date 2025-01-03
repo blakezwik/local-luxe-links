@@ -75,9 +75,11 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
   };
 
   const handleSuccessClose = () => {
+    console.log("SignUpForm: Handling success close, navigating to dashboard");
     setShowSuccess(false);
     onSuccess();
-    navigate('/dashboard');
+    // Force navigation to dashboard
+    navigate('/dashboard', { replace: true });
   };
 
   return (
