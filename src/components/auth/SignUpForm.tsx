@@ -33,7 +33,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
       // Get the base URL for the verification link
       const baseUrl = window.location.origin;
       
-      // Sign up with Supabase but disable the default email
+      // Sign up with Supabase
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -44,20 +44,21 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
             city: city || null,
           },
           emailRedirectTo: `${baseUrl}/auth/callback?redirect=/dashboard`,
-          shouldCreateUser: true,
         },
       });
 
       if (error) throw error;
 
-      // Get the confirmation URL from the response
-      const confirmLink = data?.user?.confirmation_sent_at 
-        ? `${baseUrl}/auth/v1/verify?token=${data.user.confirmation_token}&type=signup&redirect_to=${encodeURIComponent(`${baseUrl}/auth/callback?redirect=/dashboard`)}`
-        : null;
+      // Get the session details to construct the verification URL
+      const { data: { session } } = await supabase.auth.getSession();
+      const accessToken = session?.access_token;
 
-      if (!confirmLink) {
-        throw new Error("Failed to get confirmation link");
+      if (!accessToken) {
+        throw new Error("Failed to get access token");
       }
+
+      // Construct verification URL using the access token
+      const confirmLink = `${baseUrl}/auth/v1/verify?access_token=${accessToken}&type=signup&redirect_to=${encodeURIComponent(`${baseUrl}/auth/callback?redirect=/dashboard`)}`;
 
       // Send custom welcome email
       const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
