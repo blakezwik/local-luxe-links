@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { handleAuthCallback } from "@/utils/authUtils";
+import { supabase } from "@/integrations/supabase/client";
 import { LoadingState } from "@/components/auth/LoadingState";
 
 const AuthCallback = () => {
@@ -13,38 +13,75 @@ const AuthCallback = () => {
     const processAuthCallback = async () => {
       try {
         console.log("AuthCallback: Starting auth callback processing");
-        const session = await handleAuthCallback(location.hash, navigate, toast);
         
-        if (session) {
-          console.log("AuthCallback: Active session found, redirecting to dashboard");
+        // Parse the hash parameters
+        const hashParams = new URLSearchParams(location.hash.substring(1));
+        const token = hashParams.get('access_token');
+        const type = hashParams.get('type');
+
+        console.log("AuthCallback: Parsed parameters:", { type });
+
+        if (!token) {
+          console.error("AuthCallback: No token found in URL");
           toast({
-            title: "Email Verified",
-            description: "Your email has been verified successfully. Welcome!",
+            variant: "destructive",
+            title: "Error",
+            description: "No verification token found. Please try signing up again.",
           });
-          navigate("/dashboard");
+          navigate("/");
           return;
         }
 
-        console.log("AuthCallback: No valid session found, redirecting to home");
+        if (type === 'signup') {
+          console.log("AuthCallback: Processing signup verification");
+          const { data, error } = await supabase.auth.verifyOtp({
+            token_hash: token,
+            type: 'signup',
+          });
+
+          if (error) {
+            console.error("AuthCallback: Error verifying email:", error);
+            toast({
+              variant: "destructive",
+              title: "Verification Failed",
+              description: error.message,
+            });
+            navigate("/");
+            return;
+          }
+
+          if (data?.session) {
+            console.log("AuthCallback: Email verified successfully");
+            toast({
+              title: "Email Verified",
+              description: "Your email has been verified successfully. Welcome!",
+            });
+            navigate("/dashboard");
+            return;
+          }
+        }
+
+        // If we get here, something unexpected happened
+        console.error("AuthCallback: Unexpected state");
         toast({
           variant: "destructive",
-          title: "Session Error",
-          description: "No valid session found. Please try signing in again.",
+          title: "Error",
+          description: "An unexpected error occurred. Please try signing in again.",
         });
         navigate("/");
-      } catch (error) {
+      } catch (error: any) {
         console.error("AuthCallback: Error processing callback:", error);
         toast({
           variant: "destructive",
           title: "Error",
-          description: "An unexpected error occurred. Please try again.",
+          description: error.message || "An unexpected error occurred. Please try again.",
         });
         navigate("/");
       }
     };
 
     processAuthCallback();
-  }, [navigate, toast, location.hash]);
+  }, [navigate, location.hash, toast]);
 
   return <LoadingState />;
 };

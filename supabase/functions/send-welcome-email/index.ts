@@ -36,8 +36,13 @@ const handler = async (req: Request): Promise<Response> => {
       ? "GuestVibes <onboarding@resend.dev>"
       : "GuestVibes <welcome@guestvibes.com>";
 
-    // Construct verification URL with the correct path and hash format
-    const verificationUrl = `${req.headers.get("origin")}/auth/callback#access_token=${verificationToken}&type=signup&refresh_token=&provider_token=&provider_refresh_token=`;
+    // Get the base URL from the request origin
+    const baseUrl = req.headers.get("origin") || "";
+    console.log("Base URL for verification link:", baseUrl);
+
+    // Construct verification URL with the token from the signup response
+    const verificationUrl = `${baseUrl}/auth/callback#access_token=${verificationToken}&type=signup`;
+    console.log("Constructed verification URL (without token):", `${baseUrl}/auth/callback#type=signup`);
 
     const emailData = {
       from: fromEmail,
