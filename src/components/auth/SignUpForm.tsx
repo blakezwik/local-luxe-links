@@ -30,7 +30,6 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
     console.log("SignUpForm: Starting signup process");
 
     try {
-      // Changed to disable email confirmation
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -41,8 +40,6 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
             city: city || null,
           },
           emailRedirectTo: `${window.location.origin}/auth/callback?redirect=/dashboard`,
-          // Disable the default email verification
-          emailConfirmTo: null
         },
       });
 
