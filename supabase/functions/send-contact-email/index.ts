@@ -36,6 +36,11 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("User profile not found");
     }
 
+    console.log("Sending email with profile:", profile);
+
+    // In development/test mode, we can only send to the verified email
+    const toEmail = "bzwikventure@gmail.com"; // Hardcoded for testing
+
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -44,19 +49,22 @@ const handler = async (req: Request): Promise<Response> => {
       },
       body: JSON.stringify({
         from: "GuestVibes Contact <onboarding@resend.dev>",
-        to: ["contact@guestvibes.com"],
+        to: [toEmail],
         subject: `Contact Form Submission from ${profile.full_name}`,
         html: `
           <h2>New Contact Form Submission</h2>
           <p><strong>From:</strong> ${profile.full_name} (${profile.email})</p>
           <p><strong>Message:</strong></p>
           <p>${contactRequest.message}</p>
+          <p><em>Note: This is a test email. In production, this would be sent to contact@guestvibes.com</em></p>
         `,
       }),
     });
 
     if (!res.ok) {
-      throw new Error(await res.text());
+      const errorData = await res.text();
+      console.error("Resend API error:", errorData);
+      throw new Error(errorData);
     }
 
     return new Response(JSON.stringify({ success: true }), {
