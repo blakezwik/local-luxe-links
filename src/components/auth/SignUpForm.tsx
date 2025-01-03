@@ -41,7 +41,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
             state: state,
             city: city || null,
           },
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: `${window.location.origin}/dashboard`,
         }
       });
 
@@ -53,7 +53,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
         body: {
           email,
           name: fullName,
-          verificationUrl: `${window.location.origin}/auth/callback#access_token=${signUpData.session?.access_token}&refresh_token=${signUpData.session?.refresh_token}&type=signup`,
+          verificationUrl: `${window.location.origin}/auth/callback?access_token=${signUpData.session?.access_token}&refresh_token=${signUpData.session?.refresh_token}&type=signup&next=/dashboard`,
         },
       });
 

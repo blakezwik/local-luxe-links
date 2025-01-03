@@ -14,12 +14,13 @@ const AuthCallback = () => {
       try {
         console.log("AuthCallback: Starting auth callback processing");
         
-        // Parse the hash parameters
-        const hashParams = new URLSearchParams(location.hash.substring(1));
-        const token = hashParams.get('access_token');
-        const type = hashParams.get('type');
+        // Parse the URL parameters
+        const searchParams = new URLSearchParams(location.search);
+        const token = searchParams.get('access_token');
+        const type = searchParams.get('type');
+        const next = searchParams.get('next') || '/dashboard';
 
-        console.log("AuthCallback: Parsed parameters:", { type });
+        console.log("AuthCallback: Parsed parameters:", { type, next });
 
         if (!token) {
           console.error("AuthCallback: No token found in URL");
@@ -56,7 +57,7 @@ const AuthCallback = () => {
               title: "Email Verified",
               description: "Your email has been verified successfully. Welcome!",
             });
-            navigate("/dashboard");
+            navigate(next);
             return;
           }
         }
@@ -81,7 +82,7 @@ const AuthCallback = () => {
     };
 
     processAuthCallback();
-  }, [navigate, location.hash, toast]);
+  }, [navigate, location.search, toast]);
 
   return <LoadingState />;
 };
