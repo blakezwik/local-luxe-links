@@ -30,8 +30,10 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
     console.log("SignUpForm: Starting signup process");
 
     try {
-      // Sign up with Supabase but don't send their default email
-      const { data, error } = await supabase.auth.signUp({
+      // First, generate an email OTP token
+      console.log("SignUpForm: Generating email verification token");
+      const { data: otpData, error: otpError } = await supabase.auth.admin.generateLink({
+        type: 'signup',
         email,
         password,
         options: {
@@ -40,23 +42,24 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
             state: state,
             city: city || null,
           },
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
+        }
       });
 
-      if (error) throw error;
+      if (otpError) throw otpError;
 
-      if (!data.session?.access_token) {
-        throw new Error("No access token received during signup");
+      if (!otpData?.properties?.email_otp) {
+        throw new Error("Failed to generate email verification token");
       }
 
-      // Send our custom welcome email with verification
+      console.log("SignUpForm: Email verification token generated successfully");
+
+      // Send our custom welcome email with the OTP token
       console.log("SignUpForm: Sending welcome email");
       const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
         body: {
           email,
           name: fullName,
-          verificationToken: data.session.access_token,
+          verificationToken: otpData.properties.email_otp,
         },
       });
 

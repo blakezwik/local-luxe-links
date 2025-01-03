@@ -37,12 +37,12 @@ const handler = async (req: Request): Promise<Response> => {
       : "GuestVibes <welcome@guestvibes.com>";
 
     // Get the base URL from the request origin
-    const baseUrl = req.headers.get("origin") || "";
-    console.log("Base URL for verification link:", baseUrl);
+    const origin = req.headers.get("origin") || "";
+    console.log("Base URL for verification link:", origin);
 
-    // Construct verification URL with the token from the signup response
-    const verificationUrl = `${baseUrl}/auth/callback#access_token=${verificationToken}&type=signup`;
-    console.log("Constructed verification URL (without token):", `${baseUrl}/auth/callback#type=signup`);
+    // Construct verification URL with the OTP token
+    const verificationUrl = `${origin}/auth/callback#access_token=${verificationToken}&type=signup`;
+    console.log("Constructed verification URL (without token):", `${origin}/auth/callback#type=signup`);
 
     const emailData = {
       from: fromEmail,
