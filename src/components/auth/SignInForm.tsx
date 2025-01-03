@@ -25,18 +25,21 @@ export function SignInForm({ onSuccess }: { onSuccess: () => void }) {
       if (error) {
         console.error("SignInForm: Signin error:", error.message);
         
-        // Handle email not confirmed error specifically
         if (error.message.includes("Email not confirmed")) {
           toast({
             variant: "destructive",
             title: "Email Not Verified",
             description: "Please check your email and click the verification link before signing in.",
           });
-          setLoading(false);
           return;
         }
 
-        throw error;
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: error.message,
+        });
+        return;
       }
 
       console.log("SignInForm: Signin successful");
