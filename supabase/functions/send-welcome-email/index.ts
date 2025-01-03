@@ -34,6 +34,16 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Preparing to send email with Resend");
     const firstName = name.split(' ')[0];
 
+    // Extract token from confirmLink
+    const url = new URL(confirmLink);
+    const token = url.searchParams.get('token');
+    const type = url.searchParams.get('type');
+    const redirectTo = url.searchParams.get('redirect_to');
+
+    // Construct the proper Supabase verification URL
+    const verificationUrl = `${url.origin}/auth/v1/verify?token=${token}&type=${type}&redirect_to=${redirectTo}`;
+    console.log("Constructed verification URL:", verificationUrl);
+
     const emailData = {
       from: "GuestVibes <onboarding@resend.dev>",
       to: [email],
@@ -58,7 +68,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
 
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${confirmLink}" 
+            <a href="${verificationUrl}" 
                style="background-color: #177E89; 
                       color: white; 
                       padding: 12px 24px; 
