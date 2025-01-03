@@ -34,9 +34,10 @@ const handler = async (req: Request): Promise<Response> => {
     // For development/testing, use a different from address
     const fromEmail = email === "bzwikventure@gmail.com" 
       ? "GuestVibes <onboarding@resend.dev>"
-      : "GuestVibes <welcome@guestvibes.com>"; // Update this with your verified domain
+      : "GuestVibes <welcome@guestvibes.com>";
 
-    const verificationUrl = `${req.headers.get("origin")}/auth/callback?token=${verificationToken}&redirect=/dashboard`;
+    // Construct verification URL with hash format for Supabase auth
+    const verificationUrl = `${req.headers.get("origin")}/auth/callback#access_token=${verificationToken}&type=signup`;
 
     const emailData = {
       from: fromEmail,

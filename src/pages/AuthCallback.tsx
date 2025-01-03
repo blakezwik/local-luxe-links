@@ -12,18 +12,16 @@ const AuthCallback = () => {
   useEffect(() => {
     const processAuthCallback = async () => {
       try {
+        console.log("AuthCallback: Starting auth callback processing");
         const session = await handleAuthCallback(location.hash, navigate, toast);
         
         if (session) {
-          console.log("AuthCallback: Active session found, checking for redirect");
-          const params = new URLSearchParams(location.search);
-          const redirectTo = params.get('redirect') || '/dashboard';
-          
+          console.log("AuthCallback: Active session found, redirecting to dashboard");
           toast({
             title: "Email Verified",
             description: "Your email has been verified successfully. Welcome!",
           });
-          navigate(redirectTo);
+          navigate("/dashboard");
           return;
         }
 
@@ -35,6 +33,7 @@ const AuthCallback = () => {
         });
         navigate("/");
       } catch (error) {
+        console.error("AuthCallback: Error processing callback:", error);
         toast({
           variant: "destructive",
           title: "Error",
@@ -45,7 +44,7 @@ const AuthCallback = () => {
     };
 
     processAuthCallback();
-  }, [navigate, toast, location.hash, location.search]);
+  }, [navigate, toast, location.hash]);
 
   return <LoadingState />;
 };

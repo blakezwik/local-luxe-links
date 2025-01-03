@@ -14,6 +14,8 @@ export const handleAuthCallback = async (
     const hashParams = new URLSearchParams(hash.substring(1));
     const error = hashParams.get('error');
     const errorDescription = hashParams.get('error_description');
+    const accessToken = hashParams.get('access_token');
+    const type = hashParams.get('type');
 
     if (error) {
       console.error("AuthCallback: Error in URL params:", error, errorDescription);
@@ -35,6 +37,22 @@ export const handleAuthCallback = async (
       });
       navigate("/");
       return;
+    }
+
+    // If we have an access token and it's a signup verification
+    if (accessToken && type === 'signup') {
+      console.log("AuthCallback: Processing signup verification");
+      const { data: { session }, error: verifyError } = await supabase.auth.verifyOtp({
+        token_hash: accessToken,
+        type: 'signup',
+      });
+
+      if (verifyError) {
+        console.error("AuthCallback: Error verifying OTP:", verifyError);
+        throw verifyError;
+      }
+
+      return session;
     }
 
     // Check for active session
