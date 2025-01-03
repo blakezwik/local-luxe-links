@@ -48,7 +48,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
 
       if (error) throw error;
 
-      if (!data?.properties?.verificationUrl) {
+      if (!data?.properties?.signInURL) {
         throw new Error("Failed to generate signup link");
       }
 
@@ -60,7 +60,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
         body: {
           email,
           name: fullName,
-          verificationUrl: data.properties.verificationUrl,
+          verificationUrl: data.properties.signInURL,
         },
       });
 
