@@ -32,7 +32,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
     try {
       // Sign up the user with Supabase auth
       console.log("SignUpForm: Creating user account");
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -41,26 +41,11 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
             state: state,
             city: city || null,
           },
-          emailRedirectTo: `${window.location.origin}/dashboard`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
         }
       });
 
-      if (signUpError) throw signUpError;
-
-      // Send our custom welcome email
-      console.log("SignUpForm: Sending welcome email");
-      const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
-        body: {
-          email,
-          name: fullName,
-          verificationUrl: `${window.location.origin}/auth/callback?access_token=${signUpData.session?.access_token}&refresh_token=${signUpData.session?.refresh_token}&type=signup&next=/dashboard`,
-        },
-      });
-
-      if (emailError) {
-        console.error("Error sending welcome email:", emailError);
-        throw emailError;
-      }
+      if (error) throw error;
 
       console.log("SignUpForm: Signup successful, showing success message");
       setShowSuccess(true);

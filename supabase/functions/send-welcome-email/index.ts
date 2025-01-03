@@ -11,7 +11,6 @@ const corsHeaders = {
 interface WelcomeEmailRequest {
   email: string;
   name: string;
-  verificationUrl: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -23,7 +22,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, name, verificationUrl } = await req.json() as WelcomeEmailRequest;
+    const { email, name } = await req.json() as WelcomeEmailRequest;
     console.log("Received request to send welcome email to:", email);
 
     if (!RESEND_API_KEY) {
@@ -34,7 +33,7 @@ const handler = async (req: Request): Promise<Response> => {
     const emailData = {
       from: "GuestVibes <onboarding@resend.dev>",
       to: [email],
-      subject: "Welcome to GuestVibes - Please Verify Your Email",
+      subject: "Welcome to GuestVibes!",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h1 style="color: #177E89; text-align: center; font-size: 24px;">Welcome to GuestVibes!</h1>
@@ -46,29 +45,16 @@ const handler = async (req: Request): Promise<Response> => {
           </p>
 
           <div style="background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin: 24px 0;">
-            <h2 style="color: #177E89; font-size: 18px; margin-top: 0;">Next Steps:</h2>
+            <h2 style="color: #177E89; font-size: 18px; margin-top: 0;">What's Next?</h2>
             <ol style="color: #333; font-size: 16px; line-height: 1.5; margin: 0; padding-left: 20px;">
-              <li>Verify your email address (click the button below)</li>
               <li>Complete your host profile</li>
               <li>Start exploring local partnership opportunities</li>
+              <li>Connect with businesses in your area</li>
             </ol>
           </div>
 
-          <div style="text-align: center; margin: 30px 0;">
-            <a href="${verificationUrl}" 
-               style="background-color: #177E89; 
-                      color: white; 
-                      padding: 12px 24px; 
-                      text-decoration: none; 
-                      border-radius: 4px; 
-                      display: inline-block;
-                      font-weight: bold;">
-              Verify Email Address
-            </a>
-          </div>
-
           <p style="color: #666; font-size: 14px; text-align: center;">
-            If you didn't create this account, you can safely ignore this email.
+            If you have any questions, feel free to reach out to our support team.
           </p>
         </div>
       `

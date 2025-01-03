@@ -14,62 +14,41 @@ const AuthCallback = () => {
       try {
         console.log("AuthCallback: Starting auth callback processing");
         
-        // Parse the URL parameters
-        const searchParams = new URLSearchParams(location.search);
-        const token = searchParams.get('access_token');
-        const type = searchParams.get('type');
-        const next = searchParams.get('next') || '/dashboard';
-
-        console.log("AuthCallback: Parsed parameters:", { type, next });
-
-        if (!token) {
-          console.error("AuthCallback: No token found in URL");
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description: "No verification token found. Please try signing up again.",
-          });
+        // Get the current session
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) throw sessionError;
+        if (!session) {
+          console.error("AuthCallback: No session found");
           navigate("/");
           return;
         }
 
-        if (type === 'signup') {
-          console.log("AuthCallback: Processing signup verification");
-          const { data, error } = await supabase.auth.verifyOtp({
-            token_hash: token,
-            type: 'signup',
-          });
+        // Send welcome email after successful verification
+        console.log("AuthCallback: Sending welcome email");
+        const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
+          body: {
+            email: session.user.email,
+            name: session.user.user_metadata.full_name,
+          },
+        });
 
-          if (error) {
-            console.error("AuthCallback: Error verifying email:", error);
-            toast({
-              variant: "destructive",
-              title: "Verification Failed",
-              description: error.message,
-            });
-            navigate("/");
-            return;
-          }
-
-          if (data?.session) {
-            console.log("AuthCallback: Email verified successfully");
-            toast({
-              title: "Email Verified",
-              description: "Your email has been verified successfully. Welcome!",
-            });
-            navigate(next);
-            return;
-          }
+        if (emailError) {
+          console.error("Error sending welcome email:", emailError);
+          // Don't throw, we still want to redirect the user
         }
 
-        // If we get here, something unexpected happened
-        console.error("AuthCallback: Unexpected state");
+        // Get the next URL from search params
+        const searchParams = new URLSearchParams(location.search);
+        const next = searchParams.get('next') || '/dashboard';
+
+        console.log("AuthCallback: Redirecting to", next);
         toast({
-          variant: "destructive",
-          title: "Error",
-          description: "An unexpected error occurred. Please try signing in again.",
+          title: "Email Verified",
+          description: "Your email has been verified successfully. Welcome!",
         });
-        navigate("/");
+        navigate(next);
+        
       } catch (error: any) {
         console.error("AuthCallback: Error processing callback:", error);
         toast({
