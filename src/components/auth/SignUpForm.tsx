@@ -44,28 +44,23 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
             city: city || null,
           },
           emailRedirectTo: `${baseUrl}/auth/callback?redirect=/dashboard`,
+          // Disable the default email verification
+          emailConfirmationURL: null
         },
       });
 
       if (error) throw error;
-
-      // Get the session details to construct the verification URL
-      const { data: { session } } = await supabase.auth.getSession();
-      const accessToken = session?.access_token;
-
-      if (!accessToken) {
-        throw new Error("Failed to get access token");
+      
+      if (!data.user?.confirmation_sent_at) {
+        throw new Error("Failed to get confirmation details");
       }
-
-      // Construct verification URL using the access token
-      const confirmLink = `${baseUrl}/auth/v1/verify?access_token=${accessToken}&type=signup&redirect_to=${encodeURIComponent(`${baseUrl}/auth/callback?redirect=/dashboard`)}`;
 
       // Send custom welcome email
       const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
         body: {
           email,
           name: fullName,
-          confirmLink,
+          confirmLink: `${baseUrl}/auth/callback?redirect=/dashboard`,
         },
       });
 

@@ -1,6 +1,9 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -23,7 +26,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, name, confirmLink } = await req.json() as WelcomeEmailRequest;
+    const { email, name } = await req.json() as WelcomeEmailRequest;
     console.log("Received request to send welcome email to:", email);
 
     if (!RESEND_API_KEY) {
@@ -31,18 +34,27 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("RESEND_API_KEY is not set");
     }
 
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      console.error("Supabase environment variables are not set");
+      throw new Error("Supabase environment variables are not set");
+    }
+
+    // Initialize Supabase client with service role key
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+    // Generate email verification link
+    const { data: { user }, error: verificationError } = await supabase.auth.admin.generateLink({
+      type: 'signup',
+      email: email,
+    });
+
+    if (verificationError || !user) {
+      console.error("Error generating verification link:", verificationError);
+      throw verificationError || new Error("Failed to generate verification link");
+    }
+
     console.log("Preparing to send email with Resend");
     const firstName = name.split(' ')[0];
-
-    // Extract token from confirmLink
-    const url = new URL(confirmLink);
-    const token = url.searchParams.get('token');
-    const type = url.searchParams.get('type');
-    const redirectTo = url.searchParams.get('redirect_to');
-
-    // Construct the proper Supabase verification URL
-    const verificationUrl = `${url.origin}/auth/v1/verify?token=${token}&type=${type}&redirect_to=${redirectTo}`;
-    console.log("Constructed verification URL:", verificationUrl);
 
     const emailData = {
       from: "GuestVibes <onboarding@resend.dev>",
@@ -68,7 +80,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
 
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${verificationUrl}" 
+            <a href="${user.confirmation_token}" 
                style="background-color: #177E89; 
                       color: white; 
                       padding: 12px 24px; 
