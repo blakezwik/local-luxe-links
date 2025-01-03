@@ -42,13 +42,13 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
             state: state,
             city: city || null,
           },
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         }
       });
 
       if (error) throw error;
 
-      if (!data?.properties?.confirmationURL) {
+      if (!data?.properties?.verificationUrl) {
         throw new Error("Failed to generate signup link");
       }
 
@@ -60,7 +60,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
         body: {
           email,
           name: fullName,
-          verificationUrl: data.properties.confirmationURL,
+          verificationUrl: data.properties.verificationUrl,
         },
       });
 
