@@ -44,8 +44,6 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
             city: city || null,
           },
           emailRedirectTo: `${baseUrl}/auth/callback?redirect=/dashboard`,
-          // Disable the default email verification
-          emailConfirmationURL: null
         },
       });
 
