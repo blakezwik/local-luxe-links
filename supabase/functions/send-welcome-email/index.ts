@@ -56,8 +56,13 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Preparing to send email with Resend");
     const firstName = name.split(' ')[0];
 
+    // For development/testing, use a different from address based on environment
+    const fromEmail = email === "bzwikventure@gmail.com" 
+      ? "GuestVibes <onboarding@resend.dev>"
+      : "GuestVibes <noreply@yourdomain.com>"; // Replace with your verified domain
+
     const emailData = {
-      from: "GuestVibes <onboarding@resend.dev>",
+      from: fromEmail,
       to: [email],
       subject: "Welcome to GuestVibes - Please Verify Your Email",
       html: `
