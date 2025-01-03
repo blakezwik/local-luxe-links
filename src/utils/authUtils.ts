@@ -8,7 +8,7 @@ export const handleAuthCallback = async (
   toast: typeof Toast
 ) => {
   try {
-    console.log("AuthCallback: Starting auth callback handling");
+    console.log("AuthCallback: Starting auth callback processing");
     
     // Check for error parameters in the URL hash
     const hashParams = new URLSearchParams(hash.substring(1));
