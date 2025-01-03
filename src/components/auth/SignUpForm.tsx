@@ -30,8 +30,8 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
     console.log("SignUpForm: Starting signup process");
 
     try {
-      // Sign up with Supabase
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      // Sign up with Supabase but don't send their default email
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -44,12 +44,29 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
         },
       });
 
-      if (signUpError) throw signUpError;
+      if (error) throw error;
 
-      if (!signUpData.user?.email_confirmed_at) {
-        console.log("SignUpForm: Signup successful, showing success message");
-        setShowSuccess(true);
+      if (!data.session?.access_token) {
+        throw new Error("No access token received during signup");
       }
+
+      // Send our custom welcome email with verification
+      console.log("SignUpForm: Sending welcome email");
+      const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
+        body: {
+          email,
+          name: fullName,
+          verificationToken: data.session.access_token,
+        },
+      });
+
+      if (emailError) {
+        console.error("Error sending welcome email:", emailError);
+        throw emailError;
+      }
+
+      console.log("SignUpForm: Signup successful, showing success message");
+      setShowSuccess(true);
       
     } catch (error: any) {
       console.error("SignUpForm: Signup error:", error);
