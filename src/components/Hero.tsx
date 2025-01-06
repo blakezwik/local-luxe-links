@@ -1,11 +1,59 @@
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { SignUpDialog } from "./SignUpDialog";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 export const Hero = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      console.log("Hero: Checking authentication status");
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsAuthenticated(!!session);
+    };
+
+    checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Hero: Auth state changed:", event);
+      setIsAuthenticated(!!session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     element?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleSignOut = async () => {
+    try {
+      console.log("Hero: Starting sign out process");
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      console.log("Hero: Sign out successful");
+      toast({
+        title: "Signed out successfully",
+        description: "You have been logged out of your account.",
+      });
+      
+      navigate("/");
+    } catch (error: any) {
+      console.error("Hero: Sign out error:", error);
+      toast({
+        variant: "destructive",
+        title: "Error signing out",
+        description: error.message,
+      });
+    }
   };
 
   return (
@@ -16,16 +64,35 @@ export const Hero = () => {
           GuestVibes
         </h1>
         <div className="flex gap-4">
-          <SignUpDialog>
-            <Button className="bg-[#FFD166] text-black hover:bg-[#FFD166]/90 px-6 shadow-lg">
-              Click to Join
-            </Button>
-          </SignUpDialog>
-          <SignUpDialog showSignIn>
-            <Button className="bg-[#177E89] text-white hover:bg-[#177E89]/90 px-6 shadow-lg">
-              Sign In
-            </Button>
-          </SignUpDialog>
+          {isAuthenticated ? (
+            <>
+              <Button 
+                className="bg-[#FFD166] text-black hover:bg-[#FFD166]/90 px-6 shadow-lg"
+                onClick={() => navigate("/dashboard")}
+              >
+                Host Dashboard
+              </Button>
+              <Button 
+                className="bg-[#177E89] text-white hover:bg-[#177E89]/90 px-6 shadow-lg"
+                onClick={handleSignOut}
+              >
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <SignUpDialog>
+                <Button className="bg-[#FFD166] text-black hover:bg-[#FFD166]/90 px-6 shadow-lg">
+                  Click to Join
+                </Button>
+              </SignUpDialog>
+              <SignUpDialog showSignIn>
+                <Button className="bg-[#177E89] text-white hover:bg-[#177E89]/90 px-6 shadow-lg">
+                  Sign In
+                </Button>
+              </SignUpDialog>
+            </>
+          )}
         </div>
       </div>
 
@@ -53,14 +120,16 @@ export const Hero = () => {
             </p>
 
             <div className="flex flex-col items-center gap-12">
-              <SignUpDialog>
-                <Button 
-                  size="lg" 
-                  className="px-14 py-8 text-xl bg-[#FFD166] text-black hover:bg-[#FFD166]/90 shadow-2xl hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.3)] transition-all duration-200 transform hover:-translate-y-1"
-                >
-                  Click Here, it's Free!
-                </Button>
-              </SignUpDialog>
+              {!isAuthenticated && (
+                <SignUpDialog>
+                  <Button 
+                    size="lg" 
+                    className="px-14 py-8 text-xl bg-[#FFD166] text-black hover:bg-[#FFD166]/90 shadow-2xl hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.3)] transition-all duration-200 transform hover:-translate-y-1"
+                  >
+                    Click Here, it's Free!
+                  </Button>
+                </SignUpDialog>
+              )}
 
               <Button 
                 variant="ghost" 
