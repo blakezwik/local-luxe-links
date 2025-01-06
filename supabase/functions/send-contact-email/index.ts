@@ -47,8 +47,9 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: `${profile.full_name} <${profile.email}>`,
+        from: "GuestVibes Contact <contact@guestvibes.com>",
         to: [toEmail],
+        reply_to: profile.email,
         subject: `Contact Form Submission from ${profile.full_name}`,
         html: `
           <h2>New Contact Form Submission</h2>
@@ -72,8 +73,8 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error: any) {
     console.error("Error in send-contact-email function:", error);
     return new Response(JSON.stringify({ error: error.message }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 };
