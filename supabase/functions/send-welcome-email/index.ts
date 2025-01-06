@@ -57,9 +57,9 @@ const handler = async (req: Request): Promise<Response> => {
           <div style="margin: 30px 0;">
             <h2 style="color: #177E89; font-size: 20px; margin-bottom: 15px;">Getting Started</h2>
             <ol style="color: #333; font-size: 16px; line-height: 1.8; margin: 0; padding-left: 20px;">
-              <li>Complete your host profile with details about your property</li>
-              <li>Browse our curated list of local businesses in your area</li>
-              <li>Start creating memorable experiences for your guests</li>
+              <li>Browse the list of local businesses in your area</li>
+              <li>Generate your personalized host link to share with your guests</li>
+              <li>Sit back as they begin booking and get rewarded</li>
             </ol>
           </div>
 
