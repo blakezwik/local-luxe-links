@@ -38,7 +38,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Sending email with profile:", profile);
 
-    const toEmail = "contact@guestvibes.com"; // Domain is now verified
+    const toEmail = "contact@guestvibes.com";
     
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -47,7 +47,7 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "GuestVibes Contact <contact@guestvibes.com>",
+        from: `${profile.full_name} <${profile.email}>`,
         to: [toEmail],
         subject: `Contact Form Submission from ${profile.full_name}`,
         html: `
