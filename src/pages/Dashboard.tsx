@@ -11,26 +11,45 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const checkSession = async () => {
-      console.log("Dashboard: Checking session");
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        console.log("Dashboard: No session found, redirecting to home");
-        navigate("/");
-        return;
-      }
-      
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', session.user.id)
-        .single();
+      try {
+        console.log("Dashboard: Checking session");
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) {
+          console.error("Dashboard: Session error:", sessionError);
+          throw sessionError;
+        }
 
-      console.log("Dashboard: User profile loaded:", profile);
-      setUser(profile);
-      setLoading(false);
+        if (!session) {
+          console.log("Dashboard: No session found, redirecting to home");
+          navigate("/");
+          return;
+        }
+
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .maybeSingle();
+
+        if (profileError) {
+          console.error("Dashboard: Profile fetch error:", profileError);
+          throw profileError;
+        }
+
+        console.log("Dashboard: User profile loaded:", profile);
+        setUser(profile);
+        
+      } catch (err: any) {
+        console.error("Dashboard: Error:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     };
 
     checkSession();
@@ -51,9 +70,26 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-white to-gray-50">
         <div className="text-center">
-          <h2 className="text-2xl font-semibold">Loading...</h2>
+          <h2 className="text-2xl font-semibold text-[#177E89]">Loading your dashboard...</h2>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-white to-gray-50">
+        <div className="text-center max-w-md mx-auto px-4">
+          <h2 className="text-2xl font-semibold text-red-600 mb-4">Something went wrong</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-[#FFD166] text-black px-6 py-2 rounded-md hover:bg-[#FFD166]/90 transition-colors"
+          >
+            Try Again
+          </button>
         </div>
       </div>
     );
