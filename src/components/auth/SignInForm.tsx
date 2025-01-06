@@ -63,6 +63,11 @@ export function SignInForm({ onSuccess }: { onSuccess: () => void }) {
 
   return (
     <form onSubmit={handleSignIn} className="space-y-4">
+      <div className="flex justify-center mb-6">
+        <span className="text-4xl text-[#177E89]" style={{ fontFamily: 'Bukhari Script' }}>
+          GuestVibes
+        </span>
+      </div>
       <div className="space-y-2">
         <Label htmlFor="signinEmail">Email</Label>
         <Input
@@ -71,6 +76,7 @@ export function SignInForm({ onSuccess }: { onSuccess: () => void }) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          className="w-full px-3 py-2 border rounded-md"
         />
       </div>
       <div className="space-y-2">
@@ -81,11 +87,12 @@ export function SignInForm({ onSuccess }: { onSuccess: () => void }) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          className="w-full px-3 py-2 border rounded-md"
         />
       </div>
       <Button
         type="submit"
-        className="w-full bg-[#177E89] hover:bg-[#177E89]/90"
+        className="w-full bg-[#177E89] hover:bg-[#177E89]/90 text-white py-2 rounded-md"
         disabled={loading}
       >
         {loading ? "Processing..." : "Sign In"}

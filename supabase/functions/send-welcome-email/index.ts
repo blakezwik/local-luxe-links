@@ -16,7 +16,6 @@ interface WelcomeEmailRequest {
 const handler = async (req: Request): Promise<Response> => {
   console.log("Welcome email function started");
   
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -31,7 +30,6 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const baseUrl = req.headers.get("origin") || "https://guestvibes.com";
-    const dashboardUrl = `${baseUrl}/`;
 
     const emailData = {
       from: "GuestVibes <welcome@guestvibes.com>",
@@ -57,14 +55,14 @@ const handler = async (req: Request): Promise<Response> => {
           <div style="margin: 30px 0;">
             <h2 style="color: #177E89; font-size: 20px; margin-bottom: 15px;">Getting Started</h2>
             <ol style="color: #333; font-size: 16px; line-height: 1.8; margin: 0; padding-left: 20px;">
-              <li>Complete your host profile with details about your property</li>
-              <li>Browse our curated list of local businesses in your area</li>
-              <li>Start creating memorable experiences for your guests</li>
+              <li>Browse the list of local businesses in your area</li>
+              <li>Generate your personalized host link to share with your guests</li>
+              <li>Sit back as they begin booking and get rewarded</li>
             </ol>
           </div>
 
           <div style="background-color: #177E89; border-radius: 8px; padding: 20px; text-align: center; margin: 30px 0;">
-            <a href="${dashboardUrl}" style="color: white; text-decoration: none; display: block; font-size: 16px;">
+            <a href="${baseUrl}" style="color: white; text-decoration: none; display: block; font-size: 16px;">
               Ready to explore? Visit your dashboard to get started!
             </a>
           </div>
