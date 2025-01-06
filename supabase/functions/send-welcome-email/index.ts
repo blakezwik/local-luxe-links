@@ -35,27 +35,45 @@ const handler = async (req: Request): Promise<Response> => {
       to: [email],
       subject: "Welcome to GuestVibes!",
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h1 style="color: #177E89; text-align: center; font-size: 24px;">Welcome to GuestVibes!</h1>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #177E89; font-size: 28px; margin-bottom: 10px;">Welcome to GuestVibes!</h1>
+            <p style="color: #666; font-size: 16px;">Your journey to better hosting starts here</p>
+          </div>
           
-          <p style="color: #333; font-size: 16px; line-height: 1.5;">Hi ${name.split(' ')[0]},</p>
-          
-          <p style="color: #333; font-size: 16px; line-height: 1.5;">
-            Thank you for joining GuestVibes! We're excited to have you on board and can't wait to help you connect with local businesses in your area.
-          </p>
+          <div style="background-color: #f8f9fa; border-radius: 8px; padding: 25px; margin: 20px 0;">
+            <p style="color: #333; font-size: 16px; line-height: 1.6; margin-top: 0;">
+              Hi ${name.split(' ')[0]},
+            </p>
+            
+            <p style="color: #333; font-size: 16px; line-height: 1.6;">
+              Thank you for joining GuestVibes! We're excited to have you on board and help you enhance your guests' experience through local partnerships.
+            </p>
+          </div>
 
-          <div style="background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin: 24px 0;">
-            <h2 style="color: #177E89; font-size: 18px; margin-top: 0;">What's Next?</h2>
-            <ol style="color: #333; font-size: 16px; line-height: 1.5; margin: 0; padding-left: 20px;">
-              <li>Complete your host profile</li>
-              <li>Start exploring local partnership opportunities</li>
-              <li>Connect with businesses in your area</li>
+          <div style="margin: 30px 0;">
+            <h2 style="color: #177E89; font-size: 20px; margin-bottom: 15px;">Getting Started</h2>
+            <ol style="color: #333; font-size: 16px; line-height: 1.8; margin: 0; padding-left: 20px;">
+              <li>Complete your host profile with details about your property</li>
+              <li>Browse our curated list of local businesses in your area</li>
+              <li>Start creating memorable experiences for your guests</li>
             </ol>
           </div>
 
-          <p style="color: #666; font-size: 14px; text-align: center;">
-            If you have any questions, feel free to reach out to our support team.
-          </p>
+          <div style="background-color: #177E89; color: white; border-radius: 8px; padding: 20px; text-align: center; margin: 30px 0;">
+            <p style="margin: 0; font-size: 16px;">
+              Ready to explore? Visit your dashboard to get started!
+            </p>
+          </div>
+
+          <div style="border-top: 1px solid #eee; margin-top: 30px; padding-top: 20px; text-align: center;">
+            <p style="color: #666; font-size: 14px; margin: 5px 0;">
+              Need help? Contact our support team at support@guestvibes.com
+            </p>
+            <p style="color: #666; font-size: 12px; margin: 5px 0;">
+              © ${new Date().getFullYear()} GuestVibes. All rights reserved.
+            </p>
+          </div>
         </div>
       `
     };
