@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { LocationSelect } from "./LocationSelect";
-import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction } from "@/components/ui/alert-dialog";
-import { PartyPopper } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { PersonalInfoForm } from "./forms/PersonalInfoForm";
+import { PasswordForm } from "./forms/PasswordForm";
+import { PropertyDetailsForm } from "./forms/PropertyDetailsForm";
+import { SuccessDialog } from "./forms/SuccessDialog";
 
 interface Location {
   state: string;
@@ -32,7 +31,6 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
     console.log("SignUpForm: Starting signup process");
 
     try {
-      // Sign up the user with Supabase auth
       console.log("SignUpForm: Creating user account with email:", email);
       const { data: { session }, error } = await supabase.auth.signUp({
         email,
@@ -54,7 +52,6 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
 
       console.log("SignUpForm: User account created successfully:", session);
 
-      // Send welcome email
       console.log("SignUpForm: Sending welcome email");
       const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
         body: { email, name: fullName }
@@ -66,7 +63,6 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
         console.log("SignUpForm: Welcome email sent successfully");
       }
 
-      // Show success message
       console.log("SignUpForm: Signup successful, showing success message");
       setShowSuccess(true);
       
@@ -96,51 +92,25 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
   return (
     <>
       <form onSubmit={handleSignUp} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="fullName">Full Name</Label>
-          <Input
-            id="fullName"
-            type="text"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            required
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="signupEmail">Email</Label>
-          <Input
-            id="signupEmail"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="signupPassword">Password</Label>
-          <Input
-            id="signupPassword"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={6}
-          />
-        </div>
+        <PersonalInfoForm
+          fullName={fullName}
+          email={email}
+          setFullName={setFullName}
+          setEmail={setEmail}
+        />
         
-        <div className="mt-6 mb-4">
-          <h3 className="text-lg font-semibold text-[#177E89]">Rental Property Details</h3>
-        </div>
-
-        <div className="space-y-4">
-          <LocationSelect
-            locations={locations}
-            state={state}
-            city={city}
-            setState={setState}
-            setCity={setCity}
-          />
-        </div>
+        <PasswordForm
+          password={password}
+          setPassword={setPassword}
+        />
+        
+        <PropertyDetailsForm
+          locations={locations}
+          state={state}
+          city={city}
+          setState={setState}
+          setCity={setCity}
+        />
 
         <Button
           type="submit"
@@ -151,27 +121,10 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
         </Button>
       </form>
 
-      <AlertDialog open={showSuccess} onOpenChange={handleSuccessClose}>
-        <AlertDialogContent className="max-w-md">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-center flex flex-col items-center gap-4">
-              <PartyPopper className="h-12 w-12 text-[#FFD166] animate-bounce" />
-              <span className="text-2xl">Welcome to GuestVibes!</span>
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-center">
-              Your account has been created successfully. Please sign in to access your dashboard.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="sm:justify-center">
-            <AlertDialogAction 
-              className="bg-[#177E89] hover:bg-[#177E89]/90"
-              onClick={handleSuccessClose}
-            >
-              Continue to Sign In
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <SuccessDialog
+        showSuccess={showSuccess}
+        onClose={handleSuccessClose}
+      />
     </>
   );
 }
