@@ -31,7 +31,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const emailData = {
-      from: "GuestVibes <onboarding@resend.dev>",
+      from: "GuestVibes <welcome@guestvibes.com>",
       to: [email],
       subject: "Welcome to GuestVibes!",
       html: `
