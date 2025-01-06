@@ -38,8 +38,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Sending email with profile:", profile);
 
-    const toEmail = "contact@guestvibes.com";
-
+    // In development/test mode, we can only send to the verified email
+    const toEmail = "bzwikventure@gmail.com"; // Keeping this until domain verification
+    
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -55,6 +56,7 @@ const handler = async (req: Request): Promise<Response> => {
           <p><strong>From:</strong> ${profile.full_name} (${profile.email})</p>
           <p><strong>Message:</strong></p>
           <p>${contactRequest.message}</p>
+          <p><em>Note: This is a test email. Once domain is verified, this will be sent to contact@guestvibes.com</em></p>
         `,
       }),
     });
