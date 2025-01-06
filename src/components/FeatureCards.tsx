@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Link, BarChart3, Library } from "lucide-react";
+import { Link, BarChart3, Library, Image } from "lucide-react";
 
 export const FeatureCards = () => {
   const { toast } = useToast();
@@ -52,12 +52,13 @@ export const FeatureCards = () => {
       >
         <CardHeader>
           <CardTitle className="flex items-center gap-3 text-xl text-gray-400">
-            <BarChart3 className="h-6 w-6 text-[#FFD166] group-hover:scale-110 transition-transform" />
-            Account Analytics
+            <Image className="h-6 w-6 text-[#FFD166] group-hover:scale-110 transition-transform" />
+            My GuestVibes Page
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-400">View booking analytics and earnings</p>
+          <p className="text-gray-400">Customize your guest experience page</p>
+          <p className="text-sm text-gray-400 mt-2">Premium features available</p>
         </CardContent>
       </Card>
     </div>
