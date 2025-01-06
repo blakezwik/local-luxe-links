@@ -58,7 +58,7 @@ export const ContactDialog = () => {
       <DialogTrigger asChild>
         <Button 
           variant="outline" 
-          className="w-full max-w-2xl mx-auto flex items-center gap-2 mt-8 bg-[#FFD166] hover:bg-[#FFD166]/90 text-black border-[#FFD166]"
+          className="w-48 py-6 mx-auto flex items-center gap-2 mt-8 bg-[#FFD166] hover:bg-[#FFD166]/90 text-black border-[#FFD166]"
         >
           <Mail className="h-5 w-5" />
           Contact Us
