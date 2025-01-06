@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Link, BarChart3, UserCog, Library } from "lucide-react";
+import { Link, BarChart3, Library } from "lucide-react";
 
 export const FeatureCards = () => {
   const { toast } = useToast();
@@ -27,6 +27,7 @@ export const FeatureCards = () => {
         </CardHeader>
         <CardContent>
           <p className="text-gray-400">Explore and choose local experiences</p>
+          <p className="text-sm text-gray-400 mt-2">0/10 experiences selected</p>
         </CardContent>
       </Card>
 
