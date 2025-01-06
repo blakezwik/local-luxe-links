@@ -22,7 +22,7 @@ export const FeatureCards = () => {
         <CardHeader className="p-4">
           <CardTitle className="flex items-center gap-2 text-lg text-gray-400">
             <Library className="h-5 w-5 text-[#FFD166] group-hover:scale-110 transition-transform" />
-            Browse/Select Local Experiences
+            Browse Experiences
           </CardTitle>
         </CardHeader>
         <CardContent className="p-4 pt-0">
