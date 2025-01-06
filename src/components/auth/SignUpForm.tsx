@@ -66,7 +66,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
         console.log("SignUpForm: Welcome email sent successfully");
       }
 
-      // Since email verification is disabled, we can show success immediately
+      // Show success message
       console.log("SignUpForm: Signup successful, showing success message");
       setShowSuccess(true);
       
@@ -86,8 +86,11 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
     console.log("SignUpForm: Starting success close handler");
     setShowSuccess(false);
     onSuccess();
-    console.log("SignUpForm: Navigating to dashboard");
-    navigate('/dashboard', { replace: true });
+    console.log("SignUpForm: Navigating to home for sign in");
+    navigate('/', { 
+      replace: true,
+      state: { showSignIn: true }
+    });
   };
 
   return (
@@ -156,7 +159,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
               <span className="text-2xl">Welcome to GuestVibes!</span>
             </AlertDialogTitle>
             <AlertDialogDescription className="text-center">
-              Your account has been created successfully. Click continue to access your dashboard.
+              Your account has been created successfully. Please sign in to access your dashboard.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="sm:justify-center">
@@ -164,7 +167,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
               className="bg-[#177E89] hover:bg-[#177E89]/90"
               onClick={handleSuccessClose}
             >
-              Continue to Dashboard
+              Continue to Sign In
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

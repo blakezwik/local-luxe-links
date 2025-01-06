@@ -30,6 +30,9 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("RESEND_API_KEY is not set");
     }
 
+    const baseUrl = req.headers.get("origin") || "https://guestvibes.com";
+    const dashboardUrl = `${baseUrl}/`;
+
     const emailData = {
       from: "GuestVibes <welcome@guestvibes.com>",
       to: [email],
@@ -60,10 +63,10 @@ const handler = async (req: Request): Promise<Response> => {
             </ol>
           </div>
 
-          <div style="background-color: #177E89; color: white; border-radius: 8px; padding: 20px; text-align: center; margin: 30px 0;">
-            <p style="margin: 0; font-size: 16px;">
+          <div style="background-color: #177E89; border-radius: 8px; padding: 20px; text-align: center; margin: 30px 0;">
+            <a href="${dashboardUrl}" style="color: white; text-decoration: none; display: block; font-size: 16px;">
               Ready to explore? Visit your dashboard to get started!
-            </p>
+            </a>
           </div>
 
           <div style="border-top: 1px solid #eee; margin-top: 30px; padding-top: 20px; text-align: center;">
