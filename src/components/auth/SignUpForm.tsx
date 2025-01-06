@@ -34,7 +34,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
     try {
       // Sign up the user with Supabase auth
       console.log("SignUpForm: Creating user account with email:", email);
-      const { data, error } = await supabase.auth.signUp({
+      const { data: { session }, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -47,7 +47,12 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
       });
 
       if (error) throw error;
-      console.log("SignUpForm: User account created successfully:", data);
+      
+      if (!session) {
+        throw new Error("No session created after signup");
+      }
+
+      console.log("SignUpForm: User account created successfully:", session);
 
       // Send welcome email
       console.log("SignUpForm: Sending welcome email");
