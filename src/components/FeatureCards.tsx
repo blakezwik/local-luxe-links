@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Link, BarChart3, UserCog } from "lucide-react";
+import { Link, BarChart3, UserCog, Library } from "lucide-react";
 
 export const FeatureCards = () => {
   const { toast } = useToast();
@@ -15,6 +15,21 @@ export const FeatureCards = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <Card 
+        className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60 cursor-pointer"
+        onClick={handleFeatureClick}
+      >
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3 text-xl text-gray-400">
+            <Library className="h-6 w-6 text-[#FFD166] group-hover:scale-110 transition-transform" />
+            Browse/Select Local Experiences
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-gray-400">Explore and choose local experiences</p>
+        </CardContent>
+      </Card>
+
       <Card 
         className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60 cursor-pointer"
         onClick={handleFeatureClick}
@@ -42,21 +57,6 @@ export const FeatureCards = () => {
         </CardHeader>
         <CardContent>
           <p className="text-gray-400">View booking analytics and earnings</p>
-        </CardContent>
-      </Card>
-
-      <Card 
-        className="group hover:shadow-xl transition-all duration-300 relative overflow-hidden opacity-60 cursor-pointer"
-        onClick={handleFeatureClick}
-      >
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-xl text-gray-400">
-            <UserCog className="h-6 w-6 text-[#FFD166] group-hover:scale-110 transition-transform" />
-            Manage Account
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-gray-400">View/update your account details</p>
         </CardContent>
       </Card>
     </div>
