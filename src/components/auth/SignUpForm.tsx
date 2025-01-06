@@ -61,6 +61,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
         console.log("SignUpForm: Welcome email sent successfully");
       }
 
+      // Since email verification is disabled, we can show success immediately
       console.log("SignUpForm: Signup successful, showing success message");
       setShowSuccess(true);
       
@@ -76,39 +77,12 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
     }
   };
 
-  const handleSuccessClose = async () => {
+  const handleSuccessClose = () => {
     console.log("SignUpForm: Starting success close handler");
     setShowSuccess(false);
     onSuccess();
-    
-    // Check current session
-    console.log("SignUpForm: Checking current session");
-    const { data: { session }, error } = await supabase.auth.getSession();
-    
-    if (error) {
-      console.error("SignUpForm: Error getting session:", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Unable to verify your session. Please try signing in.",
-      });
-      navigate('/');
-      return;
-    }
-
-    if (session) {
-      console.log("SignUpForm: Valid session found, user ID:", session.user.id);
-      console.log("SignUpForm: Attempting navigation to dashboard");
-      navigate('/dashboard', { replace: true });
-    } else {
-      console.log("SignUpForm: No valid session found");
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Unable to log in automatically. Please try signing in.",
-      });
-      navigate('/');
-    }
+    console.log("SignUpForm: Navigating to dashboard");
+    navigate('/dashboard', { replace: true });
   };
 
   return (
@@ -192,4 +166,4 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
       </AlertDialog>
     </>
   );
-};
+}
