@@ -2,6 +2,7 @@ import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, A
 import { PartyPopper } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface SuccessDialogProps {
   showSuccess: boolean;
@@ -9,6 +10,8 @@ interface SuccessDialogProps {
 }
 
 export function SuccessDialog({ showSuccess, onClose }: SuccessDialogProps) {
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (showSuccess) {
       console.log("SuccessDialog: Showing success toast");
@@ -20,6 +23,11 @@ export function SuccessDialog({ showSuccess, onClose }: SuccessDialogProps) {
     }
   }, [showSuccess]);
 
+  const handleDashboardClick = () => {
+    onClose();
+    navigate('/dashboard');
+  };
+
   return (
     <AlertDialog open={showSuccess} onOpenChange={onClose}>
       <AlertDialogContent className="max-w-md">
@@ -29,15 +37,15 @@ export function SuccessDialog({ showSuccess, onClose }: SuccessDialogProps) {
             <span className="text-2xl">Welcome to GuestVibes!</span>
           </AlertDialogTitle>
           <AlertDialogDescription className="text-center">
-            Your account has been created successfully. Please sign in to access your dashboard.
+            Your account has been created successfully. Click below to access your Host Dashboard and start earning!
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter className="sm:justify-center">
+        <AlertDialogFooter className="sm:justify-center gap-2">
           <AlertDialogAction 
-            className="bg-[#177E89] hover:bg-[#177E89]/90"
-            onClick={onClose}
+            className="bg-[#177E89] hover:bg-[#177E89]/90 text-white px-8"
+            onClick={handleDashboardClick}
           >
-            Continue to Sign In
+            Go to Host Dashboard
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

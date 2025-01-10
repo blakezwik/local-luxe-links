@@ -53,7 +53,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-[#177E89]/10 to-white/5 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-4xl text-[#177E89] mb-2" style={{ fontFamily: 'Bukhari Script' }}>
@@ -62,37 +62,37 @@ const SignIn = () => {
           <p className="text-gray-600">Welcome back! Please sign in to continue.</p>
         </div>
 
-        <div className="bg-white p-8 rounded-lg shadow-lg">
+        <div className="bg-white/10 backdrop-blur-lg p-8 rounded-lg shadow-xl border border-white/20">
           <form onSubmit={handleSignIn} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-[#177E89]">Email</Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full"
+                className="w-full bg-white/5 border-[#177E89]/20 focus:border-[#177E89] text-[#177E89]"
                 placeholder="Enter your email"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-[#177E89]">Password</Label>
               <Input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full"
+                className="w-full bg-white/5 border-[#177E89]/20 focus:border-[#177E89] text-[#177E89]"
                 placeholder="Enter your password"
               />
             </div>
 
             <Button
               type="submit"
-              className="w-full bg-[#177E89] hover:bg-[#177E89]/90"
+              className="w-full bg-[#177E89] hover:bg-[#177E89]/90 text-white font-medium py-3"
               disabled={loading}
             >
               {loading ? "Signing in..." : "Sign In"}

@@ -20,7 +20,9 @@ interface EmailData {
   html: string;
 }
 
-const generateEmailTemplate = (name: string, dashboardUrl: string): string => {
+const generateEmailTemplate = (name: string): string => {
+  const dashboardUrl = "https://preview--local-luxe-links.lovable.app";
+  
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align: center; margin-bottom: 30px;">
@@ -65,12 +67,12 @@ const generateEmailTemplate = (name: string, dashboardUrl: string): string => {
   `;
 };
 
-const createEmailData = (email: string, name: string, dashboardUrl: string): EmailData => {
+const createEmailData = (email: string, name: string): EmailData => {
   return {
     from: "GuestVibes <welcome@guestvibes.com>",
     to: [email],
     subject: "Welcome to GuestVibes!",
-    html: generateEmailTemplate(name, dashboardUrl)
+    html: generateEmailTemplate(name)
   };
 };
 
@@ -127,10 +129,7 @@ const handler = async (req: Request): Promise<Response> => {
     const { email, name } = await req.json() as WelcomeEmailRequest;
     console.log("Received request to send welcome email to:", email);
 
-    const baseUrl = req.headers.get("origin") || "https://guestvibes.com";
-    const dashboardUrl = `${baseUrl}/`;
-
-    const emailData = createEmailData(email, name, dashboardUrl);
+    const emailData = createEmailData(email, name);
     return await sendEmail(emailData);
   } catch (error) {
     return handleError(error);
