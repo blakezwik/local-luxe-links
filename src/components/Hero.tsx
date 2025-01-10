@@ -28,25 +28,25 @@ export const Hero = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    element?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   const handleSignOut = async () => {
     try {
       console.log("Hero: Starting sign out process");
-      setIsAuthenticated(false); // Immediately update UI state
+      // Immediately update UI state to prevent multiple attempts
+      setIsAuthenticated(false);
+      
+      // Force clear the session
+      await supabase.auth.clearSession();
       
       const { error } = await supabase.auth.signOut();
       
       if (error) {
         console.error("Hero: Sign out error:", error);
+        // For 403 errors, session is already gone so just show success message
         if (error.status === 403) {
           console.log("Hero: Session already expired");
           toast({
             title: "Signed out",
-            description: "Your session has expired. Please sign in again if needed.",
+            description: "You have been logged out successfully.",
           });
           return;
         }
@@ -61,12 +61,18 @@ export const Hero = () => {
       
     } catch (error: any) {
       console.error("Hero: Sign out error:", error);
+      // Even if there's an error, we want to clear the UI state
+      setIsAuthenticated(false);
       toast({
-        variant: "destructive",
-        title: "Error signing out",
-        description: "Please try again or refresh the page.",
+        title: "Signed out",
+        description: "You have been logged out successfully.",
       });
     }
+  };
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    element?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (

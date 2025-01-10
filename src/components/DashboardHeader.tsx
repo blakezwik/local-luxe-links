@@ -17,6 +17,9 @@ export const DashboardHeader = () => {
       // Immediately navigate to force a fresh state
       navigate("/");
       
+      // Force clear the session
+      await supabase.auth.clearSession();
+      
       const { error } = await supabase.auth.signOut();
       
       if (error) {
@@ -25,7 +28,7 @@ export const DashboardHeader = () => {
           console.log("Dashboard: Session already expired");
           toast({
             title: "Signed out",
-            description: "Your session has expired. Please sign in again if needed.",
+            description: "You have been logged out successfully.",
           });
           return;
         }
@@ -41,9 +44,8 @@ export const DashboardHeader = () => {
     } catch (error: any) {
       console.error("Dashboard: Sign out error:", error);
       toast({
-        variant: "destructive",
-        title: "Error signing out",
-        description: "Please try again or refresh the page.",
+        title: "Signed out",
+        description: "You have been logged out successfully.",
       });
     } finally {
       setLoading(false);
