@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { PersonalInfoForm } from "./forms/PersonalInfoForm";
 import { PasswordForm } from "./forms/PasswordForm";
 import { PropertyDetailsForm } from "./forms/PropertyDetailsForm";
+import { handleSignUp } from "@/utils/signupUtils";
 
 interface Location {
   state: string;
@@ -23,66 +23,13 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    console.log("SignUpForm: Starting signup process");
 
     try {
-      console.log("SignUpForm: Creating user account with email:", email);
-      const { data: { session }, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-            state: state,
-            city: city || null,
-          },
-        }
-      });
-
-      if (error) {
-        // Handle user already exists error
-        if (error.message.includes("User already registered")) {
-          console.log("SignUpForm: User already exists, redirecting to sign in");
-          toast({
-            title: "Account Already Exists",
-            description: "Please sign in with your existing account.",
-            variant: "default",
-          });
-          navigate('/signin');
-          return;
-        }
-        throw error;
-      }
-      
-      if (!session) {
-        throw new Error("No session created after signup");
-      }
-
-      console.log("SignUpForm: User account created successfully:", session);
-
-      console.log("SignUpForm: Sending welcome email");
-      const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
-        body: { email, name: fullName }
-      });
-
-      if (emailError) {
-        console.error("Error sending welcome email:", emailError);
-      } else {
-        console.log("SignUpForm: Welcome email sent successfully");
-      }
-
-      // Show success toast and redirect to dashboard
-      toast({
-        title: "Welcome to GuestVibes!",
-        description: "Your account has been created successfully.",
-      });
-      
-      console.log("SignUpForm: Redirecting to dashboard");
-      navigate('/dashboard');
-      
+      await handleSignUp(email, password, fullName, state, city, navigate);
+      onSuccess();
     } catch (error: any) {
       console.error("SignUpForm: Signup error:", error);
       toast({
@@ -96,7 +43,7 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
   };
 
   return (
-    <form onSubmit={handleSignUp} className="space-y-4">
+    <form onSubmit={onSubmit} className="space-y-4">
       <PersonalInfoForm
         fullName={fullName}
         email={email}
