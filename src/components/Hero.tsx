@@ -34,10 +34,8 @@ export const Hero = () => {
       // Immediately update UI state to prevent multiple attempts
       setIsAuthenticated(false);
       
-      // Force clear the session
-      await supabase.auth.clearSession();
-      
-      const { error } = await supabase.auth.signOut();
+      // Force global sign out to invalidate all sessions
+      const { error } = await supabase.auth.signOut({ scope: 'global' });
       
       if (error) {
         console.error("Hero: Sign out error:", error);
