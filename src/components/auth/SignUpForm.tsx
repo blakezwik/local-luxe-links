@@ -6,8 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { PersonalInfoForm } from "./forms/PersonalInfoForm";
 import { PasswordForm } from "./forms/PasswordForm";
 import { PropertyDetailsForm } from "./forms/PropertyDetailsForm";
-import { SuccessDialog } from "./forms/SuccessDialog";
-import { AuthError } from "@supabase/supabase-js";
 
 interface Location {
   state: string;
@@ -22,7 +20,6 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
   const [fullName, setFullName] = useState("");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
-  const [showSuccess, setShowSuccess] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -77,8 +74,14 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
         console.log("SignUpForm: Welcome email sent successfully");
       }
 
-      console.log("SignUpForm: Signup successful, showing success message");
-      setShowSuccess(true);
+      // Show success toast and redirect to dashboard
+      toast({
+        title: "Welcome to GuestVibes!",
+        description: "Your account has been created successfully.",
+      });
+      
+      console.log("SignUpForm: Redirecting to dashboard");
+      navigate('/dashboard');
       
     } catch (error: any) {
       console.error("SignUpForm: Signup error:", error);
@@ -92,52 +95,35 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
     }
   };
 
-  const handleSuccessClose = () => {
-    console.log("SignUpForm: Starting success close handler");
-    setShowSuccess(false);
-    onSuccess();
-    console.log("SignUpForm: Navigating to signin page");
-    navigate('/signin', { 
-      replace: true
-    });
-  };
-
   return (
-    <>
-      <form onSubmit={handleSignUp} className="space-y-4">
-        <PersonalInfoForm
-          fullName={fullName}
-          email={email}
-          setFullName={setFullName}
-          setEmail={setEmail}
-        />
-        
-        <PasswordForm
-          password={password}
-          setPassword={setPassword}
-        />
-        
-        <PropertyDetailsForm
-          locations={locations}
-          state={state}
-          city={city}
-          setState={setState}
-          setCity={setCity}
-        />
-
-        <Button
-          type="submit"
-          className="w-full bg-[#177E89] hover:bg-[#177E89]/90"
-          disabled={loading}
-        >
-          {loading ? "Processing..." : "Sign Up"}
-        </Button>
-      </form>
-
-      <SuccessDialog
-        showSuccess={showSuccess}
-        onClose={handleSuccessClose}
+    <form onSubmit={handleSignUp} className="space-y-4">
+      <PersonalInfoForm
+        fullName={fullName}
+        email={email}
+        setFullName={setFullName}
+        setEmail={setEmail}
       />
-    </>
+      
+      <PasswordForm
+        password={password}
+        setPassword={setPassword}
+      />
+      
+      <PropertyDetailsForm
+        locations={locations}
+        state={state}
+        city={city}
+        setState={setState}
+        setCity={setCity}
+      />
+
+      <Button
+        type="submit"
+        className="w-full bg-[#177E89] hover:bg-[#177E89]/90"
+        disabled={loading}
+      >
+        {loading ? "Processing..." : "Sign Up"}
+      </Button>
+    </form>
   );
 }
