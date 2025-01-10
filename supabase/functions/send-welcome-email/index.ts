@@ -20,7 +20,7 @@ interface EmailData {
   html: string;
 }
 
-const generateEmailTemplate = (name: string, dashboardUrl: string): string => {
+const generateEmailTemplate = (name: string, baseUrl: string): string => {
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align: center; margin-bottom: 30px;">
@@ -48,7 +48,7 @@ const generateEmailTemplate = (name: string, dashboardUrl: string): string => {
       </div>
 
       <div style="background-color: #177E89; border-radius: 8px; padding: 20px; text-align: center; margin: 30px 0;">
-        <a href="${dashboardUrl}/signin" style="color: white; text-decoration: none; display: block; font-size: 16px;">
+        <a href="${baseUrl}/signin" style="color: white; text-decoration: none; display: block; font-size: 16px;">
           Ready to explore? Sign in to your dashboard!
         </a>
       </div>
@@ -65,12 +65,12 @@ const generateEmailTemplate = (name: string, dashboardUrl: string): string => {
   `;
 };
 
-const createEmailData = (email: string, name: string, dashboardUrl: string): EmailData => {
+const createEmailData = (email: string, name: string, baseUrl: string): EmailData => {
   return {
     from: "GuestVibes <welcome@guestvibes.com>",
     to: [email],
     subject: "Welcome to GuestVibes!",
-    html: generateEmailTemplate(name, dashboardUrl)
+    html: generateEmailTemplate(name, baseUrl)
   };
 };
 
@@ -127,10 +127,13 @@ const handler = async (req: Request): Promise<Response> => {
     const { email, name } = await req.json() as WelcomeEmailRequest;
     console.log("Received request to send welcome email to:", email);
 
-    const baseUrl = req.headers.get("origin") || "https://guestvibes.com";
-    const dashboardUrl = `${baseUrl}/`;
+    // Get the origin from the request headers, fallback to a default if not available
+    const origin = req.headers.get("origin");
+    // Remove any trailing slashes and ensure clean base URL
+    const baseUrl = origin ? origin.replace(/\/+$/, '') : 'https://guestvibes.com';
+    console.log("Using base URL for email:", baseUrl);
 
-    const emailData = createEmailData(email, name, dashboardUrl);
+    const emailData = createEmailData(email, name, baseUrl);
     return await sendEmail(emailData);
   } catch (error) {
     return handleError(error);
