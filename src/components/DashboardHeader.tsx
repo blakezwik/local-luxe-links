@@ -1,19 +1,37 @@
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 export const DashboardHeader = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSignOut = async () => {
     try {
       setLoading(true);
       console.log("Dashboard: Starting sign out process");
+      
+      // First check if we have a valid session
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        console.log("Dashboard: No valid session found, redirecting to home");
+        navigate("/");
+        return;
+      }
+
       const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      if (error) {
+        // If we get a 403/user not found error, just redirect to home
+        if (error.status === 403) {
+          console.log("Dashboard: Session expired, redirecting to home");
+          navigate("/");
+          return;
+        }
+        throw error;
+      }
       
       console.log("Dashboard: Sign out successful");
       toast({
@@ -21,12 +39,13 @@ export const DashboardHeader = () => {
         description: "You have been logged out of your account.",
       });
       
+      navigate("/");
     } catch (error: any) {
       console.error("Dashboard: Sign out error:", error);
       toast({
         variant: "destructive",
         title: "Error signing out",
-        description: error.message,
+        description: "Please try again or refresh the page.",
       });
     } finally {
       setLoading(false);

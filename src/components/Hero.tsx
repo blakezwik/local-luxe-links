@@ -36,8 +36,25 @@ export const Hero = () => {
   const handleSignOut = async () => {
     try {
       console.log("Hero: Starting sign out process");
+      
+      // First check if we have a valid session
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        console.log("Hero: No valid session found, redirecting to home");
+        setIsAuthenticated(false);
+        return;
+      }
+
       const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      if (error) {
+        // If we get a 403/user not found error, just handle it gracefully
+        if (error.status === 403) {
+          console.log("Hero: Session expired, updating state");
+          setIsAuthenticated(false);
+          return;
+        }
+        throw error;
+      }
       
       console.log("Hero: Sign out successful");
       toast({
@@ -45,13 +62,12 @@ export const Hero = () => {
         description: "You have been logged out of your account.",
       });
       
-      navigate("/");
     } catch (error: any) {
       console.error("Hero: Sign out error:", error);
       toast({
         variant: "destructive",
         title: "Error signing out",
-        description: error.message,
+        description: "Please try again or refresh the page.",
       });
     }
   };
