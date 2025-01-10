@@ -14,14 +14,19 @@ export const DashboardHeader = () => {
       setLoading(true);
       console.log("Dashboard: Starting sign out process");
       
+      // Immediately navigate to force a fresh state
+      navigate("/");
+      
       const { error } = await supabase.auth.signOut();
       
       if (error) {
         console.error("Dashboard: Sign out error:", error);
-        // If it's a 403 error, just redirect without showing an error
         if (error.status === 403) {
-          console.log("Dashboard: Session already expired, redirecting");
-          navigate("/");
+          console.log("Dashboard: Session already expired");
+          toast({
+            title: "Signed out",
+            description: "Your session has expired. Please sign in again if needed.",
+          });
           return;
         }
         throw error;
@@ -33,7 +38,6 @@ export const DashboardHeader = () => {
         description: "You have been logged out of your account.",
       });
       
-      navigate("/");
     } catch (error: any) {
       console.error("Dashboard: Sign out error:", error);
       toast({

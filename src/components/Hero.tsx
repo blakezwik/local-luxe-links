@@ -36,15 +36,18 @@ export const Hero = () => {
   const handleSignOut = async () => {
     try {
       console.log("Hero: Starting sign out process");
+      setIsAuthenticated(false); // Immediately update UI state
       
       const { error } = await supabase.auth.signOut();
       
       if (error) {
         console.error("Hero: Sign out error:", error);
-        // If it's a 403 error, just update state without showing an error
         if (error.status === 403) {
-          console.log("Hero: Session already expired, updating state");
-          setIsAuthenticated(false);
+          console.log("Hero: Session already expired");
+          toast({
+            title: "Signed out",
+            description: "Your session has expired. Please sign in again if needed.",
+          });
           return;
         }
         throw error;
@@ -56,7 +59,6 @@ export const Hero = () => {
         description: "You have been logged out of your account.",
       });
       
-      setIsAuthenticated(false);
     } catch (error: any) {
       console.error("Hero: Sign out error:", error);
       toast({
