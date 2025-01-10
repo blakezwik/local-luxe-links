@@ -48,8 +48,8 @@ const generateEmailTemplate = (name: string, dashboardUrl: string): string => {
       </div>
 
       <div style="background-color: #177E89; border-radius: 8px; padding: 20px; text-align: center; margin: 30px 0;">
-        <a href="${dashboardUrl}" style="color: white; text-decoration: none; display: block; font-size: 16px;">
-          Ready to explore? Visit your dashboard to get started!
+        <a href="${dashboardUrl}/signin" style="color: white; text-decoration: none; display: block; font-size: 16px;">
+          Ready to explore? Sign in to your dashboard!
         </a>
       </div>
 

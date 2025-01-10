@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import AuthCallback from "./pages/AuthCallback";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
+import SignIn from "./pages/SignIn";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/signin" element={<SignIn />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
