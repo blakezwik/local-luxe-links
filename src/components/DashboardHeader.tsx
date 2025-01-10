@@ -14,19 +14,14 @@ export const DashboardHeader = () => {
       setLoading(true);
       console.log("Dashboard: Starting sign out process");
       
-      // First check if we have a valid session
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        console.log("Dashboard: No valid session found, redirecting to home");
-        navigate("/");
-        return;
-      }
-
       const { error } = await supabase.auth.signOut();
+      
+      // Handle the error if it exists
       if (error) {
-        // If we get a 403/user not found error, just redirect to home
+        console.error("Dashboard: Sign out error:", error);
+        // If it's a 403 error, just redirect without showing an error
         if (error.status === 403) {
-          console.log("Dashboard: Session expired, redirecting to home");
+          console.log("Dashboard: Session already expired, redirecting");
           navigate("/");
           return;
         }

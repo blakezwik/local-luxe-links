@@ -37,19 +37,14 @@ export const Hero = () => {
     try {
       console.log("Hero: Starting sign out process");
       
-      // First check if we have a valid session
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        console.log("Hero: No valid session found, redirecting to home");
-        setIsAuthenticated(false);
-        return;
-      }
-
       const { error } = await supabase.auth.signOut();
+      
+      // Handle the error if it exists
       if (error) {
-        // If we get a 403/user not found error, just handle it gracefully
+        console.error("Hero: Sign out error:", error);
+        // If it's a 403 error, just update state without showing an error
         if (error.status === 403) {
-          console.log("Hero: Session expired, updating state");
+          console.log("Hero: Session already expired, updating state");
           setIsAuthenticated(false);
           return;
         }
