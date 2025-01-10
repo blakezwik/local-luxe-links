@@ -36,8 +36,35 @@ export const Hero = () => {
   const handleSignOut = async () => {
     try {
       console.log("Hero: Starting sign out process");
+      
+      // First check if we have a valid session
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError) {
+        console.error("Hero: Session error:", sessionError);
+        // If there's a session error, we should just clear local state
+        await supabase.auth.clearSession();
+        navigate("/");
+        return;
+      }
+
+      if (!session) {
+        console.log("Hero: No active session found, redirecting");
+        navigate("/");
+        return;
+      }
+
       const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      
+      if (error) {
+        if (error.message.includes("User from sub claim in JWT does not exist")) {
+          console.log("Hero: Invalid session, clearing local state");
+          await supabase.auth.clearSession();
+          navigate("/");
+          return;
+        }
+        throw error;
+      }
       
       console.log("Hero: Sign out successful");
       toast({

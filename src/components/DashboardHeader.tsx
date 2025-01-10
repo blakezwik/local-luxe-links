@@ -1,19 +1,47 @@
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 export const DashboardHeader = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSignOut = async () => {
     try {
       setLoading(true);
       console.log("Dashboard: Starting sign out process");
+      
+      // First check if we have a valid session
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError) {
+        console.error("Dashboard: Session error:", sessionError);
+        // If there's a session error, we should just clear local state
+        await supabase.auth.clearSession();
+        navigate("/");
+        return;
+      }
+
+      if (!session) {
+        console.log("Dashboard: No active session found, redirecting");
+        navigate("/");
+        return;
+      }
+
       const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      
+      if (error) {
+        if (error.message.includes("User from sub claim in JWT does not exist")) {
+          console.log("Dashboard: Invalid session, clearing local state");
+          await supabase.auth.clearSession();
+          navigate("/");
+          return;
+        }
+        throw error;
+      }
       
       console.log("Dashboard: Sign out successful");
       toast({
