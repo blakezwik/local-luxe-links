@@ -39,7 +39,6 @@ export const Hero = () => {
       
       const { error } = await supabase.auth.signOut();
       
-      // Handle the error if it exists
       if (error) {
         console.error("Hero: Sign out error:", error);
         // If it's a 403 error, just update state without showing an error
@@ -57,6 +56,7 @@ export const Hero = () => {
         description: "You have been logged out of your account.",
       });
       
+      setIsAuthenticated(false);
     } catch (error: any) {
       console.error("Hero: Sign out error:", error);
       toast({

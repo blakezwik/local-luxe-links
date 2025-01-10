@@ -16,7 +16,6 @@ export const DashboardHeader = () => {
       
       const { error } = await supabase.auth.signOut();
       
-      // Handle the error if it exists
       if (error) {
         console.error("Dashboard: Sign out error:", error);
         // If it's a 403 error, just redirect without showing an error
