@@ -7,6 +7,7 @@ import { PersonalInfoForm } from "./forms/PersonalInfoForm";
 import { PasswordForm } from "./forms/PasswordForm";
 import { PropertyDetailsForm } from "./forms/PropertyDetailsForm";
 import { SuccessDialog } from "./forms/SuccessDialog";
+import { AuthError } from "@supabase/supabase-js";
 
 interface Location {
   state: string;
@@ -44,7 +45,20 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        // Handle user already exists error
+        if (error.message.includes("User already registered")) {
+          console.log("SignUpForm: User already exists, redirecting to sign in");
+          toast({
+            title: "Account Already Exists",
+            description: "Please sign in with your existing account.",
+            variant: "default",
+          });
+          navigate('/signin');
+          return;
+        }
+        throw error;
+      }
       
       if (!session) {
         throw new Error("No session created after signup");
@@ -82,10 +96,9 @@ export function SignUpForm({ locations, onSuccess }: { locations: Location[], on
     console.log("SignUpForm: Starting success close handler");
     setShowSuccess(false);
     onSuccess();
-    console.log("SignUpForm: Navigating to home for sign in");
-    navigate('/', { 
-      replace: true,
-      state: { showSignIn: true }
+    console.log("SignUpForm: Navigating to signin page");
+    navigate('/signin', { 
+      replace: true
     });
   };
 
