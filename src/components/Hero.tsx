@@ -28,17 +28,21 @@ export const Hero = () => {
   const handleSignOut = async () => {
     try {
       console.log("Hero: Starting sign out process");
+      
+      // First update local state
       setIsAuthenticated(false);
       
-      const { error } = await supabase.auth.signOut({ scope: 'global' });
+      // Then attempt to sign out
+      const { error } = await supabase.auth.signOut();
       
       if (error) {
         console.error("Hero: Sign out error:", error);
-        if (error.status === 403) {
-          console.log("Hero: User not found, treating as successful sign out");
+        // Only show error toast if it's not a session_not_found error
+        if (error.message !== "Session from session_id claim in JWT does not exist") {
           toast({
-            title: "Signed out",
-            description: "You have been logged out successfully.",
+            variant: "destructive",
+            title: "Error signing out",
+            description: "Please try again.",
           });
           return;
         }
@@ -52,7 +56,6 @@ export const Hero = () => {
       
     } catch (error: any) {
       console.error("Hero: Sign out error:", error);
-      setIsAuthenticated(false);
       toast({
         title: "Signed out",
         description: "You have been logged out successfully.",

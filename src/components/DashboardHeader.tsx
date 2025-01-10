@@ -10,28 +10,29 @@ export const DashboardHeader = () => {
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
+    if (loading) return; // Prevent multiple clicks
+    
     try {
       setLoading(true);
       console.log("Dashboard: Starting sign out process");
       
-      // Immediately navigate to force a fresh state
+      // Navigate first to ensure UI is responsive
       navigate("/");
       
-      // Force global sign out to invalidate all sessions
-      const { error } = await supabase.auth.signOut({ scope: 'global' });
+      // Then attempt to sign out
+      const { error } = await supabase.auth.signOut();
       
       if (error) {
         console.error("Dashboard: Sign out error:", error);
-        // For 403 errors (user not found), treat as success since session is invalid anyway
-        if (error.status === 403) {
-          console.log("Dashboard: User not found, treating as successful sign out");
+        // Only show error toast if it's not a session_not_found error
+        if (error.message !== "Session from session_id claim in JWT does not exist") {
           toast({
-            title: "Signed out",
-            description: "You have been logged out successfully.",
+            variant: "destructive",
+            title: "Error signing out",
+            description: "Please try again.",
           });
           return;
         }
-        throw error;
       }
       
       console.log("Dashboard: Sign out successful");
