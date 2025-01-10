@@ -19,8 +19,6 @@ export const DashboardHeader = () => {
       
       if (sessionError) {
         console.error("Dashboard: Session error:", sessionError);
-        // If there's a session error, we should just clear local state
-        await supabase.auth.clearSession();
         navigate("/");
         return;
       }
@@ -35,8 +33,7 @@ export const DashboardHeader = () => {
       
       if (error) {
         if (error.message.includes("User from sub claim in JWT does not exist")) {
-          console.log("Dashboard: Invalid session, clearing local state");
-          await supabase.auth.clearSession();
+          console.log("Dashboard: Invalid session, redirecting");
           navigate("/");
           return;
         }

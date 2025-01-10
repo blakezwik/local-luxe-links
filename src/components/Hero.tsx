@@ -42,8 +42,6 @@ export const Hero = () => {
       
       if (sessionError) {
         console.error("Hero: Session error:", sessionError);
-        // If there's a session error, we should just clear local state
-        await supabase.auth.clearSession();
         navigate("/");
         return;
       }
@@ -58,8 +56,7 @@ export const Hero = () => {
       
       if (error) {
         if (error.message.includes("User from sub claim in JWT does not exist")) {
-          console.log("Hero: Invalid session, clearing local state");
-          await supabase.auth.clearSession();
+          console.log("Hero: Invalid session, redirecting");
           navigate("/");
           return;
         }
@@ -173,3 +170,5 @@ export const Hero = () => {
     </div>
   );
 };
+
+export default Hero;
