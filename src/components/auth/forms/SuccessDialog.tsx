@@ -2,7 +2,6 @@ import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, A
 import { PartyPopper } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface SuccessDialogProps {
   showSuccess: boolean;
@@ -10,8 +9,6 @@ interface SuccessDialogProps {
 }
 
 export function SuccessDialog({ showSuccess, onClose }: SuccessDialogProps) {
-  const navigate = useNavigate();
-
   useEffect(() => {
     if (showSuccess) {
       console.log("SuccessDialog: Showing success toast");
@@ -23,12 +20,6 @@ export function SuccessDialog({ showSuccess, onClose }: SuccessDialogProps) {
     }
   }, [showSuccess]);
 
-  const handleContinue = () => {
-    console.log("SuccessDialog: Navigating to dashboard");
-    onClose();
-    navigate('/dashboard');
-  };
-
   return (
     <AlertDialog open={showSuccess} onOpenChange={onClose}>
       <AlertDialogContent className="max-w-md">
@@ -37,17 +28,16 @@ export function SuccessDialog({ showSuccess, onClose }: SuccessDialogProps) {
             <PartyPopper className="h-12 w-12 text-[#FFD166] animate-bounce" />
             <span className="text-2xl">Welcome to GuestVibes!</span>
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-center space-y-2">
-            <p>Your account has been created successfully! 🎉</p>
-            <p>Click below to access your Host Dashboard and start exploring GuestVibes.</p>
+          <AlertDialogDescription className="text-center">
+            Your account has been created successfully. Please sign in to access your dashboard.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="sm:justify-center">
           <AlertDialogAction 
-            className="bg-[#177E89] hover:bg-[#177E89]/90 px-8"
-            onClick={handleContinue}
+            className="bg-[#177E89] hover:bg-[#177E89]/90"
+            onClick={onClose}
           >
-            Go to Dashboard
+            Continue to Sign In
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
