@@ -31,7 +31,7 @@ export const Hero = () => {
   const handleSignOut = async () => {
     try {
       console.log("Hero: Starting sign out process");
-      // Immediately update UI state to prevent multiple attempts
+      // Immediately update UI state
       setIsAuthenticated(false);
       
       // Force global sign out to invalidate all sessions
@@ -39,16 +39,15 @@ export const Hero = () => {
       
       if (error) {
         console.error("Hero: Sign out error:", error);
-        // For 403 errors, session is already gone so just show success message
+        // For 403 errors (user not found), treat as success since session is invalid anyway
         if (error.status === 403) {
-          console.log("Hero: Session already expired");
+          console.log("Hero: User not found, treating as successful sign out");
           toast({
             title: "Signed out",
             description: "You have been logged out successfully.",
           });
           return;
         }
-        throw error;
       }
       
       console.log("Hero: Sign out successful");
@@ -59,7 +58,7 @@ export const Hero = () => {
       
     } catch (error: any) {
       console.error("Hero: Sign out error:", error);
-      // Even if there's an error, we want to clear the UI state
+      // Even on error, we want to clear the UI state
       setIsAuthenticated(false);
       toast({
         title: "Signed out",

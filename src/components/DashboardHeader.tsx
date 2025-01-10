@@ -22,8 +22,9 @@ export const DashboardHeader = () => {
       
       if (error) {
         console.error("Dashboard: Sign out error:", error);
+        // For 403 errors (user not found), treat as success since session is invalid anyway
         if (error.status === 403) {
-          console.log("Dashboard: Session already expired");
+          console.log("Dashboard: User not found, treating as successful sign out");
           toast({
             title: "Signed out",
             description: "You have been logged out successfully.",
