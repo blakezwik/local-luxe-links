@@ -33,7 +33,7 @@ export const Features = () => {
   return (
     <div id="benefits" className="min-h-screen pt-24 bg-background">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="sm:text-center">
+        <div className="text-center">
           <h2 className="text-6xl font-bold leading-8 text-[#177E89]">
             Benefits
           </h2>

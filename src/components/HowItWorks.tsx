@@ -28,7 +28,7 @@ export const HowItWorks = () => {
   return (
     <div id="how-it-works" className="min-h-screen pt-24 bg-background px-4 sm:px-6">
       <div className="mx-auto max-w-7xl">
-        <div className="mx-auto max-w-2xl lg:text-center">
+        <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-4xl sm:text-6xl font-bold leading-tight sm:leading-8 tracking-tight text-[#177E89] mb-6">
             How It Works
           </h2>
