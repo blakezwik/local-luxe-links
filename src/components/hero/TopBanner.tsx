@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { SignUpDialog } from "../SignUpDialog";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useEffect, useState } from "react";
 
 interface TopBannerProps {
   isAuthenticated: boolean;
@@ -11,10 +12,27 @@ interface TopBannerProps {
 export const TopBanner = ({ isAuthenticated, onSignOut }: TopBannerProps) => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const [fontLoaded, setFontLoaded] = useState(false);
+
+  useEffect(() => {
+    // Check if the font is already loaded
+    document.fonts.ready.then(() => {
+      // Additional check specifically for Bukhari Script
+      document.fonts.load('1em "Bukhari Script"').then(() => {
+        console.log("TopBanner: Bukhari Script font loaded successfully");
+        setFontLoaded(true);
+      }).catch(error => {
+        console.error("TopBanner: Error loading Bukhari Script font:", error);
+      });
+    });
+  }, []);
 
   return (
     <div className="fixed top-0 left-0 right-0 bg-white h-16 flex justify-between items-center px-4 sm:px-6 z-50 shadow-sm">
-      <h1 className="text-2xl sm:text-4xl text-[#177E89]" style={{ fontFamily: 'Bukhari Script' }}>
+      <h1 
+        className={`text-2xl sm:text-4xl text-[#177E89] transition-opacity duration-300 ${fontLoaded ? 'opacity-100' : 'opacity-0'}`}
+        style={{ fontFamily: 'Bukhari Script, sans-serif' }}
+      >
         GuestVibes
       </h1>
       <div className="flex gap-2 sm:gap-4">
