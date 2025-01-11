@@ -44,6 +44,7 @@ export const handleSignUp = async (
 
   console.log("SignUpForm: User account created successfully:", session);
 
+  // Send welcome email
   console.log("SignUpForm: Sending welcome email");
   const { error: emailError } = await supabase.functions.invoke('send-welcome-email', {
     body: { email, name: fullName }
@@ -53,6 +54,18 @@ export const handleSignUp = async (
     console.error("Error sending welcome email:", emailError);
   } else {
     console.log("SignUpForm: Welcome email sent successfully");
+  }
+
+  // Send signup notification
+  console.log("SignUpForm: Sending signup notification");
+  const { error: notificationError } = await supabase.functions.invoke('send-signup-notification', {
+    body: { userId: session.user.id }
+  });
+
+  if (notificationError) {
+    console.error("Error sending signup notification:", notificationError);
+  } else {
+    console.log("SignUpForm: Signup notification sent successfully");
   }
 
   toast({
