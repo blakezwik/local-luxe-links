@@ -5,12 +5,12 @@ const steps = [
   {
     id: "1",
     title: "Sign up",
-    description: "Join our platform in seconds",
+    description: "Join in seconds",
   },
   {
     id: "2",
     title: "Share",
-    description: "Share local deals to guests",
+    description: "Share your link with guests",
   },
   {
     id: "3",
@@ -57,7 +57,7 @@ export const HowItWorks = () => {
           <Button 
             variant="ghost" 
             size="icon"
-            onClick={() => scrollToSection('cta')}
+            onClick={() => scrollToSection('benefits')}
             className="animate-bounce bg-[#FFD166] shadow-lg"
           >
             <ChevronDown className="h-6 w-6 sm:h-8 sm:w-8 text-white" />

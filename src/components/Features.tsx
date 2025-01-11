@@ -4,22 +4,22 @@ import { Button } from "@/components/ui/button";
 const features = [
   {
     name: "Passive Income",
-    description: "Earn commissions from guest purchases at local businesses",
+    description: "Earn commissions from guest bookings",
     icon: CircleDollarSign,
   },
   {
     name: "Easy Sharing",
-    description: "Simply share deals via links and promo codes, and we'll handle the rest",
+    description: "Simply share your link and we'll handle the rest",
     icon: Share2,
   },
   {
     name: "Happy Guests",
-    description: "Provide exclusive deals and memorable local experiences",
+    description: "Provide exclusive deals and local experiences",
     icon: Smile,
   },
   {
     name: "Local Impact",
-    description: "Support and grow your local business community",
+    description: "Support and your local business community",
     icon: Trophy,
   },
 ];
@@ -71,7 +71,7 @@ export const Features = () => {
           <Button 
             variant="ghost" 
             size="icon"
-            onClick={() => scrollToSection('how-it-works')}
+            onClick={() => scrollToSection('cta')}
             className="animate-bounce bg-[#FFD166] shadow-lg"
           >
             <ChevronDown className="h-8 w-8 text-white" />
