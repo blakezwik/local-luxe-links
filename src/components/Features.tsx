@@ -38,17 +38,17 @@ export const Features = () => {
           </p>
         </div>
 
-        <div className="mt-8 max-w-lg sm:mx-auto md:max-w-none">
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-2">
+        <div className="mt-8">
+          <div className="grid grid-cols-2 gap-4 max-w-3xl mx-auto">
             {features.map((feature) => (
               <div
                 key={feature.name}
-                className="relative flex flex-col items-center text-center gap-2 rounded-xl bg-white p-2 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100"
+                className="relative flex flex-col items-center text-center gap-2 rounded-lg bg-white p-4 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100"
               >
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#FFD166] text-white">
                   <feature.icon className="h-5 w-5" aria-hidden="true" />
                 </div>
-                <p className="text-sm font-semibold leading-6 text-foreground">
+                <p className="text-sm font-semibold text-foreground">
                   {feature.name}
                 </p>
               </div>
@@ -56,15 +56,15 @@ export const Features = () => {
           </div>
         </div>
 
-        <div className="mt-12">
-          <div className="relative isolate overflow-hidden bg-[#177E89] px-4 py-8 text-center shadow-xl sm:rounded-2xl sm:px-6 max-w-xl mx-auto">
-            <h2 className="mx-auto max-w-xl text-2xl font-bold tracking-tight text-white sm:text-3xl">
+        <div className="mt-8">
+          <div className="relative isolate overflow-hidden bg-[#177E89] px-4 py-6 text-center shadow-lg sm:rounded-xl sm:px-6 max-w-lg mx-auto">
+            <h2 className="mx-auto max-w-xl text-2xl font-bold tracking-tight text-white">
               Ready to boost your hosting income?
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-white/90">
+            <p className="mx-auto mt-3 max-w-xl text-base leading-6 text-white/90">
               Join thousands of hosts who are already earning passive income through local partnerships.
             </p>
-            <div className="mt-6 flex items-center justify-center">
+            <div className="mt-5 flex items-center justify-center">
               <SignUpDialog>
                 <Button size="default" className="bg-[#FFD166] text-black hover:bg-[#FFD166]/90 shadow-lg">
                   Get Started Now
@@ -74,7 +74,7 @@ export const Features = () => {
           </div>
         </div>
 
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center mt-6">
           <Button 
             onClick={scrollToTop}
             className="bg-[#FFD166] text-black hover:bg-[#FFD166]/90 shadow-lg"
@@ -83,7 +83,7 @@ export const Features = () => {
           </Button>
         </div>
 
-        <div className="mt-8 text-center">
+        <div className="mt-6 text-center">
           <h1 className="text-3xl text-[#177E89]" style={{ fontFamily: 'Bukhari Script' }}>
             HostVibes
           </h1>
