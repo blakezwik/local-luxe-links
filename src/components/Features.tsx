@@ -27,13 +27,13 @@ export const Features = () => {
   };
 
   return (
-    <div id="benefits" className="min-h-screen pt-24 bg-background">
+    <div id="benefits" className="min-h-screen pt-16 sm:pt-24 bg-background">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
         <div className="text-center">
-          <h2 className="text-6xl font-bold leading-8 text-[#177E89]">
+          <h2 className="text-4xl sm:text-6xl font-bold leading-8 text-[#177E89]">
             Benefits
           </h2>
-          <p className="mt-8 text-2xl font-bold tracking-tight text-[#177E89] italic">
+          <p className="mt-6 sm:mt-8 text-xl sm:text-2xl font-bold tracking-tight text-[#177E89] italic">
             Unlock a New Revenue Source Effortlessly
           </p>
         </div>
@@ -56,15 +56,15 @@ export const Features = () => {
           </div>
         </div>
 
-        <div className="mt-8">
-          <div className="relative isolate overflow-hidden bg-[#177E89] px-4 py-6 text-center shadow-lg sm:rounded-xl sm:px-6 max-w-lg mx-auto">
-            <h2 className="mx-auto max-w-xl text-2xl font-bold tracking-tight text-white">
+        <div className="mt-8 sm:mt-12">
+          <div className="relative isolate overflow-hidden bg-[#177E89] px-4 py-4 sm:py-6 text-center shadow-lg sm:rounded-xl sm:px-6 max-w-lg mx-auto">
+            <h2 className="mx-auto max-w-xl text-xl sm:text-2xl font-bold tracking-tight text-white">
               Ready to boost your hosting income?
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-base leading-6 text-white/90">
+            <p className="mx-auto mt-2 sm:mt-3 max-w-xl text-sm sm:text-base leading-6 text-white/90">
               Join thousands of hosts who are already earning passive income through local partnerships.
             </p>
-            <div className="mt-5 flex items-center justify-center">
+            <div className="mt-4 sm:mt-5 flex items-center justify-center">
               <SignUpDialog>
                 <Button size="default" className="bg-[#FFD166] text-black hover:bg-[#FFD166]/90 shadow-lg">
                   Get Started Now

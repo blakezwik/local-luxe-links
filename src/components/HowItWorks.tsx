@@ -5,7 +5,7 @@ const steps = [
   {
     id: "1",
     title: "Sign up",
-    description: "Join in seconds",
+    description: "Join for free in seconds",
   },
   {
     id: "2",
@@ -22,7 +22,13 @@ const steps = [
 export const HowItWorks = () => {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
-    element?.scrollIntoView({ behavior: 'smooth' });
+    if (element) {
+      const offset = element.offsetTop - 50; // Adding offset to show full content
+      window.scrollTo({
+        top: offset,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (
@@ -37,10 +43,10 @@ export const HowItWorks = () => {
           </p>
         </div>
         <div className="mx-auto mt-8 sm:mt-16 max-w-2xl lg:mt-20 lg:max-w-none">
-          <dl className="grid grid-cols-3 gap-2 sm:gap-8">
+          <dl className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-8">
             {steps.map((step) => (
               <div key={step.id} className="flex flex-col items-center text-center">
-                <dt className="flex flex-col items-center gap-y-2 sm:gap-y-6">
+                <dt className="flex flex-col items-center gap-y-4 sm:gap-y-6">
                   <div className="flex h-16 w-16 sm:h-24 sm:w-24 items-center justify-center rounded-lg bg-primary shadow-lg">
                     <span className="text-white text-xl sm:text-3xl font-bold">{step.id}</span>
                   </div>
@@ -53,7 +59,7 @@ export const HowItWorks = () => {
             ))}
           </dl>
         </div>
-        <div className="flex justify-center mt-8 sm:mt-16">
+        <div className="flex justify-center mt-12 sm:mt-16">
           <Button 
             variant="ghost" 
             size="icon"
