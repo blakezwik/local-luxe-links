@@ -11,6 +11,17 @@ interface HeroContentProps {
 export const HeroContent = ({ isAuthenticated, onScrollToSection }: HeroContentProps) => {
   const isMobile = useIsMobile();
 
+  const handleScroll = () => {
+    const howItWorksSection = document.getElementById('how-it-works');
+    if (howItWorksSection) {
+      const offset = howItWorksSection.offsetTop;
+      window.scrollTo({
+        top: offset,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
     <div className="relative min-h-screen flex items-center justify-center">
       <div className="absolute inset-0">
@@ -60,7 +71,7 @@ export const HeroContent = ({ isAuthenticated, onScrollToSection }: HeroContentP
             <Button 
               variant="ghost" 
               size="icon"
-              onClick={() => onScrollToSection('benefits')}
+              onClick={handleScroll}
               className="bg-[#FFD166] shadow-lg mt-8 sm:mt-12"
             >
               <ChevronDown className="h-6 w-6 sm:h-8 sm:w-8 text-white" />

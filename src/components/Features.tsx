@@ -39,16 +39,16 @@ export const Features = () => {
         </div>
 
         <div className="mt-8">
-          <div className="grid grid-cols-2 gap-4 max-w-3xl mx-auto">
+          <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-3xl mx-auto">
             {features.map((feature) => (
               <div
                 key={feature.name}
-                className="relative flex flex-col items-center text-center gap-2 rounded-lg bg-white p-4 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100"
+                className="relative flex flex-col items-center text-center gap-2 rounded-lg bg-white p-4 sm:p-6 lg:p-8 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#FFD166] text-white">
-                  <feature.icon className="h-5 w-5" aria-hidden="true" />
+                <div className="flex h-10 w-10 sm:h-12 sm:w-12 lg:h-16 lg:w-16 items-center justify-center rounded-lg bg-[#FFD166] text-white">
+                  <feature.icon className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8" aria-hidden="true" />
                 </div>
-                <p className="text-sm font-semibold text-foreground">
+                <p className="text-sm sm:text-base lg:text-lg font-semibold text-foreground">
                   {feature.name}
                 </p>
               </div>
