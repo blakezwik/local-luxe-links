@@ -15,23 +15,29 @@ export const TopBanner = ({ isAuthenticated, onSignOut }: TopBannerProps) => {
   const [fontLoaded, setFontLoaded] = useState(false);
 
   useEffect(() => {
-    // Check if the font is already loaded
-    document.fonts.ready.then(() => {
-      // Additional check specifically for Bukhari Script
-      document.fonts.load('1em "Bukhari Script"').then(() => {
+    const loadFont = async () => {
+      try {
+        const font = new FontFace(
+          'Bukhari Script',
+          'url(https://db.onlinewebfonts.com/t/eb6ac74acf8e1ebe3a28fc09c58cdf49.woff2) format("woff2")'
+        );
+        await font.load();
+        document.fonts.add(font);
         console.log("TopBanner: Bukhari Script font loaded successfully");
         setFontLoaded(true);
-      }).catch(error => {
+      } catch (error) {
         console.error("TopBanner: Error loading Bukhari Script font:", error);
-      });
-    });
+      }
+    };
+
+    loadFont();
   }, []);
 
   return (
     <div className="fixed top-0 left-0 right-0 bg-white h-16 flex justify-between items-center px-4 sm:px-6 z-50 shadow-sm">
       <h1 
         className={`text-2xl sm:text-4xl text-[#177E89] transition-opacity duration-300 ${fontLoaded ? 'opacity-100' : 'opacity-0'}`}
-        style={{ fontFamily: 'Bukhari Script, sans-serif' }}
+        style={{ fontFamily: fontLoaded ? 'Bukhari Script, sans-serif' : 'sans-serif' }}
       >
         GuestVibes
       </h1>
