@@ -20,6 +20,19 @@ serve(async (req) => {
       throw new Error('Missing Viator API key')
     }
 
+    // Log the request payload for debugging
+    const requestPayload = {
+      "sortOrder": "RECOMMENDED",
+      "page": {
+        "size": 20,
+        "number": 0
+      },
+      "destination": {
+        "text": state
+      }
+    }
+    console.log('Viator API request payload:', JSON.stringify(requestPayload, null, 2))
+
     // Search for experiences based on state only
     const response = await fetch('https://api.viator.com/partner/products/search', {
       method: 'POST',
@@ -28,25 +41,29 @@ serve(async (req) => {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        "sortOrder": "RECOMMENDED",
-        "page": {
-          "size": 20,
-          "number": 0
-        },
-        "destination": {
-          "text": state
-        }
-      })
+      body: JSON.stringify(requestPayload)
     })
 
+    // Log the raw response for debugging
+    const responseText = await response.text()
+    console.log('Raw Viator API response:', responseText)
+
     if (!response.ok) {
-      console.error('Viator API error:', await response.text())
-      throw new Error(`Viator API returned ${response.status}`)
+      console.error('Viator API error status:', response.status)
+      console.error('Viator API error response:', responseText)
+      throw new Error(`Viator API error: ${responseText}`)
     }
 
-    const data = await response.json()
-    console.log('Viator API response:', JSON.stringify(data, null, 2))
+    // Parse the response text as JSON
+    let data
+    try {
+      data = JSON.parse(responseText)
+    } catch (error) {
+      console.error('Failed to parse Viator API response:', error)
+      throw new Error('Invalid JSON response from Viator API')
+    }
+
+    console.log('Parsed Viator API response:', JSON.stringify(data, null, 2))
 
     if (!data.products || !Array.isArray(data.products)) {
       console.error('Unexpected response format:', data)
