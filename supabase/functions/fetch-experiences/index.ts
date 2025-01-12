@@ -26,6 +26,16 @@ serve(async (req) => {
       throw new Error('Missing Viator API key')
     }
 
+    // Get today's date and tomorrow's date in YYYY-MM-DD format
+    const today = new Date()
+    const tomorrow = new Date(today)
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    
+    const startDate = today.toISOString().split('T')[0]
+    const endDate = tomorrow.toISOString().split('T')[0]
+
+    console.log(`Searching for experiences between ${startDate} and ${endDate}`)
+
     // First, get destination ID for the state
     console.log('Searching for destination:', state)
     const destinationResponse = await fetch('https://api.viator.com/partner/v1/taxonomy/destinations?count=1000', {
@@ -95,14 +105,18 @@ serve(async (req) => {
     for (const destination of processedDestinations) {
       console.log(`Fetching experiences for destination: ${destination.destinationName}`)
       
-      const productsResponse = await fetch(`https://api.viator.com/partner/v1/taxonomy/destinations/${destination.destinationId}/products?count=100`, {
-        method: 'GET',
-        headers: {
-          'exp-api-key': VIATOR_API_KEY,
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
+      // Include date parameters in the API request
+      const productsResponse = await fetch(
+        `https://api.viator.com/partner/v1/taxonomy/destinations/${destination.destinationId}/products?count=100&startDate=${startDate}&endDate=${endDate}`, 
+        {
+          method: 'GET',
+          headers: {
+            'exp-api-key': VIATOR_API_KEY,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          }
         }
-      })
+      )
 
       if (!productsResponse.ok) {
         console.error(`Error fetching products for destination ${destination.destinationName}:`, await productsResponse.text())
