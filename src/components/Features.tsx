@@ -27,7 +27,7 @@ export const Features = () => {
   };
 
   return (
-    <div id="benefits" className="min-h-screen pt-16 sm:pt-24 bg-background">
+    <div id="benefits" className="min-h-screen pt-8 sm:pt-12 bg-background">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
         <div className="text-center">
           <h2 className="text-4xl sm:text-6xl font-bold leading-8 text-[#177E89]">
