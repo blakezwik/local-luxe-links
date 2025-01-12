@@ -45,7 +45,7 @@ export const Features = () => {
                 key={feature.name}
                 className="relative flex flex-col items-center text-center gap-2 p-4"
               >
-                <div className="flex h-12 w-12 sm:h-16 sm:w-16 lg:h-20 lg:w-20 items-center justify-center rounded-full bg-[#FFD166] text-white hover:scale-110 transition-transform duration-300 animate-float p-4">
+                <div className="flex h-12 w-12 sm:h-16 sm:w-16 lg:h-20 lg:w-20 items-center justify-center rounded-full bg-[#FFD166] text-white hover:scale-110 transition-transform duration-300 p-4">
                   <feature.icon className="h-6 w-6 sm:h-8 sm:w-8 lg:h-10 lg:w-10" aria-hidden="true" />
                 </div>
                 <p className="text-sm sm:text-base lg:text-lg font-semibold text-foreground mt-2">

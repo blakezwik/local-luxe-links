@@ -39,7 +39,7 @@ export const TopBanner = ({ isAuthenticated, onSignOut }: TopBannerProps) => {
         <img 
           src="/lovable-uploads/9731e10d-fbda-4f16-8602-d938652f62e6.png" 
           alt="GuestVibes Logo" 
-          className="h-8 w-8 sm:h-10 sm:w-10 mr-2"
+          className="h-16 w-16 sm:h-20 sm:w-20 mr-2"
         />
         <h1 
           className={`text-2xl sm:text-4xl text-[#177E89] transition-opacity duration-300 ${fontLoaded ? 'opacity-100' : 'opacity-0'}`}
