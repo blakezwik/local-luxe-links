@@ -22,7 +22,7 @@ serve(async (req) => {
 
     // First, get destination ID for the state
     console.log('Searching for destination:', state)
-    const destinationResponse = await fetch('https://api.viator.com/partner/v1/taxonomy/destinations?count=1000', {
+    const destinationResponse = await fetch('https://api.viator.com/partner/v1/taxonomy/destinations', {
       method: 'GET',
       headers: {
         'exp-api-key': VIATOR_API_KEY,
@@ -52,27 +52,23 @@ serve(async (req) => {
     // Find destinations that match our state
     const searchState = state.toLowerCase()
     const matchingDestinations = destinations.filter(dest => {
-      if (!dest) return false;
+      if (!dest?.destinationName) return false;
       
-      const destName = (dest.destinationName || '').toLowerCase()
+      const destName = dest.destinationName.toLowerCase()
       const parentName = (dest.parentDestinationName || '').toLowerCase()
       const destLocation = (dest.destinationLocation || '').toLowerCase()
       
       // Log each destination we're checking
       console.log('Checking destination:', {
-        destinationName: destName,
-        parentDestinationName: parentName,
-        destinationLocation: destLocation,
+        name: destName,
+        parent: parentName,
+        location: destLocation,
         searchingFor: searchState
       })
       
-      // Check if state name appears in any of the destination fields
       return destName.includes(searchState) || 
              parentName.includes(searchState) || 
-             destLocation.includes(searchState) ||
-             // Add common state mappings
-             (searchState === 'florida' && (destName.includes('fl,') || destName.includes('miami') || destName.includes('orlando'))) ||
-             (searchState === 'california' && (destName.includes('ca,') || destName.includes('san francisco') || destName.includes('los angeles')))
+             destLocation.includes(searchState)
     })
 
     if (matchingDestinations.length === 0) {
@@ -91,33 +87,32 @@ serve(async (req) => {
 
     console.log('Found matching destinations:', matchingDestinations)
 
-    // Get experiences for all matching destinations
-    let allExperiences = []
-    
-    for (const destination of matchingDestinations) {
-      const destinationId = destination.destinationId
-      console.log('Fetching experiences for destination ID:', destinationId)
+    // Get experiences for the first matching destination
+    const destination = matchingDestinations[0]
+    const destinationId = destination.destinationId
+    console.log('Fetching experiences for destination ID:', destinationId)
 
-      const productsResponse = await fetch(`https://api.viator.com/partner/v1/taxonomy/destinations/${destinationId}/products?count=10`, {
-        method: 'GET',
-        headers: {
-          'exp-api-key': VIATOR_API_KEY,
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }
-      })
-
-      if (!productsResponse.ok) {
-        console.error(`Error fetching products for destination ${destinationId}:`, await productsResponse.text())
-        continue // Skip this destination if there's an error, but continue with others
+    const productsResponse = await fetch(`https://api.viator.com/partner/v1/taxonomy/destinations/${destinationId}/products`, {
+      method: 'GET',
+      headers: {
+        'exp-api-key': VIATOR_API_KEY,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
       }
+    })
 
-      const productsData = await productsResponse.json()
-      console.log(`Products API response for ${destinationId}:`, JSON.stringify(productsData, null, 2))
+    if (!productsResponse.ok) {
+      const errorText = await productsResponse.text()
+      console.error('Viator API products error:', errorText)
+      throw new Error(`Viator API products error: ${errorText}`)
+    }
 
-      if (productsData?.data && Array.isArray(productsData.data)) {
-        allExperiences = [...allExperiences, ...productsData.data]
-      }
+    const productsData = await productsResponse.json()
+    console.log('Products API response:', JSON.stringify(productsData, null, 2))
+
+    if (!productsData?.data || !Array.isArray(productsData.data)) {
+      console.error('Invalid products response:', productsData)
+      throw new Error('Invalid products response from Viator API')
     }
 
     // Create Supabase client
@@ -128,10 +123,10 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey)
 
     // Map products to experiences format
-    const experiences = allExperiences.map(product => ({
-      viator_id: product.productCode || product.productId || '',
-      title: product.productName || product.title || 'Untitled Experience',
-      description: product.productDescription || product.description || '',
+    const experiences = productsData.data.map(product => ({
+      viator_id: product.productCode || '',
+      title: product.productName || 'Untitled Experience',
+      description: product.productDescription || '',
       price: product.price?.fromPrice || null,
       image_url: product.thumbnailUrl || product.primaryPhotoUrl || null,
       destination: state
@@ -156,8 +151,8 @@ serve(async (req) => {
       JSON.stringify({ 
         experiences,
         message: experiences.length > 0 
-          ? `Found ${experiences.length} top experiences in ${state}`
-          : `No experiences found in ${state}. Please try a different location.`
+          ? `Found ${experiences.length} experiences in ${destination.destinationName}`
+          : `No experiences found in ${destination.destinationName}. Please try a different location.`
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
