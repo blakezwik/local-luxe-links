@@ -6,6 +6,12 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+// Map of state names to their major cities and alternate names
+const stateMapping: Record<string, string[]> = {
+  'Florida': ['Florida', 'FL', 'Miami', 'Orlando', 'Tampa', 'Fort Lauderdale'],
+  // Add other states as needed
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -22,7 +28,7 @@ serve(async (req) => {
 
     // First, get destination ID for the state
     console.log('Searching for destination:', state)
-    const destinationResponse = await fetch('https://api.viator.com/partner/v1/taxonomy/destinations', {
+    const destinationResponse = await fetch('https://api.viator.com/partner/v1/taxonomy/destinations?count=1000', {
       method: 'GET',
       headers: {
         'exp-api-key': VIATOR_API_KEY,
@@ -38,37 +44,32 @@ serve(async (req) => {
     }
 
     const destinationData = await destinationResponse.json()
-    console.log('Destination API response:', JSON.stringify(destinationData, null, 2))
+    console.log('Got destinations response')
 
-    // Validate response structure
     if (!destinationData?.data || !Array.isArray(destinationData.data)) {
-      console.error('Invalid destination response:', destinationData)
-      throw new Error('Invalid destination response from Viator API')
+      console.error('Invalid destination response structure:', destinationData)
+      throw new Error('Invalid destination response structure from Viator API')
     }
 
     const destinations = destinationData.data
     console.log(`Found ${destinations.length} destinations to search through`)
 
-    // Find destinations that match our state
-    const searchState = state.toLowerCase()
+    // Get search terms for the state
+    const searchTerms = stateMapping[state] || [state]
+    
+    // Find destinations that match our state or its major cities
     const matchingDestinations = destinations.filter(dest => {
-      if (!dest?.destinationName) return false;
+      if (!dest?.destinationName) return false
       
       const destName = dest.destinationName.toLowerCase()
       const parentName = (dest.parentDestinationName || '').toLowerCase()
       const destLocation = (dest.destinationLocation || '').toLowerCase()
       
-      // Log each destination we're checking
-      console.log('Checking destination:', {
-        name: destName,
-        parent: parentName,
-        location: destLocation,
-        searchingFor: searchState
-      })
-      
-      return destName.includes(searchState) || 
-             parentName.includes(searchState) || 
-             destLocation.includes(searchState)
+      return searchTerms.some(term => 
+        destName.includes(term.toLowerCase()) || 
+        parentName.includes(term.toLowerCase()) || 
+        destLocation.includes(term.toLowerCase())
+      )
     })
 
     if (matchingDestinations.length === 0) {
@@ -85,34 +86,43 @@ serve(async (req) => {
       )
     }
 
-    console.log('Found matching destinations:', matchingDestinations)
+    console.log(`Found ${matchingDestinations.length} matching destinations`)
 
-    // Get experiences for the first matching destination
-    const destination = matchingDestinations[0]
-    const destinationId = destination.destinationId
-    console.log('Fetching experiences for destination ID:', destinationId)
+    // Get experiences for each matching destination
+    let allExperiences = []
+    const processedDestinations = matchingDestinations.slice(0, 5) // Limit to first 5 destinations to avoid too many requests
 
-    const productsResponse = await fetch(`https://api.viator.com/partner/v1/taxonomy/destinations/${destinationId}/products`, {
-      method: 'GET',
-      headers: {
-        'exp-api-key': VIATOR_API_KEY,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
+    for (const destination of processedDestinations) {
+      console.log(`Fetching experiences for destination: ${destination.destinationName}`)
+      
+      const productsResponse = await fetch(`https://api.viator.com/partner/v1/taxonomy/destinations/${destination.destinationId}/products?count=100`, {
+        method: 'GET',
+        headers: {
+          'exp-api-key': VIATOR_API_KEY,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }
+      })
+
+      if (!productsResponse.ok) {
+        console.error(`Error fetching products for destination ${destination.destinationName}:`, await productsResponse.text())
+        continue // Skip this destination if there's an error
       }
-    })
 
-    if (!productsResponse.ok) {
-      const errorText = await productsResponse.text()
-      console.error('Viator API products error:', errorText)
-      throw new Error(`Viator API products error: ${errorText}`)
-    }
-
-    const productsData = await productsResponse.json()
-    console.log('Products API response:', JSON.stringify(productsData, null, 2))
-
-    if (!productsData?.data || !Array.isArray(productsData.data)) {
-      console.error('Invalid products response:', productsData)
-      throw new Error('Invalid products response from Viator API')
+      const productsData = await productsResponse.json()
+      
+      if (productsData?.data && Array.isArray(productsData.data)) {
+        const experiences = productsData.data.map(product => ({
+          viator_id: product.productCode || '',
+          title: product.productName || 'Untitled Experience',
+          description: product.productDescription || '',
+          price: product.price?.fromPrice || null,
+          image_url: product.thumbnailUrl || product.primaryPhotoUrl || null,
+          destination: destination.destinationName
+        }))
+        
+        allExperiences = [...allExperiences, ...experiences]
+      }
     }
 
     // Create Supabase client
@@ -122,21 +132,11 @@ serve(async (req) => {
     
     const supabase = createClient(supabaseUrl, supabaseKey)
 
-    // Map products to experiences format
-    const experiences = productsData.data.map(product => ({
-      viator_id: product.productCode || '',
-      title: product.productName || 'Untitled Experience',
-      description: product.productDescription || '',
-      price: product.price?.fromPrice || null,
-      image_url: product.thumbnailUrl || product.primaryPhotoUrl || null,
-      destination: state
-    }))
-
-    if (experiences.length > 0) {
-      console.log('Saving experiences to database:', experiences.length)
+    if (allExperiences.length > 0) {
+      console.log('Saving experiences to database:', allExperiences.length)
       const { error } = await supabase
         .from('experiences')
-        .upsert(experiences, { 
+        .upsert(allExperiences, { 
           onConflict: 'viator_id',
           ignoreDuplicates: false 
         })
@@ -149,10 +149,10 @@ serve(async (req) => {
 
     return new Response(
       JSON.stringify({ 
-        experiences,
-        message: experiences.length > 0 
-          ? `Found ${experiences.length} experiences in ${destination.destinationName}`
-          : `No experiences found in ${destination.destinationName}. Please try a different location.`
+        experiences: allExperiences,
+        message: allExperiences.length > 0 
+          ? `Found ${allExperiences.length} experiences in ${state}`
+          : `No experiences found in ${state}. Please try a different location.`
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
