@@ -43,12 +43,12 @@ export const Features = () => {
             {features.map((feature) => (
               <div
                 key={feature.name}
-                className="relative flex flex-col items-center text-center gap-2 rounded-lg bg-white p-4 sm:p-6 lg:p-8 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100"
+                className="relative flex flex-col items-center text-center gap-2 p-4"
               >
-                <div className="flex h-10 w-10 sm:h-12 sm:w-12 lg:h-16 lg:w-16 items-center justify-center rounded-lg bg-[#FFD166] text-white">
-                  <feature.icon className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8" aria-hidden="true" />
+                <div className="flex h-12 w-12 sm:h-16 sm:w-16 lg:h-20 lg:w-20 items-center justify-center rounded-full bg-[#FFD166] text-white hover:scale-110 transition-transform duration-300 animate-float p-4">
+                  <feature.icon className="h-6 w-6 sm:h-8 sm:w-8 lg:h-10 lg:w-10" aria-hidden="true" />
                 </div>
-                <p className="text-sm sm:text-base lg:text-lg font-semibold text-foreground">
+                <p className="text-sm sm:text-base lg:text-lg font-semibold text-foreground mt-2">
                   {feature.name}
                 </p>
               </div>
@@ -59,10 +59,10 @@ export const Features = () => {
         <div className="mt-8 sm:mt-12">
           <div className="relative isolate overflow-hidden bg-[#177E89] px-4 py-4 sm:py-6 text-center shadow-lg sm:rounded-xl sm:px-6 max-w-lg mx-auto">
             <h2 className="mx-auto max-w-xl text-xl sm:text-2xl font-bold tracking-tight text-white">
-              Ready to boost your hosting income?
+              Boost your hosting income today
             </h2>
             <p className="mx-auto mt-2 sm:mt-3 max-w-xl text-sm sm:text-base leading-6 text-white/90">
-              Join thousands of hosts who are already earning passive income through local partnerships.
+              Join thousands of hosts who are already earning passive income
             </p>
             <div className="mt-4 sm:mt-5 flex items-center justify-center">
               <SignUpDialog>
@@ -85,7 +85,7 @@ export const Features = () => {
 
         <div className="mt-6 text-center">
           <h1 className="text-3xl text-[#177E89]" style={{ fontFamily: 'Bukhari Script' }}>
-            HostVibes
+            GuestVibes
           </h1>
           <p className="mt-2 text-sm">
             Made with <span className="text-[#177E89]">❤</span>

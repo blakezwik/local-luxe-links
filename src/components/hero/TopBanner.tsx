@@ -19,7 +19,7 @@ export const TopBanner = ({ isAuthenticated, onSignOut }: TopBannerProps) => {
       try {
         const font = new FontFace(
           'Bukhari Script',
-          'url(https://db.onlinewebfonts.com/t/eb6ac74acf8e1ebe3a28fc09c58cdf49.woff2) format("woff2")'
+          'url(https://fonts.cdnfonts.com/css/bukhari-script) format("woff2")'
         );
         await font.load();
         document.fonts.add(font);
@@ -37,7 +37,7 @@ export const TopBanner = ({ isAuthenticated, onSignOut }: TopBannerProps) => {
     <div className="fixed top-0 left-0 right-0 bg-white h-16 flex justify-between items-center px-4 sm:px-6 z-50 shadow-sm">
       <h1 
         className={`text-2xl sm:text-4xl text-[#177E89] transition-opacity duration-300 ${fontLoaded ? 'opacity-100' : 'opacity-0'}`}
-        style={{ fontFamily: fontLoaded ? 'Bukhari Script, sans-serif' : 'sans-serif' }}
+        style={{ fontFamily: 'Bukhari Script, sans-serif' }}
       >
         GuestVibes
       </h1>
