@@ -12,14 +12,15 @@ serve(async (req) => {
   }
 
   try {
-    const { location } = await req.json()
+    const { state } = await req.json()
+    console.log('Fetching experiences for state:', state)
     
     const VIATOR_API_KEY = Deno.env.get('VIATOR_API_KEY')
     if (!VIATOR_API_KEY) {
       throw new Error('Missing Viator API key')
     }
 
-    // Search for experiences based on location
+    // Search for experiences based on state only
     const response = await fetch('https://api.viator.com/partner/products/search', {
       method: 'POST',
       headers: {
@@ -34,12 +35,13 @@ serve(async (req) => {
           "number": 0
         },
         "destination": {
-          "text": location
+          "text": state
         }
       })
     })
 
     const data = await response.json()
+    console.log(`Found ${data.products?.length || 0} experiences for state: ${state}`)
 
     // Create Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
@@ -55,7 +57,7 @@ serve(async (req) => {
       description: product.description,
       price: product.price?.fromPrice,
       image_url: product.productUrlId,
-      destination: location
+      destination: state
     })) || []
 
     if (experiences.length > 0) {

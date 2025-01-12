@@ -25,25 +25,24 @@ export const FeatureCards = () => {
 
       const { data: profile } = await supabase
         .from('profiles')
-        .select('city, state')
+        .select('state')
         .eq('id', session.user.id)
         .single();
 
-      if (!profile?.city || !profile?.state) {
+      if (!profile?.state) {
         toast({
-          title: "Location Required",
-          description: "Please update your profile with your location to browse local experiences.",
+          title: "State Required",
+          description: "Please update your profile with your state to browse local experiences.",
           duration: 3000,
         });
         return;
       }
 
-      const location = `${profile.city}, ${profile.state}`;
-      console.log('Fetching experiences for location:', location);
+      console.log('Fetching experiences for state:', profile.state);
       
       // Fetch experiences from Viator API via Edge Function
       const { data, error } = await supabase.functions.invoke('fetch-experiences', {
-        body: { location }
+        body: { state: profile.state }
       });
 
       if (error) throw error;
@@ -51,13 +50,13 @@ export const FeatureCards = () => {
       if (data?.experiences?.length > 0) {
         toast({
           title: "Experiences Updated",
-          description: `Found ${data.experiences.length} experiences in your area.`,
+          description: `Found ${data.experiences.length} experiences in ${profile.state}.`,
           duration: 3000,
         });
       } else {
         toast({
           title: "No Experiences Found",
-          description: "We couldn't find any experiences in your area. Please try again with a different location.",
+          description: `We couldn't find any experiences in ${profile.state}. Please try updating your profile with a different state.`,
           duration: 3000,
         });
       }
