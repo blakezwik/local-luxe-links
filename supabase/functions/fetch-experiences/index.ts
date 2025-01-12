@@ -20,18 +20,15 @@ serve(async (req) => {
       throw new Error('Missing Viator API key')
     }
 
-    // First, get destination ID for the state
-    const destinationResponse = await fetch('https://api.viator.com/partner/locations/search', {
-      method: 'POST',
+    // First, get destination ID for the state using the correct endpoint format
+    console.log('Searching for destination:', state)
+    const destinationResponse = await fetch('https://api.viator.com/partner/v1/taxonomy/destinations', {
+      method: 'GET',
       headers: {
         'exp-api-key': VIATOR_API_KEY,
-        'Accept': 'application/json;version=2.0',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "query": state,
-        "type": "REGION"
-      })
+      }
     })
 
     if (!destinationResponse.ok) {
@@ -43,7 +40,13 @@ serve(async (req) => {
     const destinationData = await destinationResponse.json()
     console.log('Destination search response:', JSON.stringify(destinationData, null, 2))
 
-    if (!destinationData.locations || destinationData.locations.length === 0) {
+    // Find the destination that matches our state
+    const destination = destinationData.data.find((dest: any) => 
+      dest.destinationName.toLowerCase().includes(state.toLowerCase()) ||
+      dest.parentDestinationName?.toLowerCase().includes(state.toLowerCase())
+    )
+
+    if (!destination) {
       return new Response(
         JSON.stringify({ 
           experiences: [],
@@ -56,20 +59,17 @@ serve(async (req) => {
       )
     }
 
-    const destinationId = destinationData.locations[0].destinationId
+    const destinationId = destination.destinationId
+    console.log('Found destination ID:', destinationId)
 
-    // Then, get top experiences for this destination
-    const response = await fetch('https://api.viator.com/partner/products/top-selling', {
-      method: 'POST',
+    // Then, get top experiences for this destination using the correct endpoint
+    const response = await fetch(`https://api.viator.com/partner/v1/taxonomy/destinations/${destinationId}/products`, {
+      method: 'GET',
       headers: {
         'exp-api-key': VIATOR_API_KEY,
-        'Accept': 'application/json;version=2.0',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "destinationId": destinationId,
-        "topX": 10
-      })
+      }
     })
 
     if (!response.ok) {
@@ -79,7 +79,7 @@ serve(async (req) => {
     }
 
     const data = await response.json()
-    console.log('Top experiences response:', JSON.stringify(data, null, 2))
+    console.log('Products response:', JSON.stringify(data, null, 2))
 
     // Create Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
@@ -88,13 +88,13 @@ serve(async (req) => {
     
     const supabase = createClient(supabaseUrl, supabaseKey)
 
-    // Store experiences in the database
-    const experiences = data.products?.map((product: any) => ({
-      viator_id: product.productCode,
-      title: product.title,
-      description: product.description,
+    // Map the products to our experience format
+    const experiences = data.data?.slice(0, 10).map((product: any) => ({
+      viator_id: product.productCode || product.productId,
+      title: product.productName || product.title,
+      description: product.productDescription || product.description,
       price: product.price?.fromPrice,
-      image_url: product.primaryPhotoUrl,
+      image_url: product.thumbnailUrl || product.primaryPhotoUrl,
       destination: state
     })) || []
 
