@@ -13,25 +13,16 @@ serve(async (req) => {
   }
 
   try {
-    console.log('Fetching popular experiences')
+    console.log('Starting to fetch popular experiences')
     
     const VIATOR_API_KEY = Deno.env.get('VIATOR_API_KEY')
     if (!VIATOR_API_KEY) {
       throw new Error('Missing Viator API key')
     }
 
-    // Get today's date and tomorrow's date in YYYY-MM-DD format
-    const today = new Date()
-    const tomorrow = new Date(today)
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    
-    const startDate = today.toISOString().split('T')[0]
-    const endDate = tomorrow.toISOString().split('T')[0]
-
-    console.log(`Searching for experiences between ${startDate} and ${endDate}`)
-
-    // Fetch popular products directly
-    const productsResponse = await fetch('https://api.viator.com/partner/products/popular', {
+    // Fetch popular products from Viator
+    console.log('Fetching from Viator API...')
+    const response = await fetch('https://api.viator.com/partner/products/popular', {
       method: 'GET',
       headers: {
         'exp-api-key': VIATOR_API_KEY,
@@ -40,37 +31,43 @@ serve(async (req) => {
       }
     })
 
-    if (!productsResponse.ok) {
-      console.error('Viator API error:', await productsResponse.text())
-      throw new Error('Failed to fetch experiences from Viator API')
+    if (!response.ok) {
+      console.error('Viator API error:', await response.text())
+      throw new Error(`Viator API returned ${response.status}`)
     }
 
-    const productsData = await productsResponse.json()
-    console.log('Got products response:', JSON.stringify(productsData))
+    const data = await response.json()
+    console.log('Received response from Viator:', JSON.stringify(data))
 
-    if (!productsData?.data) {
-      console.error('Invalid products response:', productsData)
+    if (!data?.data || !Array.isArray(data.data)) {
+      console.error('Invalid response structure:', data)
       throw new Error('Invalid response structure from Viator API')
     }
 
-    const experiences = productsData.data.map((product: any) => ({
-      viator_id: product.productCode || product.code,
+    // Transform the data
+    const experiences = data.data.map((product: any) => ({
+      viator_id: product.productCode,
       title: product.title || 'Untitled Experience',
-      description: product.description || '',
+      description: product.description || null,
       price: product.price?.fromPrice || null,
       image_url: product.pictures?.[0]?.urls?.[0] || null,
-      destination: product.destination || 'Popular Experience'
+      destination: product.destination || null
     }))
+
+    console.log(`Transformed ${experiences.length} experiences`)
 
     // Create Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
-    if (!supabaseUrl || !supabaseKey) throw new Error('Missing Supabase credentials')
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error('Missing Supabase credentials')
+    }
     
     const supabase = createClient(supabaseUrl, supabaseKey)
 
+    // Save experiences to database
     if (experiences.length > 0) {
-      console.log('Saving experiences to database:', experiences.length)
+      console.log('Saving experiences to database')
       const { error } = await supabase
         .from('experiences')
         .upsert(experiences, { 
@@ -82,6 +79,7 @@ serve(async (req) => {
         console.error('Supabase upsert error:', error)
         throw error
       }
+      console.log('Successfully saved experiences')
     }
 
     return new Response(
@@ -98,10 +96,10 @@ serve(async (req) => {
     )
 
   } catch (error) {
-    console.error('Error:', error)
+    console.error('Error in fetch-experiences:', error)
     return new Response(
       JSON.stringify({ 
-        error: error.message || "Unknown error occurred",
+        error: error.message,
         message: "Failed to fetch experiences. Please try again later."
       }),
       { 
