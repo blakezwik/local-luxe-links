@@ -12,7 +12,27 @@ const stateMapping: Record<string, string[]> = {
   // Add other states as needed
 }
 
+interface ViatorDestination {
+  destinationId: string;
+  destinationName: string;
+  parentDestinationId?: string;
+  parentDestinationName?: string;
+  destinationLocation?: string;
+}
+
+interface ViatorProduct {
+  productCode: string;
+  productName: string;
+  productDescription?: string;
+  price?: {
+    fromPrice: number;
+  };
+  thumbnailUrl?: string;
+  primaryPhotoUrl?: string;
+}
+
 serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -48,20 +68,19 @@ serve(async (req) => {
     })
 
     if (!destinationResponse.ok) {
-      const errorText = await destinationResponse.text()
-      console.error('Viator API destination error:', errorText)
-      throw new Error(`Viator API destination error: ${errorText}`)
+      console.error('Viator API destination error:', await destinationResponse.text())
+      throw new Error('Failed to fetch destinations from Viator API')
     }
 
     const destinationData = await destinationResponse.json()
-    console.log('Got destinations response')
+    console.log('Got destinations response:', JSON.stringify(destinationData))
 
     if (!destinationData?.data || !Array.isArray(destinationData.data)) {
       console.error('Invalid destination response structure:', destinationData)
       throw new Error('Invalid destination response structure from Viator API')
     }
 
-    const destinations = destinationData.data
+    const destinations = destinationData.data as ViatorDestination[]
     console.log(`Found ${destinations.length} destinations to search through`)
 
     // Get search terms for the state
@@ -96,37 +115,43 @@ serve(async (req) => {
       )
     }
 
-    console.log(`Found ${matchingDestinations.length} matching destinations`)
+    console.log(`Found ${matchingDestinations.length} matching destinations:`, matchingDestinations)
 
     // Get experiences for each matching destination
     let allExperiences = []
-    const processedDestinations = matchingDestinations.slice(0, 5) // Limit to first 5 destinations to avoid too many requests
+    const processedDestinations = matchingDestinations.slice(0, 5) // Limit to first 5 destinations
 
     for (const destination of processedDestinations) {
-      console.log(`Fetching experiences for destination: ${destination.destinationName}`)
+      console.log(`Fetching experiences for destination: ${destination.destinationName} (ID: ${destination.destinationId})`)
       
-      // Include date parameters in the API request
-      const productsResponse = await fetch(
-        `https://api.viator.com/partner/v1/taxonomy/destinations/${destination.destinationId}/products?count=100&startDate=${startDate}&endDate=${endDate}`, 
-        {
-          method: 'GET',
-          headers: {
-            'exp-api-key': VIATOR_API_KEY,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
+      try {
+        const productsResponse = await fetch(
+          `https://api.viator.com/partner/v1/taxonomy/destinations/${destination.destinationId}/products?count=100&startDate=${startDate}&endDate=${endDate}`, 
+          {
+            method: 'GET',
+            headers: {
+              'exp-api-key': VIATOR_API_KEY,
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            }
           }
+        )
+
+        if (!productsResponse.ok) {
+          console.error(`Error fetching products for destination ${destination.destinationName}:`, await productsResponse.text())
+          continue // Skip this destination if there's an error
         }
-      )
 
-      if (!productsResponse.ok) {
-        console.error(`Error fetching products for destination ${destination.destinationName}:`, await productsResponse.text())
-        continue // Skip this destination if there's an error
-      }
+        const productsData = await productsResponse.json()
+        console.log(`Got products response for ${destination.destinationName}:`, JSON.stringify(productsData))
+        
+        if (!productsData?.data || !Array.isArray(productsData.data)) {
+          console.error(`Invalid products response for destination ${destination.destinationName}:`, productsData)
+          continue
+        }
 
-      const productsData = await productsResponse.json()
-      
-      if (productsData?.data && Array.isArray(productsData.data)) {
-        const experiences = productsData.data.map(product => ({
+        const products = productsData.data as ViatorProduct[]
+        const experiences = products.map(product => ({
           viator_id: product.productCode || '',
           title: product.productName || 'Untitled Experience',
           description: product.productDescription || '',
@@ -136,6 +161,10 @@ serve(async (req) => {
         }))
         
         allExperiences = [...allExperiences, ...experiences]
+        console.log(`Added ${experiences.length} experiences from ${destination.destinationName}`)
+      } catch (error) {
+        console.error(`Error processing destination ${destination.destinationName}:`, error)
+        continue // Skip this destination if there's an error
       }
     }
 
@@ -178,7 +207,7 @@ serve(async (req) => {
     console.error('Error:', error)
     return new Response(
       JSON.stringify({ 
-        error: error.message,
+        error: error.message || "Unknown error occurred",
         message: "Failed to fetch experiences. Please try again later."
       }),
       { 
