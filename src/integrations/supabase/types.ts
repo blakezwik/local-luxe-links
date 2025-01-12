@@ -9,6 +9,84 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      experiences: {
+        Row: {
+          created_at: string
+          description: string | null
+          destination: string | null
+          id: string
+          image_url: string | null
+          price: number | null
+          title: string
+          updated_at: string
+          viator_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          destination?: string | null
+          id?: string
+          image_url?: string | null
+          price?: number | null
+          title: string
+          updated_at?: string
+          viator_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          destination?: string | null
+          id?: string
+          image_url?: string | null
+          price?: number | null
+          title?: string
+          updated_at?: string
+          viator_id?: string
+        }
+        Relationships: []
+      }
+      host_experiences: {
+        Row: {
+          created_at: string
+          experience_id: string
+          host_id: string
+          id: string
+          is_active: boolean | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          experience_id: string
+          host_id: string
+          id?: string
+          is_active?: boolean | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          experience_id?: string
+          host_id?: string
+          id?: string
+          is_active?: boolean | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "host_experiences_experience_id_fkey"
+            columns: ["experience_id"]
+            isOneToOne: false
+            referencedRelation: "experiences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "host_experiences_host_id_fkey"
+            columns: ["host_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       locations: {
         Row: {
           city: string
