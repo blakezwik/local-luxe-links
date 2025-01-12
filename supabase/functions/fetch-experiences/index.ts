@@ -26,10 +26,9 @@ serve(async (req) => {
       method: 'GET',
       headers: {
         'exp-api-key': VIATOR_API_KEY,
-        'Accept': 'application/json',
-        'Accept-Language': 'en-US',
-        'Content-Type': 'application/json',
-        'Accept-Version': '2.0'
+        'accept': 'application/json;version=2.0',
+        'accept-language': 'en-US',
+        'content-type': 'application/json'
       }
     })
 
