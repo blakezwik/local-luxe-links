@@ -16,7 +16,7 @@ export const FeatureCards = () => {
     try {
       setLoading(true);
       
-      // Get user's location from profile
+      // Check if user is signed in
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         toast({
@@ -27,38 +27,30 @@ export const FeatureCards = () => {
         return;
       }
 
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('state')
-        .eq('id', session.user.id)
-        .single();
-
-      if (!profile?.state) {
-        toast({
-          title: "State Required",
-          description: "Please update your profile with your state to browse local experiences.",
-          duration: 3000,
-        });
-        return;
-      }
-
-      console.log('Fetching experiences for state:', profile.state);
-      
       // Show loading toast
-      const loadingToast = toast({
+      toast({
         title: "Fetching Experiences",
-        description: `Looking for top experiences in ${profile.state}...`,
+        description: "Looking for popular experiences...",
         duration: null, // This makes it persist until we dismiss it
       });
       
       // Fetch experiences from Viator API via Edge Function
       const { data, error } = await supabase.functions.invoke('fetch-experiences', {
-        body: { state: profile.state }
+        body: {}  // No need to send state anymore
       });
 
       if (error) throw error;
 
-      // Dismiss loading toast
+      // Get existing active experiences for this host
+      const { data: activeExperiences } = await supabase
+        .from('host_experiences')
+        .select('experience_id')
+        .eq('host_id', session.user.id)
+        .eq('is_active', true);
+
+      const count = activeExperiences?.length || 0;
+      setActiveCount(count);
+
       toast({
         title: data.experiences.length > 0 ? "Experiences Found" : "No Experiences Found",
         description: data.message,
@@ -68,16 +60,6 @@ export const FeatureCards = () => {
       if (data.experiences.length > 0) {
         setExperiences(data.experiences);
         setShowGrid(true);
-
-        // Get existing active experiences for this host
-        const { data: activeExperiences } = await supabase
-          .from('host_experiences')
-          .select('experience_id')
-          .eq('host_id', session.user.id)
-          .eq('is_active', true);
-
-        const count = activeExperiences?.length || 0;
-        setActiveCount(count);
 
         toast({
           title: "Current Selection",
@@ -121,7 +103,7 @@ export const FeatureCards = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
-            <p className="text-sm">Find top-rated local experiences</p>
+            <p className="text-sm">Find popular experiences</p>
             <p className="text-xs text-gray-400 mt-2">Click to update your selection</p>
           </CardContent>
         </Card>
