@@ -49,7 +49,7 @@ export function SignUpDialog({
         <DialogHeader>
           <DialogTitle className="text-center">
             <img 
-              src="/lovable-uploads/bbdc950f-cab5-4c5c-acaa-1be3dcb11d26.png" 
+              src="/lovable-uploads/d7ab0479-09b7-4d75-b570-53049aaf23d9.png" 
               alt="GuestVibes Logo" 
               className="h-72 mx-auto"
             />
