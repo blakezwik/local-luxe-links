@@ -39,7 +39,7 @@ export const Features = () => {
         </div>
 
         <div className="mt-8">
-          <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-3xl mx-auto">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 max-w-7xl mx-auto">
             {features.map((feature) => (
               <div
                 key={feature.name}
