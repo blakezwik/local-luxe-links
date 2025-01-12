@@ -39,33 +39,25 @@ export const FeatureCards = () => {
       }
 
       const location = `${profile.city}, ${profile.state}`;
+      console.log('Fetching experiences for location:', location);
       
       // Fetch experiences from Viator API via Edge Function
-      const response = await fetch(`${process.env.SUPABASE_URL}/functions/v1/fetch-experiences`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
-        },
-        body: JSON.stringify({ location }),
+      const { data, error } = await supabase.functions.invoke('fetch-experiences', {
+        body: { location }
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch experiences');
-      }
+      if (error) throw error;
 
-      const { experiences } = await response.json();
-      
-      if (experiences?.length > 0) {
+      if (data?.experiences?.length > 0) {
         toast({
           title: "Experiences Updated",
-          description: `Found ${experiences.length} experiences in your area.`,
+          description: `Found ${data.experiences.length} experiences in your area.`,
           duration: 3000,
         });
       } else {
         toast({
           title: "No Experiences Found",
-          description: "We couldn't find any experiences in your area. Please try again later.",
+          description: "We couldn't find any experiences in your area. Please try again with a different location.",
           duration: 3000,
         });
       }
