@@ -84,14 +84,16 @@ export const Features = () => {
         </div>
 
         <div className="mt-4 sm:mt-3 text-center">
-          <img 
-            src="/lovable-uploads/7d547ebc-3fb1-4cd4-b21a-fdeddc75af35.png" 
-            alt="GuestVibes" 
-            className="h-[60px] mx-auto"
-          />
-          <p className="mt-2 text-sm">
-            Made with <span className="text-[#177E89]">❤</span>
-          </p>
+          <div className="flex items-center justify-center gap-2">
+            <img 
+              src="/lovable-uploads/7d547ebc-3fb1-4cd4-b21a-fdeddc75af35.png" 
+              alt="GuestVibes" 
+              className="h-[40px]"
+            />
+            <p className="text-sm">
+              Made with <span className="text-[#177E89]">❤</span>
+            </p>
+          </div>
         </div>
       </div>
     </div>
