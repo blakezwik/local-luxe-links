@@ -36,8 +36,8 @@ export const HowItWorks = () => {
   };
 
   return (
-    <div id="how-it-works" className="min-h-screen pt-8 bg-background px-4 sm:px-6">
-      <div className="mx-auto max-w-7xl">
+    <div id="how-it-works" className="min-h-screen bg-background px-4 sm:px-6 flex flex-col justify-center">
+      <div className="mx-auto max-w-7xl w-full">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-4xl sm:text-6xl font-bold leading-tight sm:leading-8 tracking-tight text-[#177E89] mb-4">
             How It Works
@@ -46,7 +46,7 @@ export const HowItWorks = () => {
             Start Earning in 3 Simple Steps
           </p>
         </div>
-        <div className="mx-auto mt-4 sm:mt-6 max-w-2xl lg:mt-8 lg:max-w-none">
+        <div className="mx-auto mt-4 sm:mt-6 max-w-2xl lg:mt-8 lg:max-w-5xl">
           <dl className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {steps.map((step) => (
               <div key={step.id} className="flex flex-col items-center text-center">
@@ -63,7 +63,7 @@ export const HowItWorks = () => {
             ))}
           </dl>
         </div>
-        <div className="flex justify-center mt-4 sm:mt-6">
+        <div className="flex justify-center mt-8">
           <Button 
             variant="ghost" 
             size="icon"
