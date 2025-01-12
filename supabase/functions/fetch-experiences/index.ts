@@ -40,11 +40,20 @@ serve(async (req) => {
     const destinationData = await destinationResponse.json()
     console.log('Destination search response:', JSON.stringify(destinationData, null, 2))
 
+    // Validate the response structure
+    if (!destinationData || !destinationData.data || !Array.isArray(destinationData.data)) {
+      console.error('Invalid destination data structure:', destinationData)
+      throw new Error('Invalid response from Viator API')
+    }
+
     // Find the destination that matches our state
-    const destination = destinationData.data.find((dest: any) => 
-      dest.destinationName.toLowerCase().includes(state.toLowerCase()) ||
-      dest.parentDestinationName?.toLowerCase().includes(state.toLowerCase())
-    )
+    const destination = destinationData.data.find((dest: any) => {
+      if (!dest) return false;
+      const destName = (dest.destinationName || '').toLowerCase();
+      const parentName = (dest.parentDestinationName || '').toLowerCase();
+      const searchState = state.toLowerCase();
+      return destName.includes(searchState) || parentName.includes(searchState);
+    });
 
     if (!destination) {
       return new Response(
@@ -81,6 +90,12 @@ serve(async (req) => {
     const data = await response.json()
     console.log('Products response:', JSON.stringify(data, null, 2))
 
+    // Validate the products response structure
+    if (!data || !data.data) {
+      console.error('Invalid products data structure:', data)
+      throw new Error('Invalid products response from Viator API')
+    }
+
     // Create Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
@@ -88,15 +103,17 @@ serve(async (req) => {
     
     const supabase = createClient(supabaseUrl, supabaseKey)
 
-    // Map the products to our experience format
-    const experiences = data.data?.slice(0, 10).map((product: any) => ({
-      viator_id: product.productCode || product.productId,
-      title: product.productName || product.title,
-      description: product.productDescription || product.description,
-      price: product.price?.fromPrice,
-      image_url: product.thumbnailUrl || product.primaryPhotoUrl,
-      destination: state
-    })) || []
+    // Map the products to our experience format with null checks
+    const experiences = Array.isArray(data.data) 
+      ? data.data.slice(0, 10).map((product: any) => ({
+          viator_id: product.productCode || product.productId || '',
+          title: product.productName || product.title || 'Untitled Experience',
+          description: product.productDescription || product.description || '',
+          price: product.price?.fromPrice || null,
+          image_url: product.thumbnailUrl || product.primaryPhotoUrl || null,
+          destination: state
+        }))
+      : [];
 
     if (experiences.length > 0) {
       const { error } = await supabase
