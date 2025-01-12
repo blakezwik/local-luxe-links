@@ -40,6 +40,13 @@ export const FeatureCards = () => {
 
       console.log('Fetching experiences for state:', profile.state);
       
+      // Show loading toast
+      toast({
+        title: "Fetching Experiences",
+        description: `Looking for top experiences in ${profile.state}...`,
+        duration: null, // This makes it persist until we dismiss it
+      });
+      
       // Fetch experiences from Viator API via Edge Function
       const { data, error } = await supabase.functions.invoke('fetch-experiences', {
         body: { state: profile.state }
@@ -47,17 +54,27 @@ export const FeatureCards = () => {
 
       if (error) throw error;
 
-      if (data?.experiences?.length > 0) {
+      // Show result toast
+      toast({
+        title: data.experiences.length > 0 ? "Experiences Found" : "No Experiences Found",
+        description: data.message,
+        duration: 5000,
+      });
+
+      if (data.experiences.length > 0) {
+        // Get existing active experiences for this host
+        const { data: activeExperiences } = await supabase
+          .from('host_experiences')
+          .select('experience_id')
+          .eq('host_id', session.user.id)
+          .eq('is_active', true);
+
+        const activeCount = activeExperiences?.length || 0;
+
         toast({
-          title: "Experiences Updated",
-          description: `Found ${data.experiences.length} experiences in ${profile.state}.`,
-          duration: 3000,
-        });
-      } else {
-        toast({
-          title: "No Experiences Found",
-          description: `We couldn't find any experiences in ${profile.state}. Please try updating your profile with a different state.`,
-          duration: 3000,
+          title: "Current Selection",
+          description: `You have ${activeCount}/10 experiences selected`,
+          duration: 5000,
         });
       }
 
@@ -66,8 +83,8 @@ export const FeatureCards = () => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to fetch experiences. Please try again.",
-        duration: 3000,
+        description: error.message || "Failed to fetch experiences. Please try again.",
+        duration: 5000,
       });
     } finally {
       setLoading(false);
@@ -95,8 +112,8 @@ export const FeatureCards = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-4 pt-0">
-          <p className="text-sm">Explore and choose local experiences</p>
-          <p className="text-xs text-gray-400 mt-2">0/10 experiences selected</p>
+          <p className="text-sm">Find top-rated local experiences</p>
+          <p className="text-xs text-gray-400 mt-2">Click to update your selection</p>
         </CardContent>
       </Card>
 

@@ -20,57 +20,66 @@ serve(async (req) => {
       throw new Error('Missing Viator API key')
     }
 
-    // Log the request payload for debugging
-    const requestPayload = {
-      "sortOrder": "RECOMMENDED",
-      "page": {
-        "size": 20,
-        "number": 0
-      },
-      "destination": {
-        "text": state
-      }
-    }
-    console.log('Viator API request payload:', JSON.stringify(requestPayload, null, 2))
-
-    // Search for experiences based on state only
-    const response = await fetch('https://api.viator.com/partner/products/search', {
+    // First, get destination ID for the state
+    const destinationResponse = await fetch('https://api.viator.com/partner/locations/search', {
       method: 'POST',
       headers: {
         'exp-api-key': VIATOR_API_KEY,
         'Accept': 'application/json;version=2.0',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(requestPayload)
+      body: JSON.stringify({
+        "query": state,
+        "type": "REGION"
+      })
     })
 
-    // Log the raw response for debugging
-    const responseText = await response.text()
-    console.log('Raw Viator API response:', responseText)
+    if (!destinationResponse.ok) {
+      const errorText = await destinationResponse.text()
+      console.error('Viator API destination error:', errorText)
+      throw new Error(`Viator API destination error: ${errorText}`)
+    }
+
+    const destinationData = await destinationResponse.json()
+    console.log('Destination search response:', JSON.stringify(destinationData, null, 2))
+
+    if (!destinationData.locations || destinationData.locations.length === 0) {
+      return new Response(
+        JSON.stringify({ 
+          experiences: [],
+          message: `No destinations found for ${state}` 
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200 
+        }
+      )
+    }
+
+    const destinationId = destinationData.locations[0].destinationId
+
+    // Then, get top experiences for this destination
+    const response = await fetch('https://api.viator.com/partner/products/top-selling', {
+      method: 'POST',
+      headers: {
+        'exp-api-key': VIATOR_API_KEY,
+        'Accept': 'application/json;version=2.0',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "destinationId": destinationId,
+        "topX": 10
+      })
+    })
 
     if (!response.ok) {
-      console.error('Viator API error status:', response.status)
-      console.error('Viator API error response:', responseText)
-      throw new Error(`Viator API error: ${responseText}`)
+      const errorText = await response.text()
+      console.error('Viator API error:', errorText)
+      throw new Error(`Viator API error: ${errorText}`)
     }
 
-    // Parse the response text as JSON
-    let data
-    try {
-      data = JSON.parse(responseText)
-    } catch (error) {
-      console.error('Failed to parse Viator API response:', error)
-      throw new Error('Invalid JSON response from Viator API')
-    }
-
-    console.log('Parsed Viator API response:', JSON.stringify(data, null, 2))
-
-    if (!data.products || !Array.isArray(data.products)) {
-      console.error('Unexpected response format:', data)
-      throw new Error('Invalid response format from Viator API')
-    }
-
-    console.log(`Found ${data.products.length} experiences for state: ${state}`)
+    const data = await response.json()
+    console.log('Top experiences response:', JSON.stringify(data, null, 2))
 
     // Create Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
@@ -80,14 +89,14 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey)
 
     // Store experiences in the database
-    const experiences = data.products.map((product: any) => ({
+    const experiences = data.products?.map((product: any) => ({
       viator_id: product.productCode,
       title: product.title,
       description: product.description,
       price: product.price?.fromPrice,
-      image_url: product.productUrlId,
+      image_url: product.primaryPhotoUrl,
       destination: state
-    }))
+    })) || []
 
     if (experiences.length > 0) {
       const { error } = await supabase
@@ -104,7 +113,12 @@ serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ experiences }),
+      JSON.stringify({ 
+        experiences,
+        message: experiences.length > 0 
+          ? `Found ${experiences.length} top experiences in ${state}`
+          : `No experiences found in ${state}`
+      }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200 
@@ -114,7 +128,10 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error:', error)
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: error.message,
+        message: "Failed to fetch experiences. Please try again later."
+      }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 500
