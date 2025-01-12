@@ -36,7 +36,7 @@ export const HowItWorks = () => {
   };
 
   return (
-    <div id="how-it-works" className="min-h-screen bg-background px-4 sm:px-6 flex flex-col justify-start sm:justify-center pt-20 sm:pt-0">
+    <div id="how-it-works" className="min-h-screen bg-background px-4 sm:px-6 flex flex-col justify-start sm:justify-center pt-12 sm:pt-0">
       <div className="mx-auto max-w-7xl w-full">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-4xl sm:text-6xl font-bold leading-tight sm:leading-8 tracking-tight text-[#177E89] mb-4">
