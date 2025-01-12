@@ -37,9 +37,9 @@ export const TopBanner = ({ isAuthenticated, onSignOut }: TopBannerProps) => {
     <div className="fixed top-0 left-0 right-0 bg-white h-16 flex justify-between items-center px-4 sm:px-6 z-50 shadow-sm">
       <div className="flex items-center">
         <img 
-          src="/lovable-uploads/b72bf377-9f73-4f6c-9aa1-ab06d4f962b7.png" 
+          src="/lovable-uploads/9731e10d-fbda-4f16-8602-d938652f62e6.png" 
           alt="GuestVibes Logo" 
-          className="h-8 w-8 mr-2"
+          className="h-8 w-8 sm:h-10 sm:w-10 mr-2"
         />
         <h1 
           className={`text-2xl sm:text-4xl text-[#177E89] transition-opacity duration-300 ${fontLoaded ? 'opacity-100' : 'opacity-0'}`}
