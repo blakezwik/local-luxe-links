@@ -38,7 +38,7 @@ serve(async (req) => {
       method: 'POST',
       headers: {
         'exp-api-key': VIATOR_API_KEY,
-        'Accept': 'application/json',
+        'Accept': 'application/json;version=2.0',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(requestPayload)
