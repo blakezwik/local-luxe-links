@@ -64,7 +64,7 @@ export const HowItWorks = () => {
             variant="ghost" 
             size="icon"
             onClick={() => scrollToSection('benefits')}
-            className="animate-bounce bg-[#FFD166] shadow-lg"
+            className="bg-[#FFD166] shadow-lg"
           >
             <ChevronDown className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
           </Button>
