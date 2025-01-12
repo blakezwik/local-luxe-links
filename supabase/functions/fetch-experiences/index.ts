@@ -40,26 +40,49 @@ serve(async (req) => {
     const destinationData = await destinationResponse.json()
     console.log('Destination search response:', JSON.stringify(destinationData, null, 2))
 
-    // Validate the response structure
-    if (!destinationData || !destinationData.data || !Array.isArray(destinationData.data)) {
-      console.error('Invalid destination data structure:', destinationData)
-      throw new Error('Invalid response from Viator API')
+    // Validate the response structure and log detailed information
+    if (!destinationData) {
+      console.error('Destination data is null')
+      throw new Error('No destination data received from Viator API')
     }
 
-    // Find the destination that matches our state
+    if (!destinationData.data) {
+      console.error('Destination data has no data property:', destinationData)
+      throw new Error('Invalid destination data structure from Viator API')
+    }
+
+    if (!Array.isArray(destinationData.data)) {
+      console.error('Destination data.data is not an array:', destinationData.data)
+      throw new Error('Invalid destination data format from Viator API')
+    }
+
+    // Find the destination that matches our state with detailed logging
+    console.log('Searching for state match:', state.toLowerCase())
     const destination = destinationData.data.find((dest: any) => {
-      if (!dest) return false;
-      const destName = (dest.destinationName || '').toLowerCase();
-      const parentName = (dest.parentDestinationName || '').toLowerCase();
-      const searchState = state.toLowerCase();
-      return destName.includes(searchState) || parentName.includes(searchState);
-    });
+      if (!dest) {
+        console.log('Found null destination in array')
+        return false
+      }
+      
+      const destName = (dest.destinationName || '').toLowerCase()
+      const parentName = (dest.parentDestinationName || '').toLowerCase()
+      const searchState = state.toLowerCase()
+      
+      console.log('Checking destination:', {
+        destinationName: destName,
+        parentDestinationName: parentName,
+        searchingFor: searchState
+      })
+      
+      return destName.includes(searchState) || parentName.includes(searchState)
+    })
 
     if (!destination) {
+      console.log('No matching destination found for state:', state)
       return new Response(
         JSON.stringify({ 
           experiences: [],
-          message: `No destinations found for ${state}` 
+          message: `No destinations found for ${state}. This could be because the state name doesn't match Viator's naming convention.` 
         }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -71,7 +94,8 @@ serve(async (req) => {
     const destinationId = destination.destinationId
     console.log('Found destination ID:', destinationId)
 
-    // Then, get top experiences for this destination using the correct endpoint
+    // Then, get top experiences for this destination
+    console.log('Fetching products for destination ID:', destinationId)
     const response = await fetch(`https://api.viator.com/partner/v1/taxonomy/destinations/${destinationId}/products`, {
       method: 'GET',
       headers: {
@@ -83,17 +107,22 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error('Viator API error:', errorText)
-      throw new Error(`Viator API error: ${errorText}`)
+      console.error('Viator API products error:', errorText)
+      throw new Error(`Viator API products error: ${errorText}`)
     }
 
     const data = await response.json()
     console.log('Products response:', JSON.stringify(data, null, 2))
 
     // Validate the products response structure
-    if (!data || !data.data) {
-      console.error('Invalid products data structure:', data)
-      throw new Error('Invalid products response from Viator API')
+    if (!data) {
+      console.error('Products data is null')
+      throw new Error('No products data received from Viator API')
+    }
+
+    if (!data.data) {
+      console.error('Products data has no data property:', data)
+      throw new Error('Invalid products data structure from Viator API')
     }
 
     // Create Supabase client
@@ -103,19 +132,33 @@ serve(async (req) => {
     
     const supabase = createClient(supabaseUrl, supabaseKey)
 
-    // Map the products to our experience format with null checks
+    // Map the products to our experience format with detailed validation
     const experiences = Array.isArray(data.data) 
-      ? data.data.slice(0, 10).map((product: any) => ({
-          viator_id: product.productCode || product.productId || '',
-          title: product.productName || product.title || 'Untitled Experience',
-          description: product.productDescription || product.description || '',
-          price: product.price?.fromPrice || null,
-          image_url: product.thumbnailUrl || product.primaryPhotoUrl || null,
-          destination: state
-        }))
-      : [];
+      ? data.data.slice(0, 10).map((product: any) => {
+          if (!product) {
+            console.log('Found null product in array')
+            return null
+          }
+          
+          console.log('Processing product:', {
+            productCode: product.productCode,
+            productId: product.productId,
+            productName: product.productName
+          })
+          
+          return {
+            viator_id: product.productCode || product.productId || '',
+            title: product.productName || product.title || 'Untitled Experience',
+            description: product.productDescription || product.description || '',
+            price: product.price?.fromPrice || null,
+            image_url: product.thumbnailUrl || product.primaryPhotoUrl || null,
+            destination: state
+          }
+        }).filter(Boolean) // Remove any null entries
+      : []
 
     if (experiences.length > 0) {
+      console.log('Saving experiences to database:', experiences.length)
       const { error } = await supabase
         .from('experiences')
         .upsert(experiences, { 
