@@ -56,7 +56,7 @@ export const Features = () => {
           </div>
         </div>
 
-        <div className="mt-6 sm:mt-8">
+        <div className="mt-6 sm:mt-6">
           <div className="relative isolate overflow-hidden bg-[#177E89] px-4 py-4 sm:py-6 text-center shadow-lg sm:rounded-xl sm:px-6 max-w-lg mx-auto">
             <h2 className="mx-auto max-w-xl text-xl sm:text-2xl font-bold tracking-tight text-white">
               Boost your hosting income today
@@ -74,7 +74,7 @@ export const Features = () => {
           </div>
         </div>
 
-        <div className="flex justify-center mt-4 sm:mt-4">
+        <div className="flex justify-center mt-4 sm:mt-3">
           <Button 
             onClick={scrollToTop}
             className="bg-[#177E89] text-white hover:bg-[#177E89]/90 shadow-lg"
@@ -83,7 +83,7 @@ export const Features = () => {
           </Button>
         </div>
 
-        <div className="mt-4 sm:mt-4 text-center">
+        <div className="mt-4 sm:mt-3 text-center">
           <h1 className="text-3xl text-[#177E89]" style={{ fontFamily: 'Bukhari Script' }}>
             GuestVibes
           </h1>
