@@ -84,9 +84,11 @@ export const Features = () => {
         </div>
 
         <div className="mt-4 sm:mt-3 text-center">
-          <h1 className="text-3xl text-[#177E89]" style={{ fontFamily: 'Bukhari Script' }}>
-            GuestVibes
-          </h1>
+          <img 
+            src="/lovable-uploads/9731e10d-fbda-4f16-8602-d938652f62e6.png" 
+            alt="GuestVibes Logo" 
+            className="h-40 w-40 sm:h-50 sm:w-50 mx-auto"
+          />
           <p className="mt-2 text-sm">
             Made with <span className="text-[#177E89]">❤</span>
           </p>
