@@ -51,7 +51,7 @@ export function SignUpDialog({
             <img 
               src="/lovable-uploads/bbdc950f-cab5-4c5c-acaa-1be3dcb11d26.png" 
               alt="GuestVibes Logo" 
-              className="h-12 mx-auto"
+              className="h-72 mx-auto"
             />
           </DialogTitle>
         </DialogHeader>
