@@ -20,38 +20,41 @@ serve(async (req) => {
       throw new Error('Missing Viator API key')
     }
 
-    // Fetch popular products from Viator
-    console.log('Fetching from Viator API...')
-    const response = await fetch('https://api.viator.com/partner/products/popular', {
+    // Fetch popular products from Viator using v2 API
+    console.log('Fetching from Viator API v2...')
+    const response = await fetch('https://api.viator.com/partner/v2/products/popular', {
       method: 'GET',
       headers: {
         'exp-api-key': VIATOR_API_KEY,
         'Accept': 'application/json',
+        'Accept-Language': 'en-US',
         'Content-Type': 'application/json',
+        'Accept-Version': '2.0'
       }
     })
 
     if (!response.ok) {
-      console.error('Viator API error:', await response.text())
-      throw new Error(`Viator API returned ${response.status}`)
+      const errorText = await response.text()
+      console.error(`Viator API error (${response.status}):`, errorText)
+      throw new Error(`Viator API error: ${response.status} - ${errorText}`)
     }
 
     const data = await response.json()
     console.log('Received response from Viator:', JSON.stringify(data))
 
-    if (!data?.data || !Array.isArray(data.data)) {
+    if (!data?.products || !Array.isArray(data.products)) {
       console.error('Invalid response structure:', data)
       throw new Error('Invalid response structure from Viator API')
     }
 
-    // Transform the data
-    const experiences = data.data.map((product: any) => ({
+    // Transform the data according to v2 API structure
+    const experiences = data.products.map((product: any) => ({
       viator_id: product.productCode,
       title: product.title || 'Untitled Experience',
       description: product.description || null,
-      price: product.price?.fromPrice || null,
-      image_url: product.pictures?.[0]?.urls?.[0] || null,
-      destination: product.destination || null
+      price: product.pricing?.summary?.fromPrice || null,
+      image_url: product.images?.[0]?.urls?.['image_preview'] || null,
+      destination: product.location?.address?.city || null
     }))
 
     console.log(`Transformed ${experiences.length} experiences`)
