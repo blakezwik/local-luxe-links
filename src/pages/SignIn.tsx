@@ -56,9 +56,11 @@ const SignIn = () => {
     <div className="min-h-screen bg-gradient-to-b from-[#177E89]/10 to-white/5 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-4xl text-[#177E89] mb-2" style={{ fontFamily: 'Bukhari Script' }}>
-            GuestVibes
-          </h1>
+          <img 
+            src="/lovable-uploads/bbdc950f-cab5-4c5c-acaa-1be3dcb11d26.png" 
+            alt="GuestVibes Logo" 
+            className="h-12 mx-auto mb-2"
+          />
           <p className="text-gray-600">Welcome back! Please sign in to continue.</p>
         </div>
 

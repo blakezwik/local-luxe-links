@@ -48,9 +48,11 @@ export function SignUpDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-center">
-            <span className="text-4xl text-[#177E89]" style={{ fontFamily: 'Bukhari Script' }}>
-              GuestVibes
-            </span>
+            <img 
+              src="/lovable-uploads/bbdc950f-cab5-4c5c-acaa-1be3dcb11d26.png" 
+              alt="GuestVibes Logo" 
+              className="h-12 mx-auto"
+            />
           </DialogTitle>
         </DialogHeader>
         {showSignIn ? (
