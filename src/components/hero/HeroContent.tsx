@@ -14,9 +14,13 @@ export const HeroContent = ({ isAuthenticated, onScrollToSection }: HeroContentP
   const handleScroll = () => {
     const howItWorksSection = document.getElementById('how-it-works');
     if (howItWorksSection) {
-      const offset = howItWorksSection.offsetTop;
+      // Calculate header height (16 = 4rem for h-16)
+      const headerHeight = 64; // 4rem = 64px
+      const elementPosition = howItWorksSection.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+      
       window.scrollTo({
-        top: offset,
+        top: offsetPosition,
         behavior: 'smooth'
       });
     }
