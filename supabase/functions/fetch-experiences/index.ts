@@ -40,8 +40,20 @@ serve(async (req) => {
       })
     })
 
+    if (!response.ok) {
+      console.error('Viator API error:', await response.text())
+      throw new Error(`Viator API returned ${response.status}`)
+    }
+
     const data = await response.json()
-    console.log(`Found ${data.products?.length || 0} experiences for state: ${state}`)
+    console.log('Viator API response:', JSON.stringify(data, null, 2))
+
+    if (!data.products || !Array.isArray(data.products)) {
+      console.error('Unexpected response format:', data)
+      throw new Error('Invalid response format from Viator API')
+    }
+
+    console.log(`Found ${data.products.length} experiences for state: ${state}`)
 
     // Create Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
@@ -51,14 +63,14 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey)
 
     // Store experiences in the database
-    const experiences = data.products?.map((product: any) => ({
+    const experiences = data.products.map((product: any) => ({
       viator_id: product.productCode,
       title: product.title,
       description: product.description,
       price: product.price?.fromPrice,
       image_url: product.productUrlId,
       destination: state
-    })) || []
+    }))
 
     if (experiences.length > 0) {
       const { error } = await supabase
@@ -68,7 +80,10 @@ serve(async (req) => {
           ignoreDuplicates: false 
         })
 
-      if (error) throw error
+      if (error) {
+        console.error('Supabase upsert error:', error)
+        throw error
+      }
     }
 
     return new Response(
