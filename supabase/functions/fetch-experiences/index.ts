@@ -30,14 +30,14 @@ serve(async (req) => {
       "currency": "USD"
     }
 
-    // Using the affiliate API endpoint
+    // Using the affiliate API endpoint with the correct header format
     const response = await fetch('https://api.viator.com/partner/products/search', {
       method: 'POST',
       headers: {
         'Accept-Language': 'en-US',
         'Accept': 'application/json;version=2.0',
         'Content-Type': 'application/json',
-        'exp-api-key': VIATOR_API_KEY
+        'api-key': VIATOR_API_KEY  // Changed from 'exp-api-key' to 'api-key'
       },
       body: JSON.stringify(searchParams)
     })
