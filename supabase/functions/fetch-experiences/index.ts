@@ -29,12 +29,18 @@ serve(async (req) => {
       count: 10 // Limit results for testing
     }
 
+    console.log('Making request with headers:', {
+      'Accept-Language': 'en-US',
+      'Accept': 'application/json;version=2.0',
+      'exp-api-key': '[MASKED]'
+    })
+
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Accept-Language': 'en-US',
         'Accept': 'application/json;version=2.0',
-        'Viator-API-Key': VIATOR_API_KEY,
+        'exp-api-key': VIATOR_API_KEY,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(searchBody)
@@ -45,7 +51,14 @@ serve(async (req) => {
     if (!response.ok) {
       const errorText = await response.text()
       console.error('Error response:', errorText)
-      throw new Error(`API error (${response.status}): ${errorText}`)
+      
+      // Parse the error response for better error handling
+      try {
+        const errorJson = JSON.parse(errorText)
+        throw new Error(`API error (${response.status}): ${JSON.stringify(errorJson)}`)
+      } catch (parseError) {
+        throw new Error(`API error (${response.status}): ${errorText}`)
+      }
     }
 
     const data = await response.json()
