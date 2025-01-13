@@ -43,7 +43,7 @@ serve(async (req) => {
     const response = await fetch('https://api.viator.com/partner/products/search', {
       method: 'POST',
       headers: {
-        'Viator-API-Key': cleanApiKey,
+        'exp-api-key': cleanApiKey,
         'Accept': 'application/json;version=2.0',
         'Accept-Language': 'en-US',
         'Content-Type': 'application/json'
