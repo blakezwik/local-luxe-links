@@ -19,16 +19,16 @@ serve(async (req) => {
       throw new Error('Missing Viator API key')
     }
 
-    console.log('Making test request to Viator Affiliate API')
+    console.log('Making test request to Viator Partner API')
     
-    // Simple test request to the Viator API
+    // Following Viator's technical documentation for headers and endpoint
     const response = await fetch('https://api.viator.com/partner/products/search', {
       method: 'POST',
       headers: {
         'Accept-Language': 'en-US',
         'Accept': 'application/json;version=2.0',
         'Content-Type': 'application/json',
-        'exp-api-key': VIATOR_API_KEY  // Changed from 'api-key' to 'exp-api-key'
+        'Viator-API-Key': VIATOR_API_KEY
       },
       body: JSON.stringify({
         "count": 1  // Just request 1 product to test the connection
