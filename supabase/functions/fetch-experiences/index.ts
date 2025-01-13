@@ -37,14 +37,12 @@ serve(async (req) => {
       "count": 20 // Limit to 20 experiences
     }
 
-    const response = await fetch('https://api.viator.com/partner/products/search', {
+    const response = await fetch('https://api.viator.com/v1/products/search', {
       method: 'POST',
       headers: {
-        'exp-api-key': cleanApiKey,
-        'Accept': 'application/json;version=2.0',
-        'Accept-Language': 'en-US',
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache'
+        'Viator-API-Key': cleanApiKey,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(searchParams)
     })
@@ -71,14 +69,14 @@ serve(async (req) => {
       throw new Error('Invalid response structure from Viator API')
     }
 
-    // Transform the data according to v2 API structure
+    // Transform the data according to v1 API structure
     const experiences = data.products.map((product: any) => ({
-      viator_id: product.productCode,
+      viator_id: product.code,
       title: product.title || 'Untitled Experience',
       description: product.description || null,
-      price: product.pricing?.summary?.fromPrice || null,
-      image_url: product.images?.[0]?.urls?.['image_preview'] || null,
-      destination: product.location?.address?.city || null
+      price: product.price?.fromPrice || null,
+      image_url: product.primaryPhoto?.photoUrl || null,
+      destination: product.location?.name || null
     }))
 
     console.log(`Transformed ${experiences.length} experiences`)
