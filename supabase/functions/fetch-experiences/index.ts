@@ -18,6 +18,8 @@ serve(async (req) => {
       throw new Error('Missing Viator API key')
     }
 
+    console.log('API Key present:', !!VIATOR_API_KEY)
+
     const endpoint = 'https://api.viator.com/partner/products/search'
     console.log(`Endpoint: ${endpoint}`)
     
@@ -58,22 +60,22 @@ serve(async (req) => {
       currency: "USD"
     }
 
-    console.log('Request headers:', {
+    const headers = {
       'Accept-Language': 'en-US',
       'Accept': 'application/json;version=2.0',
       'Content-Type': 'application/json',
+      'exp-api-key': VIATOR_API_KEY
+    }
+
+    console.log('Request headers:', {
+      ...headers,
       'exp-api-key': '[MASKED]'
     })
     console.log('Request body:', JSON.stringify(searchBody, null, 2))
 
     const response = await fetch(endpoint, {
       method: 'POST',
-      headers: {
-        'Accept-Language': 'en-US',
-        'Accept': 'application/json;version=2.0',
-        'Content-Type': 'application/json',
-        'exp-api-key': VIATOR_API_KEY
-      },
+      headers,
       body: JSON.stringify(searchBody)
     })
 
