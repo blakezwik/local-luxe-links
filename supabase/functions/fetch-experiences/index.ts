@@ -36,7 +36,10 @@ serve(async (req) => {
       "count": 20, // Limit to 20 experiences
       "sortOrder": "TOP_SELLERS", // Sort by most popular
       "currencyCode": "USD",
-      "language": "en"
+      "language": "en",
+      "topX": "YEAR", // Added for sandbox API
+      "startDate": new Date().toISOString().split('T')[0], // Added for sandbox API
+      "endDate": new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 30 days from now
     }
 
     const response = await fetch('https://api.viator.com/partner/products/search', {
@@ -57,8 +60,13 @@ serve(async (req) => {
       const errorText = await response.text()
       console.error('Viator API error response:', errorText)
       
+      // Special handling for common API errors
       if (response.status === 401) {
-        throw new Error('Invalid API key. Please check your Viator API key.')
+        throw new Error('Invalid API key or unauthorized access. Please check your Viator API key.')
+      } else if (response.status === 403) {
+        throw new Error('Access forbidden. Your API key might not have the required permissions.')
+      } else if (response.status === 429) {
+        throw new Error('Too many requests. Please try again later.')
       }
       
       throw new Error(`Viator API error: ${response.status} - ${errorText}`)
@@ -66,6 +74,7 @@ serve(async (req) => {
 
     const data = await response.json()
     console.log('Received response from Viator. Products count:', data.products?.length || 0)
+    console.log('Response data structure:', Object.keys(data))
 
     if (!data?.products || !Array.isArray(data.products)) {
       console.error('Invalid response structure:', JSON.stringify(data))
@@ -74,6 +83,7 @@ serve(async (req) => {
 
     // Transform the data according to v2 API structure
     const experiences = data.products.map((product: any) => ({
+      id: crypto.randomUUID(), // Generate a UUID for our database
       viator_id: product.productCode,
       title: product.title,
       description: product.description || null,
@@ -99,10 +109,12 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error in fetch-experiences:', error)
+    
+    // Return a more detailed error response
     return new Response(
       JSON.stringify({ 
         error: error.message,
-        message: "Failed to fetch experiences. Please try again later."
+        message: "Failed to fetch experiences. " + error.message
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
