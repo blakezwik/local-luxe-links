@@ -1,5 +1,4 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -34,13 +33,13 @@ serve(async (req) => {
     // Search parameters according to Viator V2 API documentation
     const searchParams = {
       "status": "AVAILABLE",
-      "topX": "20", // Limit to 20 experiences
+      "count": 20, // Limit to 20 experiences
       "sortOrder": "TOP_SELLERS", // Sort by most popular
       "currencyCode": "USD",
       "language": "en"
     }
 
-    const response = await fetch('https://api.viator.com/partner/v2/products', {
+    const response = await fetch('https://api.viator.com/partner/products/search', {
       method: 'POST',
       headers: {
         'exp-api-key': cleanApiKey,
@@ -78,9 +77,9 @@ serve(async (req) => {
       viator_id: product.productCode,
       title: product.title,
       description: product.description || null,
-      price: product.pricing?.summary?.fromPrice || null,
-      image_url: product.images?.[0]?.variants?.[0]?.url || null,
-      destination: product.location?.address?.city || null
+      price: product.pricing?.fromPrice || null,
+      image_url: product.primaryPhotoUrl || null,
+      destination: product.destination?.name || null
     }))
 
     console.log(`Transformed ${experiences.length} experiences`)
