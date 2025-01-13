@@ -6,7 +6,6 @@ const corsHeaders = {
 }
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders })
   }
@@ -19,54 +18,44 @@ serve(async (req) => {
       throw new Error('Missing Viator API key')
     }
 
-    // Basic Access endpoints as per documentation
-    const endpoints = [
-      'https://api.viator.com/partner/products/available',
-      'https://api.viator.com/partner/products/codes'
-    ]
+    // Using the basic access endpoint for product search
+    const endpoint = 'https://api.viator.com/partner/products/search'
+    console.log(`Testing endpoint: ${endpoint}`)
     
-    let successfulEndpoint = null
-    let responseData = null
-
-    // Try each endpoint until we find one that works
-    for (const endpoint of endpoints) {
-      console.log(`Testing endpoint: ${endpoint}`)
-      
-      try {
-        const response = await fetch(endpoint, {
-          method: 'GET',
-          headers: {
-            'Accept-Language': 'en-US',
-            'Accept': 'application/json;version=2.0',
-            'Viator-API-Key': VIATOR_API_KEY
-          }
-        })
-
-        console.log(`Response status for ${endpoint}:`, response.status)
-        
-        if (response.ok) {
-          responseData = await response.json()
-          successfulEndpoint = endpoint
-          console.log('Successfully connected to endpoint:', endpoint)
-          break
-        } else {
-          const errorText = await response.text()
-          console.log(`Error for ${endpoint}:`, errorText)
-        }
-      } catch (error) {
-        console.error(`Error testing ${endpoint}:`, error)
-      }
+    // Basic search parameters for testing
+    const searchBody = {
+      startDate: new Date().toISOString().split('T')[0], // Today's date
+      endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
+      count: 10 // Limit results for testing
     }
 
-    if (!successfulEndpoint) {
-      throw new Error('Unable to connect to any Basic Access endpoints')
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Accept-Language': 'en-US',
+        'Accept': 'application/json;version=2.0',
+        'Viator-API-Key': VIATOR_API_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(searchBody)
+    })
+
+    console.log(`Response status: ${response.status}`)
+    
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error('Error response:', errorText)
+      throw new Error(`API error (${response.status}): ${errorText}`)
     }
+
+    const data = await response.json()
+    console.log('Successfully retrieved products:', data.data?.length || 0)
 
     return new Response(
       JSON.stringify({ 
         success: true,
-        message: `Successfully connected to Viator API using Basic Access endpoint: ${successfulEndpoint}`,
-        data: responseData,
+        message: `Successfully connected to Viator API and retrieved ${data.data?.length || 0} products`,
+        data: data,
         accessLevel: 'basic',
         limitations: [
           'Direct booking not available',

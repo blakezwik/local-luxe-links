@@ -24,13 +24,13 @@ export const FeatureCards = () => {
       }
 
       // Show loading toast
-      const loadingToast = toast({
-        title: "Testing Viator API Connection",
-        description: "Making a test request...",
-        duration: null, // This makes it persist until we dismiss it
+      toast({
+        title: "Connecting to Viator API",
+        description: "Fetching available experiences...",
+        duration: null,
       });
       
-      // Make a test request to Viator API via Edge Function
+      // Make request to Viator API via Edge Function
       const { data, error } = await supabase.functions.invoke('fetch-experiences', {
         body: {}
       });
@@ -39,17 +39,21 @@ export const FeatureCards = () => {
 
       console.log('Viator API Response:', data);
       
-      toast({
-        title: "API Test Result",
-        description: data.message || "Successfully connected to Viator API",
-        duration: 5000,
-      });
+      if (data.success) {
+        toast({
+          title: "Success",
+          description: data.message,
+          duration: 5000,
+        });
+      } else {
+        throw new Error(data.message || "Failed to fetch experiences");
+      }
 
     } catch (error: any) {
       console.error('Error testing Viator API:', error);
       toast({
         variant: "destructive",
-        title: "API Test Failed",
+        title: "API Connection Failed",
         description: error.message || "Failed to connect to Viator API",
         duration: 5000,
       });
@@ -79,8 +83,10 @@ export const FeatureCards = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-4 pt-0">
-          <p className="text-sm">Test Viator API Connection</p>
-          <p className="text-xs text-gray-400 mt-2">Click to make a test request</p>
+          <p className="text-sm">Connect to Viator API</p>
+          <p className="text-xs text-gray-400 mt-2">
+            {loading ? 'Connecting...' : 'Click to browse available experiences'}
+          </p>
         </CardContent>
       </Card>
 
