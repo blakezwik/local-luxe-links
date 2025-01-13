@@ -28,7 +28,7 @@ serve(async (req) => {
         'Accept-Language': 'en-US',
         'Accept': 'application/json;version=2.0',
         'Content-Type': 'application/json',
-        'api-key': VIATOR_API_KEY
+        'exp-api-key': VIATOR_API_KEY  // Changed from 'api-key' to 'exp-api-key'
       },
       body: JSON.stringify({
         "count": 1  // Just request 1 product to test the connection
