@@ -18,37 +18,33 @@ serve(async (req) => {
       throw new Error('Missing Viator API key')
     }
 
-    console.log('API Key present:', !!VIATOR_API_KEY)
+    // Validate API key format (should be a non-empty string without spaces)
+    if (VIATOR_API_KEY.trim() !== VIATOR_API_KEY) {
+      throw new Error('API key contains leading or trailing spaces')
+    }
+
+    console.log('API Key validation passed')
     console.log('API Key length:', VIATOR_API_KEY.length)
 
-    // Using the correct endpoint from Viator docs
     const endpoint = 'https://api.viator.com/partner/products/search'
     console.log(`Endpoint: ${endpoint}`)
 
-    // Headers as specified in Viator documentation, ensuring no duplicates
-    const headers = new Headers({
-      'Accept-Language': 'en-US',
+    // Headers exactly as specified in Viator documentation
+    const headers = {
+      'exp-api-key': VIATOR_API_KEY,
       'Accept': 'application/json;version=2.0',
-      'Content-Type': 'application/json',
-      'exp-api-key': VIATOR_API_KEY
-    })
+      'Accept-Language': 'en-US',
+      'Content-Type': 'application/json'
+    }
 
     // Basic search body for initial testing
     const searchBody = {
-      filtering: {
-        destination: "732", // Las Vegas
-        startDate: new Date().toISOString().split('T')[0],
-        endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-      },
-      pagination: {
-        start: 1,
-        count: 5
-      },
-      currency: "USD"
+      "sortOrder": "RECOMMENDED",
+      "currency": "USD"
     }
 
     console.log('Request headers:', {
-      ...Object.fromEntries(headers.entries()),
+      ...headers,
       'exp-api-key': '[MASKED]'
     })
     console.log('Request body:', JSON.stringify(searchBody, null, 2))
