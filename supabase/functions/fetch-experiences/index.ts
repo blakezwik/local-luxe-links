@@ -18,7 +18,7 @@ serve(async (req) => {
       throw new Error('Missing Viator API key')
     }
 
-    // Log key details (safely)
+    // Debug API key format
     console.log('API Key validation:')
     console.log('- Length:', VIATOR_API_KEY.length)
     console.log('- Contains hyphens:', VIATOR_API_KEY.includes('-'))
@@ -27,7 +27,6 @@ serve(async (req) => {
     const endpoint = 'https://api.viator.com/partner/products/search'
     console.log(`Endpoint: ${endpoint}`)
 
-    // Create headers using the Headers class to prevent duplicates
     const headers = {
       'exp-api-key': VIATOR_API_KEY.trim(),
       'accept': 'application/json;version=2.0',
@@ -35,11 +34,16 @@ serve(async (req) => {
       'content-type': 'application/json'
     }
 
-    // Log headers (excluding sensitive data)
-    console.log('Request headers:', {
+    // Log the exact request configuration (for Postman comparison)
+    console.log('=== REQUEST CONFIGURATION ===')
+    console.log('Method: POST')
+    console.log('URL:', endpoint)
+    console.log('Headers:', {
       'accept': headers.accept,
       'accept-language': headers['accept-language'],
-      'content-type': headers['content-type']
+      'content-type': headers['content-type'],
+      // Not logging the full API key, just length for security
+      'exp-api-key': `[Key length: ${headers['exp-api-key'].length}]`
     })
 
     const searchBody = {
@@ -47,7 +51,7 @@ serve(async (req) => {
       "currency": "USD"
     }
 
-    console.log('Request body:', JSON.stringify(searchBody, null, 2))
+    console.log('Request Body:', JSON.stringify(searchBody, null, 2))
 
     const response = await fetch(endpoint, {
       method: 'POST',
