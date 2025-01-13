@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -39,7 +40,7 @@ serve(async (req) => {
       "language": "en"
     }
 
-    const response = await fetch('https://api.viator.com/partner/v1/products/search', {
+    const response = await fetch('https://api.viator.com/partner/products/search', {
       method: 'POST',
       headers: {
         'Viator-API-Key': cleanApiKey,
