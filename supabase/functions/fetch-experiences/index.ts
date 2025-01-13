@@ -19,6 +19,7 @@ serve(async (req) => {
     }
 
     console.log('API Key present:', !!VIATOR_API_KEY)
+    console.log('API Key length:', VIATOR_API_KEY.length)
 
     const endpoint = 'https://api.viator.com/partner/products/search'
     console.log(`Endpoint: ${endpoint}`)
@@ -31,8 +32,8 @@ serve(async (req) => {
     // Search parameters matching Postman configuration
     const searchBody = {
       filtering: {
-        destination: "732",
-        tags: [21972],
+        destination: "732", // Las Vegas
+        tags: [21972], // Food, Wine & Nightlife
         flags: ["LIKELY_TO_SELL_OUT", "FREE_CANCELLATION"],
         lowestPrice: 5,
         highestPrice: 500,
@@ -79,21 +80,29 @@ serve(async (req) => {
       body: JSON.stringify(searchBody)
     })
 
-    console.log(`Response status: ${response.status}`)
+    console.log('Response status:', response.status)
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()))
+    
+    const responseText = await response.text()
+    console.log('Raw response:', responseText)
     
     if (!response.ok) {
-      const errorText = await response.text()
-      console.error('Error response:', errorText)
-      
       try {
-        const errorJson = JSON.parse(errorText)
+        const errorJson = JSON.parse(responseText)
         throw new Error(`API error (${response.status}): ${JSON.stringify(errorJson)}`)
       } catch (parseError) {
-        throw new Error(`API error (${response.status}): ${errorText}`)
+        throw new Error(`API error (${response.status}): ${responseText}`)
       }
     }
 
-    const data = await response.json()
+    let data
+    try {
+      data = JSON.parse(responseText)
+    } catch (error) {
+      console.error('Failed to parse JSON response:', error)
+      throw new Error('Invalid JSON response from Viator API')
+    }
+
     console.log('Successfully retrieved products:', data.data?.length || 0)
 
     return new Response(
