@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    console.log('Starting to fetch experiences from Viator Sandbox API')
+    console.log('Starting to fetch experiences from Viator Affiliate API')
     
     const VIATOR_API_KEY = Deno.env.get('VIATOR_API_KEY')
     if (!VIATOR_API_KEY) {
@@ -20,25 +20,24 @@ serve(async (req) => {
     }
 
     // Log API request details
-    console.log('Making request to Viator Sandbox API')
+    console.log('Making request to Viator Affiliate API')
     
-    // Simplified search parameters for sandbox testing
+    // Parameters for the affiliate API search
     const searchParams = {
-      "status": "AVAILABLE",
-      "count": 10,
-      "topX": "YEAR",
       "startDate": new Date().toISOString().split('T')[0],
-      "endDate": new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days from now
-      "currencyCode": "USD"
+      "endDate": new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      "count": 10,
+      "currency": "USD"
     }
 
-    // Using the sandbox-specific endpoint
-    const response = await fetch('https://api.sandbox.viator.com/partner/products/search', {
+    // Using the affiliate API endpoint
+    const response = await fetch('https://api.viator.com/partner/products/search', {
       method: 'POST',
       headers: {
-        'exp-api-key': VIATOR_API_KEY,
+        'Accept-Language': 'en-US',
         'Accept': 'application/json;version=2.0',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'exp-api-key': VIATOR_API_KEY
       },
       body: JSON.stringify(searchParams)
     })
