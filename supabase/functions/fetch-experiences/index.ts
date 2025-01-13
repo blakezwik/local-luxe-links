@@ -18,18 +18,20 @@ serve(async (req) => {
       throw new Error('Missing Viator API key')
     }
 
-    // Using the basic access endpoint for product search
     const endpoint = 'https://api.viator.com/partner/products/search'
     console.log(`Testing endpoint: ${endpoint}`)
     
-    // Basic search parameters for testing
+    // Search parameters based on documentation example
     const searchBody = {
-      startDate: new Date().toISOString().split('T')[0], // Today's date
-      endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
-      count: 10 // Limit results for testing
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      count: 10,
+      currency: "USD",
+      language: "en",
     }
 
-    console.log('Making request with headers:', {
+    console.log('Making request with search parameters:', searchBody)
+    console.log('Using headers:', {
       'Accept-Language': 'en-US',
       'Accept': 'application/json;version=2.0',
       'exp-api-key': '[MASKED]'
@@ -52,7 +54,6 @@ serve(async (req) => {
       const errorText = await response.text()
       console.error('Error response:', errorText)
       
-      // Parse the error response for better error handling
       try {
         const errorJson = JSON.parse(errorText)
         throw new Error(`API error (${response.status}): ${JSON.stringify(errorJson)}`)
