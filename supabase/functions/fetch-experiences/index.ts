@@ -24,39 +24,38 @@ serve(async (req) => {
     // Log key details for debugging (safely)
     console.log('API Key present:', !!VIATOR_API_KEY)
     console.log('API Key length:', VIATOR_API_KEY.length)
+    console.log('First 4 chars of API key:', VIATOR_API_KEY.substring(0, 4))
     
     // Clean the API key
     const cleanApiKey = VIATOR_API_KEY.trim()
 
-    console.log('Fetching from Viator API...')
+    console.log('Making request to Viator API...')
     
-    // Search parameters according to Viator V1 API documentation
+    // Search parameters according to Viator V2 API documentation
     const searchParams = {
-      "startDate": new Date().toISOString().split('T')[0], // Today's date
-      "endDate": new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
+      "status": "AVAILABLE",
       "topX": "20", // Limit to 20 experiences
       "sortOrder": "TOP_SELLERS", // Sort by most popular
       "currencyCode": "USD",
       "language": "en"
     }
 
-    const response = await fetch('https://api.viator.com/partner/products/search', {
+    const response = await fetch('https://api.viator.com/partner/v2/products', {
       method: 'POST',
       headers: {
         'exp-api-key': cleanApiKey,
-        'Accept': 'application/json;version=2.0',
-        'Accept-Language': 'en-US',
+        'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(searchParams)
     })
 
     console.log('Viator API response status:', response.status)
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()))
     
     if (!response.ok) {
       const errorText = await response.text()
       console.error('Viator API error response:', errorText)
-      console.error('Response headers:', Object.fromEntries(response.headers.entries()))
       
       if (response.status === 401) {
         throw new Error('Invalid API key. Please check your Viator API key.')
@@ -66,21 +65,21 @@ serve(async (req) => {
     }
 
     const data = await response.json()
-    console.log('Received response from Viator. Products count:', data.data?.length || 0)
+    console.log('Received response from Viator. Products count:', data.products?.length || 0)
 
-    if (!data?.data || !Array.isArray(data.data)) {
+    if (!data?.products || !Array.isArray(data.products)) {
       console.error('Invalid response structure:', JSON.stringify(data))
       throw new Error('Invalid response structure from Viator API')
     }
 
-    // Transform the data according to v1 API structure
-    const experiences = data.data.map((product: any) => ({
-      viator_id: product.code,
+    // Transform the data according to v2 API structure
+    const experiences = data.products.map((product: any) => ({
+      viator_id: product.productCode,
       title: product.title,
-      description: product.shortDescription || null,
-      price: product.price?.fromPrice || null,
-      image_url: product.thumbnailURL || product.thumbnailHiResURL || null,
-      destination: product.destinationName || null
+      description: product.description || null,
+      price: product.pricing?.summary?.fromPrice || null,
+      image_url: product.images?.[0]?.variants?.[0]?.url || null,
+      destination: product.location?.address?.city || null
     }))
 
     console.log(`Transformed ${experiences.length} experiences`)
