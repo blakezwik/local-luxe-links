@@ -24,17 +24,13 @@ serve(async (req) => {
     // Log key details for debugging (safely)
     console.log('API Key present:', !!VIATOR_API_KEY)
     console.log('API Key length:', VIATOR_API_KEY.length)
-    console.log('API Key first/last chars:', `${VIATOR_API_KEY.slice(0, 4)}...${VIATOR_API_KEY.slice(-4)}`)
     
     // Clean the API key
     const cleanApiKey = VIATOR_API_KEY.trim()
-    if (cleanApiKey.length < 32) {
-      throw new Error('Viator API key appears to be invalid (too short)')
-    }
 
-    console.log('Fetching from Viator API v2...')
+    console.log('Fetching from Viator API...')
     
-    // Fetch products from Viator using v2 API with search parameters
+    // Fetch products from Viator using search parameters
     const searchParams = {
       "status": "PUBLISHED",
       "sortOrder": "POPULARITY",
@@ -44,7 +40,7 @@ serve(async (req) => {
     const response = await fetch('https://api.viator.com/partner/products/search', {
       method: 'POST',
       headers: {
-        'exp-api-key': cleanApiKey,
+        'apiKey': cleanApiKey,
         'Accept': 'application/json;version=2.0',
         'Accept-Language': 'en-US',
         'Content-Type': 'application/json',
@@ -61,7 +57,7 @@ serve(async (req) => {
       console.error('Response headers:', Object.fromEntries(response.headers.entries()))
       
       if (response.status === 401) {
-        throw new Error('Invalid Viator API key format. Please ensure you are using the correct API key format (exp-api-key) from the Viator Partner API.')
+        throw new Error('Invalid API key. Please check your Viator API key.')
       }
       
       throw new Error(`Viator API error: ${response.status} - ${errorText}`)
