@@ -18,35 +18,35 @@ serve(async (req) => {
       throw new Error('Missing Viator API key')
     }
 
-    // Validate API key format (should be a non-empty string without spaces)
-    if (VIATOR_API_KEY.trim() !== VIATOR_API_KEY) {
-      throw new Error('API key contains leading or trailing spaces')
-    }
-
-    console.log('API Key validation passed')
-    console.log('API Key length:', VIATOR_API_KEY.length)
+    // Log key details (safely)
+    console.log('API Key validation:')
+    console.log('- Length:', VIATOR_API_KEY.length)
+    console.log('- Contains hyphens:', VIATOR_API_KEY.includes('-'))
+    console.log('- Has whitespace:', VIATOR_API_KEY !== VIATOR_API_KEY.trim())
 
     const endpoint = 'https://api.viator.com/partner/products/search'
     console.log(`Endpoint: ${endpoint}`)
 
-    // Headers exactly as specified in Viator documentation
-    const headers = {
+    // Create headers using the Headers class to prevent duplicates
+    const headers = new Headers({
       'exp-api-key': VIATOR_API_KEY,
       'Accept': 'application/json;version=2.0',
       'Accept-Language': 'en-US',
       'Content-Type': 'application/json'
-    }
+    })
 
-    // Basic search body for initial testing
+    // Log headers (excluding sensitive data)
+    console.log('Request headers:', {
+      'Accept': headers.get('Accept'),
+      'Accept-Language': headers.get('Accept-Language'),
+      'Content-Type': headers.get('Content-Type')
+    })
+
     const searchBody = {
       "sortOrder": "RECOMMENDED",
       "currency": "USD"
     }
 
-    console.log('Request headers:', {
-      ...headers,
-      'exp-api-key': '[MASKED]'
-    })
     console.log('Request body:', JSON.stringify(searchBody, null, 2))
 
     const response = await fetch(endpoint, {
