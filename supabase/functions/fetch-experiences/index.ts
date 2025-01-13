@@ -17,11 +17,14 @@ serve(async (req) => {
     
     const VIATOR_API_KEY = Deno.env.get('VIATOR_API_KEY')
     if (!VIATOR_API_KEY) {
+      console.error('Missing Viator API key')
       throw new Error('Missing Viator API key')
     }
 
-    // Fetch products from Viator using v2 API with search parameters
     console.log('Fetching from Viator API v2...')
+    console.log('API Key length:', VIATOR_API_KEY.length) // Log key length for debugging
+    
+    // Fetch products from Viator using v2 API with search parameters
     const searchParams = {
       "status": "PUBLISHED",
       "sortOrder": "POPULARITY"
@@ -31,9 +34,9 @@ serve(async (req) => {
       method: 'POST',
       headers: {
         'exp-api-key': VIATOR_API_KEY,
-        'accept': 'application/json;version=2.0',
-        'accept-language': 'en-US',
-        'content-type': 'application/json'
+        'Accept': 'application/json;version=2.0',
+        'Accept-Language': 'en-US',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(searchParams)
     })
@@ -42,15 +45,16 @@ serve(async (req) => {
     
     if (!response.ok) {
       const errorText = await response.text()
-      console.error(`Viator API error (${response.status}):`, errorText)
+      console.error('Viator API error response:', errorText)
+      console.error('Response headers:', Object.fromEntries(response.headers.entries()))
       throw new Error(`Viator API error: ${response.status} - ${errorText}`)
     }
 
     const data = await response.json()
-    console.log('Received response from Viator:', JSON.stringify(data))
+    console.log('Received response from Viator. Products count:', data.products?.length || 0)
 
     if (!data?.products || !Array.isArray(data.products)) {
-      console.error('Invalid response structure:', data)
+      console.error('Invalid response structure:', JSON.stringify(data))
       throw new Error('Invalid response structure from Viator API')
     }
 
