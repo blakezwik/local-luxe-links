@@ -37,7 +37,7 @@ serve(async (req) => {
       "count": 20 // Limit to 20 experiences
     }
 
-    const response = await fetch('https://api.viator.com/v1/products/search', {
+    const response = await fetch('https://api.viator.com/partner/v1/products/search', {
       method: 'POST',
       headers: {
         'Viator-API-Key': cleanApiKey,
