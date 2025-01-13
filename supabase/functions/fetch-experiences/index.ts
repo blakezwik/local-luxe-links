@@ -21,51 +21,29 @@ serve(async (req) => {
     console.log('API Key present:', !!VIATOR_API_KEY)
     console.log('API Key length:', VIATOR_API_KEY.length)
 
+    // Using the correct endpoint from Viator docs
     const endpoint = 'https://api.viator.com/partner/products/search'
     console.log(`Endpoint: ${endpoint}`)
-    
-    // Current date and one month from now
-    const today = new Date()
-    const nextMonth = new Date()
-    nextMonth.setMonth(nextMonth.getMonth() + 1)
 
-    // Search parameters matching Postman configuration
+    // Headers exactly as specified in Viator documentation
+    const headers = {
+      'exp-api-key': VIATOR_API_KEY,
+      'Accept': 'application/json;version=2.0',
+      'Content-Type': 'application/json'
+    }
+
+    // Simplified search body for initial testing
     const searchBody = {
       filtering: {
         destination: "732", // Las Vegas
-        tags: [21972], // Food, Wine & Nightlife
-        flags: ["LIKELY_TO_SELL_OUT", "FREE_CANCELLATION"],
-        lowestPrice: 5,
-        highestPrice: 500,
-        startDate: today.toISOString().split('T')[0],
-        endDate: nextMonth.toISOString().split('T')[0],
-        includeAutomaticTranslations: true,
-        confirmationType: "INSTANT",
-        durationInMinutes: {
-          from: 20,
-          to: 360
-        },
-        rating: {
-          from: 3,
-          to: 5
-        }
-      },
-      sorting: {
-        sort: "TRAVELER_RATING",
-        order: "DESCENDING"
+        startDate: new Date().toISOString().split('T')[0],
+        endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
       },
       pagination: {
         start: 1,
         count: 5
       },
       currency: "USD"
-    }
-
-    const headers = {
-      'Accept-Language': 'en-US',
-      'Accept': 'application/json;version=2.0',
-      'Content-Type': 'application/json',
-      'exp-api-key': VIATOR_API_KEY
     }
 
     console.log('Request headers:', {
