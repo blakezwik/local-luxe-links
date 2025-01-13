@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    console.log('Starting Viator Basic Access API test')
+    console.log('Starting Viator API request')
     
     const VIATOR_API_KEY = Deno.env.get('VIATOR_API_KEY')
     if (!VIATOR_API_KEY) {
@@ -19,31 +19,60 @@ serve(async (req) => {
     }
 
     const endpoint = 'https://api.viator.com/partner/products/search'
-    console.log(`Testing endpoint: ${endpoint}`)
+    console.log(`Endpoint: ${endpoint}`)
     
-    // Search parameters based on documentation example
+    // Current date and one month from now
+    const today = new Date()
+    const nextMonth = new Date()
+    nextMonth.setMonth(nextMonth.getMonth() + 1)
+
+    // Search parameters matching Postman configuration
     const searchBody = {
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      count: 10,
-      currency: "USD",
-      language: "en",
+      filtering: {
+        destination: "732",
+        tags: [21972],
+        flags: ["LIKELY_TO_SELL_OUT", "FREE_CANCELLATION"],
+        lowestPrice: 5,
+        highestPrice: 500,
+        startDate: today.toISOString().split('T')[0],
+        endDate: nextMonth.toISOString().split('T')[0],
+        includeAutomaticTranslations: true,
+        confirmationType: "INSTANT",
+        durationInMinutes: {
+          from: 20,
+          to: 360
+        },
+        rating: {
+          from: 3,
+          to: 5
+        }
+      },
+      sorting: {
+        sort: "TRAVELER_RATING",
+        order: "DESCENDING"
+      },
+      pagination: {
+        start: 1,
+        count: 5
+      },
+      currency: "USD"
     }
 
-    console.log('Making request with search parameters:', searchBody)
-    console.log('Using headers:', {
+    console.log('Request headers:', {
       'Accept-Language': 'en-US',
       'Accept': 'application/json;version=2.0',
+      'Content-Type': 'application/json',
       'exp-api-key': '[MASKED]'
     })
+    console.log('Request body:', JSON.stringify(searchBody, null, 2))
 
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Accept-Language': 'en-US',
         'Accept': 'application/json;version=2.0',
-        'exp-api-key': VIATOR_API_KEY,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'exp-api-key': VIATOR_API_KEY
       },
       body: JSON.stringify(searchBody)
     })
@@ -68,14 +97,8 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         success: true,
-        message: `Successfully connected to Viator API and retrieved ${data.data?.length || 0} products`,
-        data: data,
-        accessLevel: 'basic',
-        limitations: [
-          'Direct booking not available',
-          'Real-time pricing limited',
-          'Basic product information only'
-        ]
+        message: `Successfully retrieved ${data.data?.length || 0} experiences`,
+        data: data
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -89,9 +112,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         error: error.message,
-        message: "Failed to fetch experiences: " + error.message,
-        details: "This error occurred while testing Basic Access endpoints. Please ensure you have proper Basic Access credentials.",
-        documentation: "https://partnerresources.viator.com/travel-commerce/affiliate/basic-access/golden-path/"
+        message: "Failed to fetch experiences: " + error.message
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
