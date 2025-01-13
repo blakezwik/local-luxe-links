@@ -25,14 +25,15 @@ serve(async (req) => {
     const endpoint = 'https://api.viator.com/partner/products/search'
     console.log(`Endpoint: ${endpoint}`)
 
-    // Headers exactly as specified in Viator documentation
-    const headers = {
-      'exp-api-key': VIATOR_API_KEY,
+    // Headers as specified in Viator documentation, ensuring no duplicates
+    const headers = new Headers({
+      'Accept-Language': 'en-US',
       'Accept': 'application/json;version=2.0',
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+      'exp-api-key': VIATOR_API_KEY
+    })
 
-    // Simplified search body for initial testing
+    // Basic search body for initial testing
     const searchBody = {
       filtering: {
         destination: "732", // Las Vegas
@@ -47,7 +48,7 @@ serve(async (req) => {
     }
 
     console.log('Request headers:', {
-      ...headers,
+      ...Object.fromEntries(headers.entries()),
       'exp-api-key': '[MASKED]'
     })
     console.log('Request body:', JSON.stringify(searchBody, null, 2))
