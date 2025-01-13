@@ -27,11 +27,12 @@ serve(async (req) => {
     const endpoint = 'https://api.viator.com/partner/products/search'
     console.log(`Endpoint: ${endpoint}`)
 
+    // Using Exp-Api-Key with capital letters as shown in Viator's documentation
     const headers = {
-      'exp-api-key': VIATOR_API_KEY.trim(),
-      'accept': 'application/json;version=2.0',
-      'accept-language': 'en-US',
-      'content-type': 'application/json'
+      'Exp-Api-Key': VIATOR_API_KEY.trim(),
+      'Accept': 'application/json;version=2.0',
+      'Accept-Language': 'en-US',
+      'Content-Type': 'application/json'
     }
 
     // Log the exact request configuration (for Postman comparison)
@@ -39,11 +40,11 @@ serve(async (req) => {
     console.log('Method: POST')
     console.log('URL:', endpoint)
     console.log('Headers:', {
-      'accept': headers.accept,
-      'accept-language': headers['accept-language'],
-      'content-type': headers['content-type'],
+      'Accept': headers.Accept,
+      'Accept-Language': headers['Accept-Language'],
+      'Content-Type': headers['Content-Type'],
       // Not logging the full API key, just length for security
-      'exp-api-key': `[Key length: ${headers['exp-api-key'].length}]`
+      'Exp-Api-Key': `[Key length: ${headers['Exp-Api-Key'].length}]`
     })
 
     const searchBody = {
