@@ -20,18 +20,26 @@ serve(async (req) => {
       throw new Error('Missing Viator API key')
     }
 
-    // Fetch popular products from Viator using v2 API
+    // Fetch products from Viator using v2 API with search parameters
     console.log('Fetching from Viator API v2...')
-    const response = await fetch('https://api.viator.com/partner/v2/products/popular', {
-      method: 'GET',
+    const searchParams = {
+      "status": "PUBLISHED",
+      "sortOrder": "POPULARITY"
+    }
+
+    const response = await fetch('https://api.viator.com/partner/products/search', {
+      method: 'POST',
       headers: {
         'exp-api-key': VIATOR_API_KEY,
         'accept': 'application/json;version=2.0',
         'accept-language': 'en-US',
         'content-type': 'application/json'
-      }
+      },
+      body: JSON.stringify(searchParams)
     })
 
+    console.log('Viator API response status:', response.status)
+    
     if (!response.ok) {
       const errorText = await response.text()
       console.error(`Viator API error (${response.status}):`, errorText)
