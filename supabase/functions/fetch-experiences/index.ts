@@ -30,11 +30,14 @@ serve(async (req) => {
 
     console.log('Fetching from Viator API...')
     
-    // Fetch products from Viator using search parameters
+    // Search parameters according to Viator V1 API documentation
     const searchParams = {
-      "status": "PUBLISHED",
-      "sortOrder": "POPULARITY",
-      "count": 20 // Limit to 20 experiences
+      "startDate": new Date().toISOString().split('T')[0], // Today's date
+      "endDate": new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
+      "topX": "20", // Limit to 20 experiences
+      "sortOrder": "TOP_SELLERS", // Sort by most popular
+      "currencyCode": "USD",
+      "language": "en"
     }
 
     const response = await fetch('https://api.viator.com/partner/v1/products/search', {
@@ -62,21 +65,21 @@ serve(async (req) => {
     }
 
     const data = await response.json()
-    console.log('Received response from Viator. Products count:', data.products?.length || 0)
+    console.log('Received response from Viator. Products count:', data.data?.length || 0)
 
-    if (!data?.products || !Array.isArray(data.products)) {
+    if (!data?.data || !Array.isArray(data.data)) {
       console.error('Invalid response structure:', JSON.stringify(data))
       throw new Error('Invalid response structure from Viator API')
     }
 
     // Transform the data according to v1 API structure
-    const experiences = data.products.map((product: any) => ({
+    const experiences = data.data.map((product: any) => ({
       viator_id: product.code,
-      title: product.title || 'Untitled Experience',
-      description: product.description || null,
+      title: product.title,
+      description: product.shortDescription || null,
       price: product.price?.fromPrice || null,
-      image_url: product.primaryPhoto?.photoUrl || null,
-      destination: product.location?.name || null
+      image_url: product.thumbnailURL || product.thumbnailHiResURL || null,
+      destination: product.destinationName || null
     }))
 
     console.log(`Transformed ${experiences.length} experiences`)
