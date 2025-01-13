@@ -1,5 +1,4 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -9,7 +8,7 @@ const corsHeaders = {
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response(null, { headers: corsHeaders })
   }
 
   try {
@@ -44,7 +43,8 @@ serve(async (req) => {
       method: 'POST',
       headers: {
         'Viator-API-Key': cleanApiKey,
-        'Accept': 'application/json',
+        'Accept': 'application/json;version=2.0',
+        'Accept-Language': 'en-US',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(searchParams)
