@@ -19,20 +19,16 @@ serve(async (req) => {
       throw new Error('Missing Viator API key')
     }
 
-    console.log('Making test request to Viator Partner API')
+    console.log('Making test request to Viator Partner API using basic-access endpoint')
     
-    // Following Viator's technical documentation for headers and endpoint
-    const response = await fetch('https://api.viator.com/partner/products/search', {
-      method: 'POST',
+    // Using the /available/products endpoint which is accessible to basic-access affiliates
+    const response = await fetch('https://api.viator.com/partner/available/products', {
+      method: 'GET',
       headers: {
         'Accept-Language': 'en-US',
         'Accept': 'application/json;version=2.0',
-        'Content-Type': 'application/json',
         'Viator-API-Key': VIATOR_API_KEY
-      },
-      body: JSON.stringify({
-        "count": 1  // Just request 1 product to test the connection
-      })
+      }
     })
 
     console.log('Viator API response status:', response.status)
@@ -40,6 +36,12 @@ serve(async (req) => {
     if (!response.ok) {
       const errorText = await response.text()
       console.error('Viator API error response:', errorText)
+      
+      // Check if it's an access level issue
+      if (errorText.includes('access') || errorText.includes('permission')) {
+        throw new Error(`API access level error: ${errorText}. This endpoint might not be available for basic-access affiliates.`)
+      }
+      
       throw new Error(`API error (${response.status}): ${errorText}`)
     }
 
@@ -49,7 +51,8 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         success: true,
-        message: `Successfully connected to Viator API. Found ${data.products?.length || 0} products.`
+        message: `Successfully connected to Viator API using basic-access endpoint. Found ${data.products?.length || 0} available products.`,
+        data: data
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -63,7 +66,8 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         error: error.message,
-        message: "Failed to fetch experiences: " + error.message
+        message: "Failed to fetch experiences: " + error.message,
+        details: "This might be due to API access level restrictions. Please check if this endpoint is available for basic-access affiliates."
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
