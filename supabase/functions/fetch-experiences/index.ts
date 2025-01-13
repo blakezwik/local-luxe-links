@@ -44,7 +44,8 @@ serve(async (req) => {
       method: 'POST',
       headers: {
         'exp-api-key': cleanApiKey,
-        'Accept': 'application/json',
+        'Accept': 'application/json;version=2.0',
+        'Accept-Language': 'en-US',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(searchParams)
