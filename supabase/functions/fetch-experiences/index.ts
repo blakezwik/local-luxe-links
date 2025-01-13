@@ -22,21 +22,22 @@ serve(async (req) => {
     }
 
     console.log('Fetching from Viator API v2...')
-    console.log('API Key length:', VIATOR_API_KEY.length) // Log key length for debugging
     
     // Fetch products from Viator using v2 API with search parameters
     const searchParams = {
       "status": "PUBLISHED",
-      "sortOrder": "POPULARITY"
+      "sortOrder": "POPULARITY",
+      "count": 20 // Limit to 20 experiences
     }
 
     const response = await fetch('https://api.viator.com/partner/products/search', {
       method: 'POST',
       headers: {
-        'exp-api-key': VIATOR_API_KEY,
+        'exp-api-key': VIATOR_API_KEY.trim(), // Ensure no whitespace
         'Accept': 'application/json;version=2.0',
         'Accept-Language': 'en-US',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache'
       },
       body: JSON.stringify(searchParams)
     })
@@ -47,6 +48,12 @@ serve(async (req) => {
       const errorText = await response.text()
       console.error('Viator API error response:', errorText)
       console.error('Response headers:', Object.fromEntries(response.headers.entries()))
+      
+      // Check if it's an auth error and provide more specific error message
+      if (response.status === 401) {
+        throw new Error('Invalid Viator API key. Please check the API key format and ensure it is correctly set in Supabase secrets.')
+      }
+      
       throw new Error(`Viator API error: ${response.status} - ${errorText}`)
     }
 
