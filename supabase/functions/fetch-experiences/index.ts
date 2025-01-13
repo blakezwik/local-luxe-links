@@ -84,32 +84,6 @@ serve(async (req) => {
 
     console.log(`Transformed ${experiences.length} experiences`)
 
-    // Create Supabase client
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
-    if (!supabaseUrl || !supabaseKey) {
-      throw new Error('Missing Supabase credentials')
-    }
-    
-    const supabase = createClient(supabaseUrl, supabaseKey)
-
-    // Save experiences to database
-    if (experiences.length > 0) {
-      console.log('Saving experiences to database')
-      const { error } = await supabase
-        .from('experiences')
-        .upsert(experiences, { 
-          onConflict: 'viator_id',
-          ignoreDuplicates: false 
-        })
-
-      if (error) {
-        console.error('Supabase upsert error:', error)
-        throw error
-      }
-      console.log('Successfully saved experiences')
-    }
-
     return new Response(
       JSON.stringify({ 
         experiences,
