@@ -28,18 +28,18 @@ serve(async (req) => {
     console.log(`Endpoint: ${endpoint}`)
 
     // Create headers using the Headers class to prevent duplicates
-    const headers = new Headers({
-      'exp-api-key': VIATOR_API_KEY,
-      'Accept': 'application/json;version=2.0',
-      'Accept-Language': 'en-US',
-      'Content-Type': 'application/json'
-    })
+    const headers = {
+      'exp-api-key': VIATOR_API_KEY.trim(),
+      'accept': 'application/json;version=2.0',
+      'accept-language': 'en-US',
+      'content-type': 'application/json'
+    }
 
     // Log headers (excluding sensitive data)
     console.log('Request headers:', {
-      'Accept': headers.get('Accept'),
-      'Accept-Language': headers.get('Accept-Language'),
-      'Content-Type': headers.get('Content-Type')
+      'accept': headers.accept,
+      'accept-language': headers['accept-language'],
+      'content-type': headers['content-type']
     })
 
     const searchBody = {
