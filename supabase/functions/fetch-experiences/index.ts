@@ -12,34 +12,27 @@ serve(async (req) => {
   }
 
   try {
-    console.log('Starting to fetch experiences from Viator Affiliate API')
+    console.log('Starting Viator API connection test')
     
     const VIATOR_API_KEY = Deno.env.get('VIATOR_API_KEY')
     if (!VIATOR_API_KEY) {
       throw new Error('Missing Viator API key')
     }
 
-    // Log API request details
-    console.log('Making request to Viator Affiliate API')
+    console.log('Making test request to Viator Affiliate API')
     
-    // Parameters for the affiliate API search
-    const searchParams = {
-      "startDate": new Date().toISOString().split('T')[0],
-      "endDate": new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      "count": 10,
-      "currency": "USD"
-    }
-
-    // Using the affiliate API endpoint with the correct header format
+    // Simple test request to the Viator API
     const response = await fetch('https://api.viator.com/partner/products/search', {
       method: 'POST',
       headers: {
         'Accept-Language': 'en-US',
         'Accept': 'application/json;version=2.0',
         'Content-Type': 'application/json',
-        'api-key': VIATOR_API_KEY  // Changed from 'exp-api-key' to 'api-key'
+        'api-key': VIATOR_API_KEY
       },
-      body: JSON.stringify(searchParams)
+      body: JSON.stringify({
+        "count": 1  // Just request 1 product to test the connection
+      })
     })
 
     console.log('Viator API response status:', response.status)
@@ -47,46 +40,16 @@ serve(async (req) => {
     if (!response.ok) {
       const errorText = await response.text()
       console.error('Viator API error response:', errorText)
-      
-      // Handle specific error cases
-      switch (response.status) {
-        case 401:
-          throw new Error('Invalid API key. Please verify your Viator API key.')
-        case 403:
-          throw new Error('Access forbidden. Your API key might not have the required permissions.')
-        case 429:
-          throw new Error('Rate limit exceeded. Please try again later.')
-        default:
-          throw new Error(`API error (${response.status}): ${errorText}`)
-      }
+      throw new Error(`API error (${response.status}): ${errorText}`)
     }
 
     const data = await response.json()
     console.log('Response data:', JSON.stringify(data, null, 2))
 
-    if (!data?.products) {
-      console.error('Invalid response structure:', JSON.stringify(data))
-      throw new Error('Invalid response structure from Viator API')
-    }
-
-    const experiences = data.products.map((product: any) => ({
-      id: crypto.randomUUID(),
-      viator_id: product.productCode || product.code,
-      title: product.title,
-      description: product.description || product.shortDescription || null,
-      price: product.pricing?.fromPrice || null,
-      image_url: product.primaryPhotoUrl || product.thumbnailUrl || null,
-      destination: product.destination?.name || null
-    }))
-
-    console.log(`Successfully transformed ${experiences.length} experiences`)
-
     return new Response(
       JSON.stringify({ 
-        experiences,
-        message: experiences.length > 0 
-          ? `Found ${experiences.length} experiences`
-          : 'No experiences found for the current search criteria.'
+        success: true,
+        message: `Successfully connected to Viator API. Found ${data.products?.length || 0} products.`
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
